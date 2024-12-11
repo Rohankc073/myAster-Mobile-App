@@ -62,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                     hintText: 'Enter Your Email',
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextField(
                   obscureText: true,
                   decoration: InputDecoration(
@@ -71,10 +71,10 @@ class _LoginPageState extends State<LoginPage> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     hintText: 'Enter Your Password',
-                    suffixIcon: Icon(Icons.visibility_off),
+                    suffixIcon: const Icon(Icons.visibility_off),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -94,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    backgroundColor: Color(0xFF3579FF),
+                    backgroundColor: const Color(0xFF3579FF),
                   ),
                   child: const Text(
                     'Sign In',
@@ -105,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                         fontFamily: "Rockwell"),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -130,14 +130,14 @@ class _LoginPageState extends State<LoginPage> {
                         )),
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Don’t have an account? "),
+                    const Text("Don’t have an account? "),
                     TextButton(
                       onPressed: () {},
-                      child: Text(
+                      child: const Text(
                         'Sign Up',
                         style: TextStyle(color: Color(0xFF3579FF)),
                       ),
