@@ -62,7 +62,7 @@ class SignUpPage extends StatelessWidget {
                     // Add login action here
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF3579FF),
+                    backgroundColor: const Color(0xFF3579FF),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
