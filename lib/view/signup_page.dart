@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myasteer/view/login_page.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
@@ -69,7 +70,7 @@ class SignUpPage extends StatelessWidget {
                     ),
                   ),
                   child: const Text(
-                    "Login",
+                    "Sign Up",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -137,7 +138,11 @@ class SignUpPage extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // Add Sign In navigation action
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()),
+                      );
                     },
                     child: const Text(
                       "Sign In",

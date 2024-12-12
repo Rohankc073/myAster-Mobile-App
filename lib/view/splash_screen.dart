@@ -1,17 +1,17 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'login_page.dart'; // Replace with the correct path to your login page file
+import 'onboarding_screen.dart'; // Replace with the correct path to your onboarding screen file
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Navigate to Login Page after 3 seconds
+    // Navigate to Onboarding Screen after 3 seconds
     Timer(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const LoginPage()),
+        MaterialPageRoute(builder: (context) => OnboardingScreen()),
       );
     });
 
@@ -25,11 +25,13 @@ class SplashScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Responsive logo image
+            // Responsive logo image with increased size
             Image.asset(
               'assets/images/Logo.png',
-              height: screenHeight * .9, // 90% of screen height
-              width: screenWidth * .9, // 90% of screen width
+              height: screenHeight *
+                  0.9, // Increased to occupy 50% of screen height
+              width:
+                  screenWidth * 0.9, // Increased to occupy 80% of screen width
             ),
           ],
         ),
