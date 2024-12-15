@@ -10,42 +10,42 @@ class SignUpPage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(25.0),
+          padding: const EdgeInsets.symmetric(horizontal: 27.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 40), // Spacing at the top
+              const SizedBox(height: 10),
               // App Logo
               Image.asset(
-                'assets/images/Logo.png', // Replace with your logo file path
+                'assets/images/Logo.png',
                 height: 300,
-                width: 500,
+                width: 300,
               ),
-
               // Heading
               const Text(
                 "Create Account",
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
+                  color: Color(0xFF3579FF),
+                  fontFamily: 'Rockwell',
                 ),
               ),
-
-              const SizedBox(height: 12),
+              const SizedBox(height: 30),
 
               // Name TextField
               const CustomTextField(
                 hintText: "Your Name",
                 icon: Icons.person,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
 
               // Email TextField
               const CustomTextField(
                 hintText: "Your Email",
                 icon: Icons.email,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
 
               // Password TextField
               const CustomTextField(
@@ -53,52 +53,63 @@ class SignUpPage extends StatelessWidget {
                 icon: Icons.lock,
                 obscureText: true,
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 20),
 
-              // Login Button
+              // Confirm Password TextField
+              const CustomTextField(
+                hintText: "Confirm Password",
+                icon: Icons.lock,
+                obscureText: true,
+              ),
+              const SizedBox(height: 30),
+
+              // Sign Up Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Add login action here
+                    // Add sign-up action here
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF3579FF),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                   child: const Text(
                     "Sign Up",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: 19,
+                      fontWeight: FontWeight.normal,
+                      fontFamily: "Rockwell",
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
 
               // OR Divider
-              const Row(
+              Row(
                 children: [
-                  Expanded(
+                  const Expanded(
                     child: Divider(
                       thickness: 1,
                       color: Colors.grey,
                     ),
                   ),
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
-                      "or",
+                      "OR",
                       style: TextStyle(
                         color: Colors.grey,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  Expanded(
+                  const Expanded(
                     child: Divider(
                       thickness: 1,
                       color: Colors.grey,
@@ -106,49 +117,58 @@ class SignUpPage extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
 
               // Google and Facebook Buttons
-              SocialButton(
-                iconPath:
-                    'assets/images/google.png', // Replace with your Google logo file path
-                label: "Continue with Google",
-                onPressed: () {
-                  // Add Google login action
-                },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.white,
+                    child: Image.asset(
+                      "assets/images/facebook.png",
+                      height: 20,
+                      width: 20,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.white,
+                    child: Image.asset(
+                      "assets/images/google.png",
+                      height: 20,
+                      width: 20,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              SocialButton(
-                iconPath:
-                    'assets/images/facebook.png', // Replace with your Facebook logo file path
-                label: "Continue with Facebook",
-                onPressed: () {
-                  // Add Facebook login action
-                },
-              ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 20),
 
               // Sign In Text
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    "Do you have an account? ",
-                    style: TextStyle(color: Colors.grey),
+                    "Already have an account?",
+                    style: TextStyle(fontFamily: 'Rockwell'),
                   ),
-                  GestureDetector(
-                    onTap: () {
+                  TextButton(
+                    onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const LoginPage()),
+                          builder: (context) => const LoginPage(),
+                        ),
                       );
                     },
                     child: const Text(
                       "Sign In",
                       style: TextStyle(
                         color: Color(0xFF3579FF),
-                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Rockwell',
                       ),
                     ),
                   ),
@@ -181,50 +201,26 @@ class CustomTextField extends StatelessWidget {
       obscureText: obscureText,
       decoration: InputDecoration(
         prefixIcon: Icon(icon),
-        hintText: hintText,
+        labelText: hintText,
+        labelStyle: const TextStyle(
+          fontFamily: 'Rockwell',
+          fontSize: 14,
+          color: Colors.grey,
+        ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        hintText: hintText,
+        hintStyle: const TextStyle(
+          fontFamily: 'Rockwell',
+          fontSize: 14,
+          color: Colors.grey,
         ),
         filled: true,
         fillColor: Colors.grey[200],
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-      ),
-    );
-  }
-}
-
-// Social Button Widget
-class SocialButton extends StatelessWidget {
-  final String iconPath;
-  final String label;
-  final VoidCallback onPressed;
-
-  const SocialButton({
-    required this.iconPath,
-    required this.label,
-    required this.onPressed,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedButton.icon(
-      onPressed: onPressed,
-      icon: Image.asset(
-        iconPath,
-        height: 24,
-        width: 24,
-      ),
-      label: Text(
-        label,
-        style: const TextStyle(fontSize: 16, color: Colors.grey),
-      ),
-      style: OutlinedButton.styleFrom(
-        side: const BorderSide(color: Colors.grey),
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 15,
+          horizontal: 10,
         ),
       ),
     );
