@@ -12,7 +12,7 @@ class AppointmentScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "Previous Appointments",
+              "Previous Appointments- Orders",
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
