@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:myasteer/view/bottom_screen/appointment_screen.dart';
 import 'package:myasteer/view/bottom_screen/home_screen.dart';
 import 'package:myasteer/view/bottom_screen/profile_screen.dart';
-// import 'package:myaster/view/bottom_screen/bottom_navigation.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -21,6 +20,13 @@ class _DashboardState extends State<Dashboard> {
     const ProfileScreen(),
   ];
 
+  // Define AppBar titles for each screen
+  final List<String> _appBarTitles = [
+    "Home",
+    "Appointments",
+    "Profile",
+  ];
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -31,9 +37,10 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Dashboard"),
+        title: Text(_appBarTitles[_selectedIndex]), // Dynamic AppBar title
+        centerTitle: true,
       ),
-      body: _screens[_selectedIndex],
+      body: _screens[_selectedIndex], // Dynamic screen based on selection
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
@@ -44,7 +51,7 @@ class _DashboardState extends State<Dashboard> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month),
-            label: 'Appointment',
+            label: 'Appointments',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
@@ -55,3 +62,11 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 }
+
+// Dummy Home Screen
+
+
+// Dummy Appointment Screen
+
+
+
