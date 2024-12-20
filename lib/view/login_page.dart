@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myasteer/view/dashboard.dart';
+import 'package:myasteer/view/signup_page.dart';
+// Import your dashboard page here
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -8,6 +11,50 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  void login() {
+    // Hardcoded credentials
+    const String validEmail = "admin";
+    const String validPassword = "admin";
+
+    // Check if the entered credentials match
+    if (emailController.text == validEmail &&
+        passwordController.text == validPassword) {
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Login successful!',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Color(0xFF3579FF),
+          duration: Duration(seconds: 1),
+        ),
+      );
+
+      // Navigate to the dashboard after showing the success message
+      Future.delayed(const Duration(seconds: 1), () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Dashboard()),
+        );
+      });
+    } else {
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Invalid email or password!',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,15 +66,13 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 const Text(
                   'Welcome Back',
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF3579FF), // Custom color
+                    color: Color(0xFF3579FF),
                     fontFamily: 'Rockwell',
                   ),
                 ),
@@ -37,9 +82,10 @@ class _LoginPageState extends State<LoginPage> {
                   child: Text(
                     'Sign In',
                     style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.normal,
-                        fontFamily: 'Rockwell'),
+                      fontSize: 20,
+                      fontWeight: FontWeight.normal,
+                      fontFamily: 'Rockwell',
+                    ),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -54,6 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 30),
                 TextField(
+                  controller: emailController,
                   decoration: InputDecoration(
                     labelText: 'Email',
                     border: OutlineInputBorder(
@@ -62,8 +109,9 @@ class _LoginPageState extends State<LoginPage> {
                     hintText: 'Enter Your Email',
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextField(
+                  controller: passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: 'Password',
@@ -71,10 +119,10 @@ class _LoginPageState extends State<LoginPage> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     hintText: 'Enter Your Password',
-                    suffixIcon: Icon(Icons.visibility_off),
+                    suffixIcon: const Icon(Icons.visibility_off),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -87,31 +135,32 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: login,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                         vertical: 15, horizontal: 80),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    backgroundColor: Color(0xFF3579FF),
+                    backgroundColor: const Color(0xFF3579FF),
                   ),
                   child: const Text(
                     'Sign In',
                     style: TextStyle(
-                        fontSize: 19,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.white,
-                        fontFamily: "Rockwell"),
+                      fontSize: 19,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white,
+                      fontFamily: "Rockwell",
+                    ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircleAvatar(
                       radius: 20,
-                      backgroundColor: Colors.blue.shade100,
+                      backgroundColor: Colors.white,
                       child: Image.asset(
                         "assets/images/facebook.png",
                         height: 20,
@@ -121,23 +170,31 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(width: 20),
                     CircleAvatar(
-                        radius: 20,
-                        backgroundColor: Colors.white,
-                        child: Image.asset(
-                          "assets/images/google.png",
-                          height: 20,
-                          width: 20,
-                        )),
+                      radius: 20,
+                      backgroundColor: Colors.white,
+                      child: Image.asset(
+                        "assets/images/google.png",
+                        height: 20,
+                        width: 20,
+                      ),
+                    ),
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Don’t have an account? "),
+                    const Text("Don’t have an account?"),
                     TextButton(
-                      onPressed: () {},
-                      child: Text(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SignUpPage(),
+                          ),
+                        );
+                      },
+                      child: const Text(
                         'Sign Up',
                         style: TextStyle(color: Color(0xFF3579FF)),
                       ),
