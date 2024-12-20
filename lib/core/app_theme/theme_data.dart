@@ -19,11 +19,10 @@ ThemeData getApplicationTheme() {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         textStyle: const TextStyle(
-          fontSize: 18,
-          color: Colors.white10,
+          fontSize: 15,
+          color: Colors.white,
           fontFamily: "Rockwell",
         ),
-        backgroundColor: Colors.green,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),

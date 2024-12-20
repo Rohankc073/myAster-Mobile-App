@@ -65,6 +65,8 @@ class HomeScreen extends StatelessWidget {
               crossAxisCount: 4,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
               children: const [
                 CategoryItem(
                   icon: Icons.medical_services,
@@ -87,7 +89,7 @@ class HomeScreen extends StatelessWidget {
                   color: Colors.purple,
                 ),
                 CategoryItem(
-                  icon: Icons.grain,
+                  icon: Icons.people,
                   label: "Neurology",
                   color: Colors.teal,
                 ),
@@ -120,23 +122,34 @@ class HomeScreen extends StatelessWidget {
                   Image.asset(
                     'assets/images/doctor.png', // Replace with your image path
                     height: 80,
+                    width: 80,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(
+                        Icons.broken_image,
+                        size: 80,
+                        color: Colors.grey,
+                      );
+                    },
                   ),
                   const SizedBox(width: 16),
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           "Online and Offline Consultations",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         ElevatedButton(
-                          onPressed: null,
-                          child: Text("Book Now"),
+                          onPressed: () {
+                            // Handle Book Now action
+                          },
+                          child: const Text("Book Now"),
                         ),
                       ],
                     ),
@@ -156,7 +169,7 @@ class HomeScreen extends StatelessWidget {
                     buttonLabel: "Book",
                   ),
                 ),
-                SizedBox(width: 16),
+                SizedBox(width: 10),
                 Expanded(
                   child: ActionCard(
                     title: "Pharmacy",
@@ -239,21 +252,24 @@ class ActionCard extends StatelessWidget {
             children: [
               Icon(icon, size: 40, color: backgroundColor),
               const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    subtitle,
-                    style: const TextStyle(fontSize: 12, color: Colors.black54),
-                  ),
-                ],
+                    Text(
+                      subtitle,
+                      style:
+                          const TextStyle(fontSize: 12, color: Colors.black54),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -262,6 +278,10 @@ class ActionCard extends StatelessWidget {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: backgroundColor,
+                minimumSize: const Size(70, 30), // Minimum size for the button
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                textStyle: const TextStyle(fontSize: 12), // Adjust font size
               ),
               onPressed: () {},
               child: Text(buttonLabel),
