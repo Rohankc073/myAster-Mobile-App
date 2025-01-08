@@ -3,6 +3,8 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 // import 'signup_page.dart';
 
 class OnboardingScreen extends StatefulWidget {
+  const OnboardingScreen({super.key});
+
   @override
   _OnboardingScreenState createState() => _OnboardingScreenState();
 }
@@ -75,7 +77,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 dotWidth: 10,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: ElevatedButton(
@@ -98,7 +100,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
           ],
         ),
       ),
@@ -112,6 +114,7 @@ class OnboardingPage extends StatelessWidget {
   final Widget image;
 
   const OnboardingPage({
+    super.key,
     required this.title,
     required this.description,
     required this.image,
@@ -125,7 +128,7 @@ class OnboardingPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           image,
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
           Text(
             title,
             style: const TextStyle(
@@ -136,7 +139,7 @@ class OnboardingPage extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
             description,
             style: TextStyle(
