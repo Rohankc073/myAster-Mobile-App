@@ -10,11 +10,11 @@ class HomePage extends StatefulWidget {
 class _MyWidgetState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("DashBoard"),
-        backgroundColor: Colors.blue,
-      ),
-    );
+    return const Scaffold(
+        // appBar: AppBar(
+        //   title: const Text("DashBoard"),
+        //   backgroundColor: Colors.blue,
+        // ),
+        );
   }
 }
