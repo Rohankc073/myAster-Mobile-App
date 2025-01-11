@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myasteer/view/login_page.dart';
+import 'package:myasteer/features/auth/presentation/view/login_page.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
@@ -91,15 +91,15 @@ class SignUpPage extends StatelessWidget {
               const SizedBox(height: 20),
 
               // OR Divider
-              Row(
+              const Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Divider(
                       thickness: 1,
                       color: Colors.grey,
                     ),
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
                       "OR",
@@ -109,7 +109,7 @@ class SignUpPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Expanded(
+                  Expanded(
                     child: Divider(
                       thickness: 1,
                       color: Colors.grey,

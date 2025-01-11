@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dartz/dartz.dart';
 import 'package:myasteer/core/error/failure.dart';
 import 'package:myasteer/features/auth/data/datasource/local_data_source/local_data_source.dart';
@@ -22,12 +20,12 @@ class AuthLocalRepository implements IAuthRepository {
   }
 
   @override
-  Future<Either<Failure, String>> loginStudent(
+  Future<Either<Failure, String>> loginUser(
     String email,
     String password,
   ) async {
     try {
-      final token = await _authLocalDataSource.loginStudent(email, password);
+      final token = await _authLocalDataSource.loginUser(email, password);
       return Right(token);
     } catch (e) {
       return Left(LocalDatabaseFailure(message: e.toString()));
@@ -35,17 +33,11 @@ class AuthLocalRepository implements IAuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> registerStudent(AuthEntity student) async {
+  Future<Either<Failure, void>> registerUser(AuthEntity user) async {
     try {
-      return Right(_authLocalDataSource.registerStudent(student));
+      return Right(_authLocalDataSource.registerUser(user));
     } catch (e) {
       return Left(LocalDatabaseFailure(message: e.toString()));
     }
-  }
-
-  @override
-  Future<Either<Failure, String>> uploadProfilePicture(File file) async {
-    // TODO: implement uploadProfilePicture
-    throw UnimplementedError();
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:myasteer/features/auth/presentation/view/signup_page.dart';
 import 'package:myasteer/view/dashboard.dart';
-import 'package:myasteer/view/signup_page.dart';
 // Import your dashboard page here
 
 class LoginPage extends StatefulWidget {

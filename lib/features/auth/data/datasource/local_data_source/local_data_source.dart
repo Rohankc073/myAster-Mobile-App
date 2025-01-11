@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:myasteer/core/network/hive_service.dart';
 import 'package:myasteer/features/auth/data/datasource/auth_data_source.dart';
 import 'package:myasteer/features/auth/data/model/auth_hive_model.dart';
@@ -16,17 +14,15 @@ class AuthLocalDataSource implements IAuthDataSource {
     return Future.value(const AuthEntity(
       userId: "1",
       fName: "",
-      lName: "",
-      image: null,
-      username: "",
+      email: "",
       password: "",
     ));
   }
 
   @override
-  Future<String> loginStudent(String username, String password) async {
+  Future<String> loginUser(String email, String password) async {
     try {
-      final user = await _hiveService.login(username, password);
+      final user = await _hiveService.login(email, password);
       return Future.value("Login successful");
     } catch (e) {
       return Future.error(e);
@@ -34,21 +30,15 @@ class AuthLocalDataSource implements IAuthDataSource {
   }
 
   @override
-  Future<void> registerStudent(AuthEntity student) async {
+  Future<void> registerUser(AuthEntity user) async {
     try {
       // Convert AuthEntity to AuthHiveModel
-      final authHiveModel = AuthHiveModel.fromEntity(student);
+      final authHiveModel = AuthHiveModel.fromEntity(user);
 
       await _hiveService.register(authHiveModel);
       return Future.value();
     } catch (e) {
       return Future.error(e);
     }
-  }
-
-  @override
-  Future<String> uploadProfilePicture(File file) {
-    // TODO: implement uploadProfilePicture
-    throw UnimplementedError();
   }
 }

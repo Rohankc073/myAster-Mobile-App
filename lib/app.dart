@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myasteer/core/app_theme/theme_data.dart';
-import 'package:myasteer/view/login_page.dart';
+import 'package:myasteer/features/auth/presentation/view/login_page.dart';
+import 'package:myasteer/features/auth/presentation/view/signup_page.dart';
 import 'package:myasteer/view/onboarding_screen.dart';
-import 'package:myasteer/view/signup_page.dart';
 import 'package:myasteer/view/splash_screen.dart';
 
 class MyApp extends StatelessWidget {
@@ -17,7 +17,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) =>
             const SplashScreen(), // SplashScreen is the first screen
-        '/onboarding': (context) => OnboardingScreen(), // Onboarding screen
+        '/onboarding': (context) =>
+            const OnboardingScreen(), // Onboarding screen
         '/login': (context) => const LoginPage(), // Login screen
         '/signup': (context) => const SignUpPage(), // Sign-up screen
       },

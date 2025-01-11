@@ -9,45 +9,34 @@ part 'auth_hive_model.g.dart';
 @HiveType(typeId: HiveTableConstant.userTableId)
 class AuthHiveModel extends Equatable {
   @HiveField(0)
-  final String? studentId;
+  final String? userId;
   @HiveField(1)
   final String fName;
   @HiveField(2)
-  final String lName;
+  final String email;
   @HiveField(3)
-  final String? image;
-
-  @HiveField(4)
-  final String username;
-  @HiveField(5)
   final String password;
 
   AuthHiveModel({
-    String? studentId,
+    String? userId,
+    required this.email,
     required this.fName,
-    required this.lName,
-    this.image,
-    required this.username,
     required this.password,
-  }) : studentId = studentId ?? const Uuid().v4();
+  }) : userId = userId ?? const Uuid().v4();
 
   // Initial Constructor
   const AuthHiveModel.initial()
-      : studentId = '',
+      : userId = '',
+        email = '',
         fName = '',
-        lName = '',
-        image = '',
-        username = '',
         password = '';
 
   // From Entity
   factory AuthHiveModel.fromEntity(AuthEntity entity) {
     return AuthHiveModel(
-      studentId: entity.userId,
+      userId: entity.userId,
+      email: entity.email,
       fName: entity.fName,
-      lName: entity.lName,
-      image: entity.image,
-      username: entity.username,
       password: entity.password,
     );
   }
@@ -55,16 +44,12 @@ class AuthHiveModel extends Equatable {
   // To Entity
   AuthEntity toEntity() {
     return AuthEntity(
-      userId: studentId,
+      email: email,
       fName: fName,
-      lName: lName,
-      image: image,
-      username: username,
       password: password,
     );
   }
 
   @override
-  List<Object?> get props =>
-      [studentId, fName, lName, image, username, password];
+  List<Object?> get props => [userId, fName, password];
 }

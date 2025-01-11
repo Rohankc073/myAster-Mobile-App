@@ -7,7 +7,7 @@ class HiveService {
   static Future<void> init() async {
     // Initialize the database
     var directory = await getApplicationDocumentsDirectory();
-    var path = '${directory.path}softwarica_student_management.db';
+    var path = '${directory.path}aster.db';
 
     Hive.init(path);
 
@@ -19,7 +19,7 @@ class HiveService {
   // Auth Queries
   Future<void> register(AuthHiveModel auth) async {
     var box = await Hive.openBox<AuthHiveModel>(HiveTableConstant.userBox);
-    await box.put(auth.studentId, auth);
+    await box.put(auth.userId, auth);
   }
 
   Future<void> deleteAuth(String id) async {
@@ -33,11 +33,10 @@ class HiveService {
   }
 
   // Login using username and password
-  Future<AuthHiveModel?> login(String username, String password) async {
+  Future<AuthHiveModel?> login(String email, String password) async {
     var box = await Hive.openBox<AuthHiveModel>(HiveTableConstant.userBox);
     var auth = box.values.firstWhere(
-        (element) =>
-            element.username == username && element.password == password,
+        (element) => element.email == email && element.password == password,
         orElse: () => const AuthHiveModel.initial());
     return auth;
   }
