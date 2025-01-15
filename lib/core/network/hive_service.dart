@@ -32,7 +32,7 @@ class HiveService {
     return box.values.toList();
   }
 
-  // Login using username and password
+  // Login using email and password
   Future<AuthHiveModel?> login(String email, String password) async {
     var box = await Hive.openBox<AuthHiveModel>(HiveTableConstant.userBox);
     var auth = box.values.firstWhere(

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myasteer/features/auth/presentation/view/signup_page.dart';
+import 'package:myasteer/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
 import 'package:myasteer/view/dashboard.dart';
+
 // Import your dashboard page here
 
 class LoginPage extends StatefulWidget {
@@ -187,16 +190,20 @@ class _LoginPageState extends State<LoginPage> {
                     const Text("Don’t have an account?"),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SignUpPage(),
-                          ),
-                        );
+                        // Dispatch the NavigateToLoginScreenEvent
+                        context.read<LoginBloc>().add(
+                              NavigateRegisterScreenEvent(
+                                context: context,
+                                destination: const SignUpPage(),
+                              ),
+                            );
                       },
                       child: const Text(
-                        'Sign Up',
-                        style: TextStyle(color: Color(0xFF3579FF)),
+                        "Sign Up",
+                        style: TextStyle(
+                          color: Color(0xFF3579FF),
+                          fontFamily: 'Rockwell',
+                        ),
                       ),
                     ),
                   ],

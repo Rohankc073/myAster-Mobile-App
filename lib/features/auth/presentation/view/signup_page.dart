@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myasteer/features/auth/presentation/view/login_page.dart';
+import 'package:myasteer/features/auth/presentation/view_model/signup/bloc/signup_bloc.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
@@ -157,12 +159,13 @@ class SignUpPage extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginPage(),
-                        ),
-                      );
+                      // Dispatch the NavigateToLoginScreenEvent
+                      context.read<SignupBloc>().add(
+                            NavigateToLoginScreenEvent(
+                              context: context,
+                              destination: const LoginPage(),
+                            ),
+                          );
                     },
                     child: const Text(
                       "Sign In",
