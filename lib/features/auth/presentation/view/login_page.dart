@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:myasteer/features/auth/presentation/view/signup_page.dart';
 import 'package:myasteer/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
 import 'package:myasteer/view/dashboard.dart';
-
-// Import your dashboard page here
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,45 +16,55 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  void login() {
-    // Hardcoded credentials
-    const String validEmail = "admin";
-    const String validPassword = "admin";
+  void login() async {
+    var userBox = await Hive.openBox('users'); // Open Hive box
+    String email = emailController.text;
+    String password = passwordController.text;
 
-    // Check if the entered credentials match
-    if (emailController.text == validEmail &&
-        passwordController.text == validPassword) {
-      // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Login successful!',
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Color(0xFF3579FF),
-          duration: Duration(seconds: 1),
-        ),
-      );
+    // Check if email exists in Hive storage
+    if (userBox.containsKey(email)) {
+      Map<String, dynamic> userData = userBox.get(email);
+      if (userData["password"] == password) {
+        _showSuccessSnackBar("Login successful!");
 
-      // Navigate to the dashboard after showing the success message
-      Future.delayed(const Duration(seconds: 1), () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Dashboard()),
-        );
-      });
+        // Navigate to Dashboard after showing success message
+        Future.delayed(const Duration(seconds: 1), () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const Dashboard()),
+          );
+        });
+      } else {
+        _showErrorSnackBar("Incorrect password. Try again.");
+      }
     } else {
-      // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Invalid email or password!',
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Colors.red,
-        ),
-      );
+      _showErrorSnackBar("No account found with this email.");
     }
+  }
+
+  void _showSuccessSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.green,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
 
   @override
@@ -138,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: login,
+                  onPressed: login, // Call login function
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                         vertical: 15, horizontal: 80),
@@ -161,36 +170,9 @@ class _LoginPageState extends State<LoginPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircleAvatar(
-                      radius: 20,
-                      backgroundColor: Colors.white,
-                      child: Image.asset(
-                        "assets/images/facebook.png",
-                        height: 20,
-                        width: 20,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    CircleAvatar(
-                      radius: 20,
-                      backgroundColor: Colors.white,
-                      child: Image.asset(
-                        "assets/images/google.png",
-                        height: 20,
-                        width: 20,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
                     const Text("Don’t have an account?"),
                     TextButton(
                       onPressed: () {
-                        // Dispatch the NavigateToLoginScreenEvent
                         context.read<LoginBloc>().add(
                               NavigateRegisterScreenEvent(
                                 context: context,

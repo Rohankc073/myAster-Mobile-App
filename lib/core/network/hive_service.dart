@@ -12,39 +12,47 @@ class HiveService {
     Hive.init(path);
 
     // Register Adapters
-
     Hive.registerAdapter(AuthHiveModelAdapter());
   }
 
-  // Auth Queries
+  // **Register User**
   Future<void> register(AuthHiveModel auth) async {
     var box = await Hive.openBox<AuthHiveModel>(HiveTableConstant.userBox);
     await box.put(auth.userId, auth);
   }
 
+  // **Delete User by ID**
   Future<void> deleteAuth(String id) async {
     var box = await Hive.openBox<AuthHiveModel>(HiveTableConstant.userBox);
     await box.delete(id);
   }
 
+  // **Get All Users**
   Future<List<AuthHiveModel>> getAllAuth() async {
     var box = await Hive.openBox<AuthHiveModel>(HiveTableConstant.userBox);
     return box.values.toList();
   }
 
-  // Login using email and password
+  // **Login User**
   Future<AuthHiveModel?> login(String email, String password) async {
     var box = await Hive.openBox<AuthHiveModel>(HiveTableConstant.userBox);
-    var auth = box.values.firstWhere(
+
+    try {
+      return box.values.firstWhere(
         (element) => element.email == email && element.password == password,
-        orElse: () => const AuthHiveModel.initial());
-    return auth;
+        // **Fixed: Return null if no user is found**
+      );
+    } catch (e) {
+      return null;
+    }
   }
 
+  // **Clear All Users**
   Future<void> clearAll() async {
     await Hive.deleteBoxFromDisk(HiveTableConstant.userBox);
   }
 
+  // **Close Hive**
   Future<void> close() async {
     await Hive.close();
   }

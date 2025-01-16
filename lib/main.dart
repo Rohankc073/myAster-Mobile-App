@@ -13,6 +13,7 @@ void main() async {
   // Initialize Dependencies
   await initDependencies();
 
+
   runApp(
     const App(),
   );

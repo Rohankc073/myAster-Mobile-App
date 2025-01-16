@@ -1,25 +1,26 @@
+import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'signup_event.dart';
 part 'signup_state.dart';
 
 class SignupBloc extends Bloc<SignupEvent, SignupState> {
   SignupBloc() : super(SignupState.initial()) {
-    // Handle navigation to the Login screen
-    on<NavigateToLoginScreenEvent>((event, emit) {
-      _handleNavigationToLoginScreen(event);
-    });
+    on<NavigateToLoginScreenEvent>(_onNavigateToLoginScreenEvent);
   }
 
-  void _handleNavigationToLoginScreen(NavigateToLoginScreenEvent event) {
+  void _onNavigateToLoginScreenEvent(
+    NavigateToLoginScreenEvent event,
+    Emitter<SignupState> emit,
+  ) {
+    // Perform navigation using Navigator.push
     Navigator.push(
       event.context,
-      MaterialPageRoute(
-        builder: (context) =>
-            event.destination, // Destination widget (e.g., LoginPage)
-      ),
+      MaterialPageRoute(builder: (context) => event.destination),
     );
+
+    // Optionally, emit a new state if needed
+    // emit(NavigateToLoginScreenState());
   }
 }

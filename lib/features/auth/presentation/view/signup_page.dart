@@ -1,10 +1,84 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:myasteer/features/auth/presentation/view/login_page.dart';
 import 'package:myasteer/features/auth/presentation/view_model/signup/bloc/signup_bloc.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
+
+  @override
+  _SignUpPageState createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    Hive.initFlutter(); // Ensure Hive is initialized
+  }
+
+  void _saveUserData() async {
+    if (passwordController.text != confirmPasswordController.text) {
+      _showErrorDialog("Passwords do not match.");
+      return;
+    }
+
+    var userBox = await Hive.openBox('users');
+
+    userBox.put(emailController.text, {
+      "name": nameController.text,
+      "email": emailController.text,
+      "password":
+          passwordController.text, // Store password securely in real apps
+    });
+
+    _showSuccessDialog("Account created successfully!");
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Error"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showSuccessDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Success"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
+            },
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +91,11 @@ class SignUpPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 10),
-              // App Logo
               Image.asset(
                 'assets/images/Logo.png',
                 height: 300,
                 width: 300,
               ),
-              // Heading
               const Text(
                 "Create Account",
                 style: TextStyle(
@@ -34,44 +106,36 @@ class SignUpPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 30),
-
-              // Name TextField
-              const CustomTextField(
+              CustomTextField(
+                controller: nameController,
                 hintText: "Your Name",
                 icon: Icons.person,
               ),
               const SizedBox(height: 20),
-
-              // Email TextField
-              const CustomTextField(
+              CustomTextField(
+                controller: emailController,
                 hintText: "Your Email",
                 icon: Icons.email,
               ),
               const SizedBox(height: 20),
-
-              // Password TextField
-              const CustomTextField(
+              CustomTextField(
+                controller: passwordController,
                 hintText: "Password",
                 icon: Icons.lock,
                 obscureText: true,
               ),
               const SizedBox(height: 20),
-
-              // Confirm Password TextField
-              const CustomTextField(
+              CustomTextField(
+                controller: confirmPasswordController,
                 hintText: "Confirm Password",
                 icon: Icons.lock,
                 obscureText: true,
               ),
               const SizedBox(height: 30),
-
-              // Sign Up Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Add sign-up action here
-                  },
+                  onPressed: _saveUserData, // Save user data on sign up
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF3579FF),
                     padding: const EdgeInsets.symmetric(vertical: 15),
@@ -91,16 +155,9 @@ class SignUpPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-
-              // OR Divider
               const Row(
                 children: [
-                  Expanded(
-                    child: Divider(
-                      thickness: 1,
-                      color: Colors.grey,
-                    ),
-                  ),
+                  Expanded(child: Divider(thickness: 1, color: Colors.grey)),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
@@ -111,17 +168,10 @@ class SignUpPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: Divider(
-                      thickness: 1,
-                      color: Colors.grey,
-                    ),
-                  ),
+                  Expanded(child: Divider(thickness: 1, color: Colors.grey)),
                 ],
               ),
               const SizedBox(height: 20),
-
-              // Google and Facebook Buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -148,8 +198,6 @@ class SignUpPage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 20),
-
-              // Sign In Text
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -159,7 +207,6 @@ class SignUpPage extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      // Dispatch the NavigateToLoginScreenEvent
                       context.read<SignupBloc>().add(
                             NavigateToLoginScreenEvent(
                               context: context,
@@ -187,11 +234,13 @@ class SignUpPage extends StatelessWidget {
 
 // Custom TextField Widget
 class CustomTextField extends StatelessWidget {
+  final TextEditingController controller;
   final String hintText;
   final IconData icon;
   final bool obscureText;
 
   const CustomTextField({
+    required this.controller,
     required this.hintText,
     required this.icon,
     this.obscureText = false,
@@ -201,6 +250,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       obscureText: obscureText,
       decoration: InputDecoration(
         prefixIcon: Icon(icon),

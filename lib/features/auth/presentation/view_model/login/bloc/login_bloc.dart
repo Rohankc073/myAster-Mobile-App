@@ -7,36 +7,20 @@ part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final SignupBloc _signupBloc;
-  // final HomeCubit _homeCubit;
-  LoginBloc({
-    required SignupBloc signupBloc,
-    // required HomeCubit homeCubit,
-  })  : _signupBloc = signupBloc,
-        // _homeCubit = homeCubit,
-        super(LoginState.initial()) {
+  LoginBloc({required SignupBloc signupBloc}) : super(LoginState.initial()) {
+    // Handle navigation to the Login screen
+    on<NavigateRegisterScreenEvent>((event, emit) {
+      _handleNavigationToRegisterScreen(event);
+    });
+  }
 
-          on<NavigateRegisterScreenEvent>((event, emit) => ,)
-    // on<NavigateRegisterScreenEvent>((event, emit) {
-    //   Navigator.push(
-    //     event.context,
-    //     MaterialPageRoute(
-    //       builder: (context) => BlocProvider.value(
-    //           value: _signupBloc, child: event.destination),
-    //     ),
-    //   );
-    // });
-
-    // on<NavigateHomeScreenEvent>((event, emit) {
-    //   Navigator.pushReplacement(
-    //     event.context,
-    //     MaterialPageRoute(
-    //       builder: (context) => BlocProvider.value(
-    //         // value: _homeCubit,
-    //         child: event.destination,
-    //       ),
-    //     ),
-    //   );
-    // });
+  void _handleNavigationToRegisterScreen(NavigateRegisterScreenEvent event) {
+    Navigator.push(
+      event.context,
+      MaterialPageRoute(
+        builder: (context) =>
+            event.destination, // Destination widget (e.g., LoginPage)
+      ),
+    );
   }
 }
