@@ -150,16 +150,16 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: login, // Call login function
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 15, horizontal: 80),
+                        vertical: 15, horizontal: 70),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(15),
                     ),
                     backgroundColor: const Color(0xFF3579FF),
                   ),
                   child: const Text(
                     'Sign In',
                     style: TextStyle(
-                      fontSize: 19,
+                      fontSize: 18,
                       fontWeight: FontWeight.normal,
                       color: Colors.white,
                       fontFamily: "Rockwell",
@@ -167,6 +167,52 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
+                const Row(
+                  children: [
+                    Expanded(child: Divider(thickness: 1, color: Colors.grey)),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        "OR",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Expanded(child: Divider(thickness: 1, color: Colors.grey)),
+                  ],
+                ),
+                const SizedBox(height: 40),
+
+                // Social Media Icons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 16,
+                      backgroundColor: Colors.white,
+                      child: Image.asset(
+                        "assets/images/facebook.png",
+                        height: 30,
+                        width: 30,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    const SizedBox(width: 60),
+                    CircleAvatar(
+                      radius: 16,
+                      backgroundColor: Colors.white,
+                      child: Image.asset(
+                        "assets/images/google.png",
+                        height: 30,
+                        width: 30,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 30),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

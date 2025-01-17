@@ -18,6 +18,13 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
+  bool _isNameFocused = false;
+  bool _isEmailFocused = false;
+  bool _isPasswordFocused = false;
+  bool _isConfirmPasswordFocused = false;
+
   @override
   void initState() {
     super.initState();
@@ -26,7 +33,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   void _saveUserData() async {
     if (passwordController.text != confirmPasswordController.text) {
-      _showErrorDialog("Passwords do not match.");
+      _showSnackbar("Passwords do not match!", Colors.red);
       return;
     }
 
@@ -39,43 +46,26 @@ class _SignUpPageState extends State<SignUpPage> {
           passwordController.text, // Store password securely in real apps
     });
 
-    _showSuccessDialog("Account created successfully!");
+    _showSnackbar("Account created successfully!", Colors.green);
+
+    // Navigate to Login Page after delay
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+    });
   }
 
-  void _showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Error"),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("OK"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showSuccessDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Success"),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
-              );
-            },
-            child: const Text("OK"),
-          ),
-        ],
+  void _showSnackbar(String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: const TextStyle(color: Colors.white, fontSize: 14),
+        ),
+        backgroundColor: color,
+        duration: const Duration(seconds: 2),
       ),
     );
   }
@@ -86,59 +76,109 @@ class _SignUpPageState extends State<SignUpPage> {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 27.0),
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 10),
-              Image.asset(
-                'assets/images/Logo.png',
+              const SizedBox(height: 50),
+
+              // Top Image
+              SizedBox(
                 height: 300,
                 width: 300,
+                child:
+                    Image.asset('assets/images/login-i.png', fit: BoxFit.cover),
               ),
+              const SizedBox(height: 10),
+
+              // Create Account Heading
               const Text(
-                "Create Account",
+                "Create An Account",
                 style: TextStyle(
-                  fontSize: 28,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF3579FF),
                   fontFamily: 'Rockwell',
                 ),
               ),
-              const SizedBox(height: 30),
-              CustomTextField(
+              const SizedBox(height: 20),
+
+              // Input Fields
+              _buildTextField(
                 controller: nameController,
-                hintText: "Your Name",
                 icon: Icons.person,
+                labelText: "Your Name",
+                hintText: "Enter your name",
+                isFocused: _isNameFocused,
+                onFocusChange: (hasFocus) {
+                  setState(() {
+                    _isNameFocused = hasFocus;
+                  });
+                },
               ),
               const SizedBox(height: 20),
-              CustomTextField(
+
+              _buildTextField(
                 controller: emailController,
-                hintText: "Your Email",
                 icon: Icons.email,
+                labelText: "Your Email",
+                hintText: "Enter your email",
+                isFocused: _isEmailFocused,
+                onFocusChange: (hasFocus) {
+                  setState(() {
+                    _isEmailFocused = hasFocus;
+                  });
+                },
               ),
               const SizedBox(height: 20),
-              CustomTextField(
+
+              _buildPasswordField(
                 controller: passwordController,
-                hintText: "Password",
-                icon: Icons.lock,
-                obscureText: true,
+                labelText: "Password",
+                hintText: "Enter your password",
+                isPasswordVisible: _isPasswordVisible,
+                isFocused: _isPasswordFocused,
+                onVisibilityToggle: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
+                onFocusChange: (hasFocus) {
+                  setState(() {
+                    _isPasswordFocused = hasFocus;
+                  });
+                },
               ),
               const SizedBox(height: 20),
-              CustomTextField(
+
+              _buildPasswordField(
                 controller: confirmPasswordController,
-                hintText: "Confirm Password",
-                icon: Icons.lock,
-                obscureText: true,
+                labelText: "Confirm Password",
+                hintText: "Re-enter your password",
+                isPasswordVisible: _isConfirmPasswordVisible,
+                isFocused: _isConfirmPasswordFocused,
+                onVisibilityToggle: () {
+                  setState(() {
+                    _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                  });
+                },
+                onFocusChange: (hasFocus) {
+                  setState(() {
+                    _isConfirmPasswordFocused = hasFocus;
+                  });
+                },
               ),
               const SizedBox(height: 30),
+
+              // Sign Up Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _saveUserData, // Save user data on sign up
+                  onPressed: _saveUserData,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF3579FF),
-                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 14, horizontal: 50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -147,14 +187,16 @@ class _SignUpPageState extends State<SignUpPage> {
                     "Sign Up",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 19,
+                      fontSize: 18,
                       fontWeight: FontWeight.normal,
                       fontFamily: "Rockwell",
                     ),
                   ),
                 ),
               ),
+
               const SizedBox(height: 20),
+
               const Row(
                 children: [
                   Expanded(child: Divider(thickness: 1, color: Colors.grey)),
@@ -171,33 +213,37 @@ class _SignUpPageState extends State<SignUpPage> {
                   Expanded(child: Divider(thickness: 1, color: Colors.grey)),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
+
+              // Social Media Icons
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircleAvatar(
-                    radius: 20,
+                    radius: 16,
                     backgroundColor: Colors.white,
                     child: Image.asset(
                       "assets/images/facebook.png",
-                      height: 20,
-                      width: 20,
+                      height: 30,
+                      width: 30,
                       fit: BoxFit.contain,
                     ),
                   ),
-                  const SizedBox(width: 20),
+                  const SizedBox(width: 60),
                   CircleAvatar(
-                    radius: 20,
+                    radius: 16,
                     backgroundColor: Colors.white,
                     child: Image.asset(
                       "assets/images/google.png",
-                      height: 20,
-                      width: 20,
+                      height: 30,
+                      width: 30,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+
+              const SizedBox(height: 30),
+              // Already have an account
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -230,50 +276,67 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
-}
 
-// Custom TextField Widget
-class CustomTextField extends StatelessWidget {
-  final TextEditingController controller;
-  final String hintText;
-  final IconData icon;
-  final bool obscureText;
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required IconData icon,
+    required String labelText,
+    required String hintText,
+    required bool isFocused,
+    required Function(bool) onFocusChange,
+  }) {
+    return Focus(
+      onFocusChange: onFocusChange,
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          prefixIcon: isFocused ? null : Icon(icon, size: 18),
+          labelText: labelText,
+          hintText: hintText,
+          labelStyle: TextStyle(fontSize: 13, color: Colors.grey[500]),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+        ),
+      ),
+    );
+  }
 
-  const CustomTextField({
-    required this.controller,
-    required this.hintText,
-    required this.icon,
-    this.obscureText = false,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      obscureText: obscureText,
-      decoration: InputDecoration(
-        prefixIcon: Icon(icon),
-        labelText: hintText,
-        labelStyle: const TextStyle(
-          fontFamily: 'Rockwell',
-          fontSize: 14,
-          color: Colors.grey,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        hintText: hintText,
-        hintStyle: const TextStyle(
-          fontFamily: 'Rockwell',
-          fontSize: 14,
-          color: Colors.grey,
-        ),
-        filled: true,
-        fillColor: Colors.grey[200],
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 15,
-          horizontal: 10,
+  Widget _buildPasswordField({
+    required TextEditingController controller,
+    required String labelText,
+    required String hintText,
+    required bool isPasswordVisible,
+    required bool isFocused,
+    required VoidCallback onVisibilityToggle,
+    required Function(bool) onFocusChange,
+  }) {
+    return Focus(
+      onFocusChange: onFocusChange,
+      child: TextField(
+        controller: controller,
+        obscureText: !isPasswordVisible,
+        decoration: InputDecoration(
+          prefixIcon: isFocused ? null : const Icon(Icons.lock, size: 18),
+          labelText: labelText,
+          hintText: hintText,
+          labelStyle: TextStyle(fontSize: 13, color: Colors.grey[500]),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+          suffixIcon: IconButton(
+            icon: Icon(
+                isPasswordVisible ? Icons.visibility : Icons.visibility_off),
+            onPressed: onVisibilityToggle,
+          ),
         ),
       ),
     );
