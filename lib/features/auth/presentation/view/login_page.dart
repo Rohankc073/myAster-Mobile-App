@@ -88,28 +88,6 @@ class _LoginPageState extends State<LoginPage> {
                     fontFamily: 'Rockwell',
                   ),
                 ),
-                const SizedBox(height: 50),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Sign In',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                      fontFamily: 'Rockwell',
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'To Login please enter your \n email and your password',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                    fontFamily: "Rockwell",
-                  ),
-                  textAlign: TextAlign.center,
-                ),
                 const SizedBox(height: 30),
                 TextField(
                   controller: emailController,

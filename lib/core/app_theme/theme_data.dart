@@ -73,7 +73,7 @@ class AppTheme {
 
       // Bottom navigation bar theme customization
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: Colors.lightGreen, // Background color
+        backgroundColor: Colors.blue, // Background color
         selectedItemColor: Colors.white, // Selected item color
         unselectedItemColor: Colors.black, // Unselected item color
         type: BottomNavigationBarType.fixed,
