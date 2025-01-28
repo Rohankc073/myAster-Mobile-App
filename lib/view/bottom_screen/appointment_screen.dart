@@ -144,7 +144,7 @@ class NewAppointmentForm extends StatelessWidget {
                 );
                 Navigator.pop(context);
               },
-              child: const Text("Submit"),
+              child: const Text("Submit"), //Submit
             ),
           ],
         ),
