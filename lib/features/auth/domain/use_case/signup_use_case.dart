@@ -8,15 +8,15 @@ import 'package:myasteer/features/auth/domain/repository/auth_repository.dart';
 class RegisterUserParams extends Equatable {
   final String? userId;
   final String email;
-  final String fname;
-  final String lname;
+  final String name;
+  final String phone;
   final String password;
 
   const RegisterUserParams({
     this.userId,
     required this.email,
-    required this.fname,
-    required this.lname,
+    required this.name,
+    required this.phone,
     required this.password,
   });
 
@@ -24,13 +24,13 @@ class RegisterUserParams extends Equatable {
   const RegisterUserParams.initial({
     this.userId,
     required this.email,
-    required this.fname,
-    required this.lname,
+    required this.name,
+    required this.phone,
     required this.password,
   });
 
   @override
-  List<Object?> get props => [userId, email, fname, lname, password];
+  List<Object?> get props => [userId, email, name, phone, password];
 }
 
 class RegisterUseCase implements UsecaseWithParams<void, RegisterUserParams> {
@@ -43,7 +43,8 @@ class RegisterUseCase implements UsecaseWithParams<void, RegisterUserParams> {
     final authEntity = AuthEntity(
       userId: params.userId,
       email: params.email,
-      fName: params.fname,
+      name: params.name,
+      phone: params.phone,
       password: params.password,
     );
     return repository.registerUser(authEntity);
