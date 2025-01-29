@@ -25,14 +25,13 @@ class ApiService {
       };
   }
 
-  Future<Map<String, dynamic>?> loginStudent(
-      String username, String password) async {
+  Future<Map<String, dynamic>?> loginUser(String email, String password) async {
     try {
       // Sending the login request
       final response = await _dio.post(
         ApiEndpoints.login,
         data: {
-          'username': username,
+          'email': email,
           'password': password,
         },
       );

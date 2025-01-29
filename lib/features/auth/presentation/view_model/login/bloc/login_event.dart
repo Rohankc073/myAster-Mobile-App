@@ -19,3 +19,26 @@ class NavigateRegisterScreenEvent extends LoginEvent {
   @override
   List<Object?> get props => [context, destination];
 }
+
+class LoginStudentEvent extends LoginEvent {
+  final String email;
+  final String password;
+
+  const LoginStudentEvent({
+    required this.email,
+    required this.password,
+  });
+
+  @override
+  List<Object?> get props => [email, password];
+}
+
+class NavigateHomeScreenEvent extends LoginEvent {
+  final BuildContext context;
+  final Widget destination;
+
+  const NavigateHomeScreenEvent({
+    required this.context,
+    required this.destination,
+  });
+}

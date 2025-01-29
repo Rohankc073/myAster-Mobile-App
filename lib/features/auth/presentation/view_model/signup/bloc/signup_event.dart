@@ -1,21 +1,34 @@
 part of 'signup_bloc.dart';
 
-abstract class SignupEvent extends Equatable {
+sealed class SignupEvent extends Equatable {
   const SignupEvent();
 
   @override
-  List<Object?> get props => [];
+  List<Object> get props => [];
 }
 
-class NavigateToLoginScreenEvent extends SignupEvent {
+class RegisterUser extends SignupEvent {
   final BuildContext context;
-  final Widget destination;
+  final String email;
+  final String name;
+  final String phone;
+  final String password;
 
-  const NavigateToLoginScreenEvent({
+  const RegisterUser({
     required this.context,
-    required this.destination,
+    required this.email,
+    required this.name,
+    required this.phone,
+    required this.password,
   });
-
-  @override
-  List<Object?> get props => [context, destination];
 }
+
+// class NavigateLoginScreenEvent extends SignupEvent {
+//   final BuildContext context;
+//   final Widget destination;
+
+//   const NavigateLoginScreenEvent({
+//     required this.context,
+//     required this.destination,
+//   });
+// }
