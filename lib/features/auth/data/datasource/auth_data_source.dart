@@ -8,5 +8,6 @@ abstract interface class IAuthDataSource {
   Future<void> registerUser(AuthEntity user);
 
   Future<AuthEntity> getCurrentUser();
+
   Future<String> uploadProfilePicture(File file);
 }
