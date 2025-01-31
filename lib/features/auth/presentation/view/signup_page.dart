@@ -1,6 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:myasteer/features/auth/presentation/view/login_page.dart';
 import 'package:myasteer/features/auth/presentation/view_model/signup/bloc/signup_bloc.dart';
 
@@ -12,62 +14,52 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
 
   bool _isPasswordVisible = false;
-  bool _isConfirmPasswordVisible = false;
-  bool _isNameFocused = false;
-  bool _isEmailFocused = false;
-  bool _isPasswordFocused = false;
-  bool _isConfirmPasswordFocused = false;
+  File? _img;
 
-  @override
-  void initState() {
-    super.initState();
-    Hive.initFlutter(); // Ensure Hive is initialized
+  Future _browseImage(ImageSource imageSource) async {
+    try {
+      final image = await ImagePicker().pickImage(source: imageSource);
+      if (image != null) {
+        setState(() {
+          _img = File(image.path);
+          context.read<SignupBloc>().add(LoadImage(file: _img!));
+        });
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
-  void _saveUserData() async {
-    if (passwordController.text != confirmPasswordController.text) {
-      _showSnackbar("Passwords do not match!", Colors.red);
-      return;
-    }
+  void _registerUser() {
+    if (_formKey.currentState!.validate()) {
+      context.read<SignupBloc>().add(
+            RegisterUser(
+              context: context,
+              name: nameController.text,
+              email: emailController.text,
+              phone: phoneController.text,
+              password: passwordController.text,
+            ),
+          );
 
-    var userBox = await Hive.openBox('users');
-
-    userBox.put(emailController.text, {
-      "name": nameController.text,
-      "email": emailController.text,
-      "password":
-          passwordController.text, // Store password securely in real apps
-    });
-
-    _showSnackbar("Account created successfully!", Colors.green);
-
-    // Navigate to Login Page after delay
-    Future.delayed(const Duration(seconds: 2), () {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Registered Successfully!'),
+          backgroundColor: Colors.green,
+        ),
+      );
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const LoginPage()),
+        MaterialPageRoute(builder: (context) => LoginView()),
       );
-    });
-  }
-
-  void _showSnackbar(String message, Color color) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: const TextStyle(color: Colors.white, fontSize: 14),
-        ),
-        backgroundColor: color,
-        duration: const Duration(seconds: 2),
-      ),
-    );
+    }
   }
 
   @override
@@ -77,268 +69,151 @@ class _SignUpPageState extends State<SignUpPage> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 50),
-
-              // Top Image
-              SizedBox(
-                height: 300,
-                width: 300,
-                child:
-                    Image.asset('assets/images/login-i.png', fit: BoxFit.cover),
-              ),
-              const SizedBox(height: 10),
-
-              // Create Account Heading
-              const Text(
-                "Create An Account",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF3579FF),
-                  fontFamily: 'Rockwell',
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // Input Fields
-              _buildTextField(
-                controller: nameController,
-                icon: Icons.person,
-                labelText: "Your Name",
-                hintText: "Enter your name",
-                isFocused: _isNameFocused,
-                onFocusChange: (hasFocus) {
-                  setState(() {
-                    _isNameFocused = hasFocus;
-                  });
-                },
-              ),
-              const SizedBox(height: 20),
-
-              _buildTextField(
-                controller: emailController,
-                icon: Icons.email,
-                labelText: "Your Email",
-                hintText: "Enter your email",
-                isFocused: _isEmailFocused,
-                onFocusChange: (hasFocus) {
-                  setState(() {
-                    _isEmailFocused = hasFocus;
-                  });
-                },
-              ),
-              const SizedBox(height: 20),
-
-              _buildPasswordField(
-                controller: passwordController,
-                labelText: "Password",
-                hintText: "Enter your password",
-                isPasswordVisible: _isPasswordVisible,
-                isFocused: _isPasswordFocused,
-                onVisibilityToggle: () {
-                  setState(() {
-                    _isPasswordVisible = !_isPasswordVisible;
-                  });
-                },
-                onFocusChange: (hasFocus) {
-                  setState(() {
-                    _isPasswordFocused = hasFocus;
-                  });
-                },
-              ),
-              const SizedBox(height: 20),
-
-              _buildPasswordField(
-                controller: confirmPasswordController,
-                labelText: "Confirm Password",
-                hintText: "Re-enter your password",
-                isPasswordVisible: _isConfirmPasswordVisible,
-                isFocused: _isConfirmPasswordFocused,
-                onVisibilityToggle: () {
-                  setState(() {
-                    _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
-                  });
-                },
-                onFocusChange: (hasFocus) {
-                  setState(() {
-                    _isConfirmPasswordFocused = hasFocus;
-                  });
-                },
-              ),
-              const SizedBox(height: 30),
-
-              // Sign Up Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _saveUserData,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF3579FF),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 14, horizontal: 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Text(
-                    "Sign Up",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.normal,
-                      fontFamily: "Rockwell",
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              const Row(
-                children: [
-                  Expanded(child: Divider(thickness: 1, color: Colors.grey)),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      "OR",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontWeight: FontWeight.bold,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 50),
+                InkWell(
+                  onTap: () {
+                    showModalBottomSheet(
+                      backgroundColor: Colors.grey[300],
+                      context: context,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(20)),
                       ),
-                    ),
-                  ),
-                  Expanded(child: Divider(thickness: 1, color: Colors.grey)),
-                ],
-              ),
-              const SizedBox(height: 30),
-
-              // Social Media Icons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 16,
-                    backgroundColor: Colors.white,
-                    child: Image.asset(
-                      "assets/images/facebook.png",
-                      height: 30,
-                      width: 30,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  const SizedBox(width: 60),
-                  CircleAvatar(
-                    radius: 16,
-                    backgroundColor: Colors.white,
-                    child: Image.asset(
-                      "assets/images/google.png",
-                      height: 30,
-                      width: 30,
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 30),
-              // Already have an account
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Already have an account?",
-                    style: TextStyle(fontFamily: 'Rockwell'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      context.read<SignupBloc>().add(
-                            NavigateToLoginScreenEvent(
-                              context: context,
-                              destination: const LoginPage(),
+                      builder: (context) => Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                _browseImage(ImageSource.camera);
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(Icons.camera),
+                              label: const Text('Camera'),
                             ),
-                          );
-                    },
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                _browseImage(ImageSource.gallery);
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(Icons.image),
+                              label: const Text('Gallery'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundImage: _img != null
+                        ? FileImage(_img!)
+                        : const AssetImage('assets/images/profile.png')
+                            as ImageProvider,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                _buildTextField(nameController, "Your Name", "Enter your name",
+                    Icons.person),
+                const SizedBox(height: 20),
+                _buildTextField(emailController, "Your Email",
+                    "Enter your email", Icons.email),
+                const SizedBox(height: 20),
+                _buildTextField(phoneController, "Phone Number",
+                    "Enter your phone number", Icons.phone),
+                const SizedBox(height: 20),
+                _buildPasswordField(),
+                const SizedBox(height: 30),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _registerUser,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF3579FF),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 14, horizontal: 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                     child: const Text(
-                      "Sign In",
+                      "Sign Up",
                       style: TextStyle(
-                        color: Color(0xFF3579FF),
-                        fontFamily: 'Rockwell',
+                        color: Colors.white,
+                        fontSize: 18,
                       ),
                     ),
                   ),
-                ],
-              ),
-            ],
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Already have an account?"),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginView()),
+                        );
+                      },
+                      child: const Text(
+                        "Sign In",
+                        style: TextStyle(color: Color(0xFF3579FF)),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required IconData icon,
-    required String labelText,
-    required String hintText,
-    required bool isFocused,
-    required Function(bool) onFocusChange,
-  }) {
-    return Focus(
-      onFocusChange: onFocusChange,
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          prefixIcon: isFocused ? null : Icon(icon, size: 18),
-          labelText: labelText,
-          hintText: hintText,
-          labelStyle: TextStyle(fontSize: 13, color: Colors.grey[500]),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-        ),
+  Widget _buildTextField(TextEditingController controller, String labelText,
+      String hintText, IconData icon) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        prefixIcon: Icon(icon, size: 18),
+        labelText: labelText,
+        hintText: hintText,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        filled: true,
+        fillColor: Colors.white,
       ),
+      validator: (value) =>
+          value == null || value.isEmpty ? 'Please enter $labelText' : null,
     );
   }
 
-  Widget _buildPasswordField({
-    required TextEditingController controller,
-    required String labelText,
-    required String hintText,
-    required bool isPasswordVisible,
-    required bool isFocused,
-    required VoidCallback onVisibilityToggle,
-    required Function(bool) onFocusChange,
-  }) {
-    return Focus(
-      onFocusChange: onFocusChange,
-      child: TextField(
-        controller: controller,
-        obscureText: !isPasswordVisible,
-        decoration: InputDecoration(
-          prefixIcon: isFocused ? null : const Icon(Icons.lock, size: 18),
-          labelText: labelText,
-          hintText: hintText,
-          labelStyle: TextStyle(fontSize: 13, color: Colors.grey[500]),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-          suffixIcon: IconButton(
-            icon: Icon(
-                isPasswordVisible ? Icons.visibility : Icons.visibility_off),
-            onPressed: onVisibilityToggle,
-          ),
+  Widget _buildPasswordField() {
+    return TextFormField(
+      controller: passwordController,
+      obscureText: !_isPasswordVisible,
+      decoration: InputDecoration(
+        prefixIcon: const Icon(Icons.lock, size: 18),
+        labelText: "Password",
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        filled: true,
+        fillColor: Colors.white,
+        suffixIcon: IconButton(
+          icon: Icon(
+              _isPasswordVisible ? Icons.visibility : Icons.visibility_off),
+          onPressed: () =>
+              setState(() => _isPasswordVisible = !_isPasswordVisible),
         ),
       ),
+      validator: (value) =>
+          value == null || value.isEmpty ? 'Please enter password' : null,
     );
   }
 }

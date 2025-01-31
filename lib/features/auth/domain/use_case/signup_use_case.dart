@@ -7,6 +7,7 @@ import 'package:myasteer/features/auth/domain/repository/auth_repository.dart';
 
 class RegisterUserParams extends Equatable {
   final String? userId;
+  final String? image;
   final String email;
   final String name;
   final String phone;
@@ -14,6 +15,7 @@ class RegisterUserParams extends Equatable {
 
   const RegisterUserParams({
     this.userId,
+    this.image,
     required this.email,
     required this.name,
     required this.phone,
@@ -23,6 +25,7 @@ class RegisterUserParams extends Equatable {
   //intial constructor
   const RegisterUserParams.initial({
     this.userId,
+    this.image,
     required this.email,
     required this.name,
     required this.phone,
@@ -30,7 +33,7 @@ class RegisterUserParams extends Equatable {
   });
 
   @override
-  List<Object?> get props => [userId, email, name, phone, password];
+  List<Object?> get props => [userId, email, name, phone, password, image];
 }
 
 class RegisterUseCase implements UsecaseWithParams<void, RegisterUserParams> {
@@ -42,6 +45,7 @@ class RegisterUseCase implements UsecaseWithParams<void, RegisterUserParams> {
   Future<Either<Failure, void>> call(RegisterUserParams params) {
     final authEntity = AuthEntity(
       userId: params.userId,
+      image: params.image,
       email: params.email,
       name: params.name,
       phone: params.phone,

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:myasteer/core/error/failure.dart';
 import 'package:myasteer/features/auth/data/datasource/local_data_source/local_data_source.dart';
@@ -39,5 +41,11 @@ class AuthLocalRepository implements IAuthRepository {
     } catch (e) {
       return Left(LocalDatabaseFailure(message: e.toString()));
     }
+  }
+
+  @override
+  Future<Either<Failure, String>> uploadProfilePicture(File file) {
+    // TODO: implement uploadProfilePicture
+    throw UnimplementedError();
   }
 }

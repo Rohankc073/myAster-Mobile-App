@@ -3,7 +3,6 @@ part of 'login_bloc.dart';
 class LoginState {
   final bool isLoading;
   final bool isSuccess;
-
   LoginState({
     required this.isLoading,
     required this.isSuccess,

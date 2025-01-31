@@ -1,71 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:myasteer/features/auth/presentation/view/signup_page.dart';
 import 'package:myasteer/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
-import 'package:myasteer/view/dashboard.dart';
+import 'package:myasteer/view/home_page.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginView extends StatelessWidget {
+  LoginView({super.key});
 
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController(text: 'kiran');
+  final _passwordController = TextEditingController(text: 'test12345');
+  final _gap = const SizedBox(height: 8);
 
-class _LoginPageState extends State<LoginPage> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-
-  void login() async {
-    var userBox = await Hive.openBox('users'); // Open Hive box
-    String email = emailController.text;
-    String password = passwordController.text;
-
-    // Check if email exists in Hive storage
-    if (userBox.containsKey(email)) {
-      Map<String, dynamic> userData = userBox.get(email);
-      if (userData["password"] == password) {
-        _showSuccessSnackBar("Login successful!");
-
-        // Navigate to Dashboard after showing success message
-        Future.delayed(const Duration(seconds: 1), () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const Dashboard()),
-          );
-        });
-      } else {
-        _showErrorSnackBar("Incorrect password. Try again.");
-      }
-    } else {
-      _showErrorSnackBar("No account found with this email.");
-    }
-  }
-
-  void _showSuccessSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: const TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.green,
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
-  void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: const TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
+  // Login Function
 
   @override
   Widget build(BuildContext context) {
@@ -76,9 +23,7 @@ class _LoginPageState extends State<LoginPage> {
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 10),
                 const Text(
                   'Welcome Back',
                   style: TextStyle(
@@ -89,62 +34,98 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 30),
-                TextField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    hintText: 'Enter Your Email',
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      // Username Input
+                      TextFormField(
+                        key: const ValueKey('username'),
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          labelText: 'Username',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          hintText: 'Enter Your Username',
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter username';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20),
+
+                      // Password Input
+                      TextFormField(
+                        key: const ValueKey('password'),
+                        controller: _passwordController,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          hintText: 'Enter Your Password',
+                          suffixIcon: const Icon(Icons.visibility_off),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter password';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 10),
+
+                      // Forgot Password link
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () {},
+                          child: const Text(
+                            'Forget Password',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
+                      // Login Button
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            final email = _emailController.text.trim();
+                            final password = _passwordController.text.trim();
+
+                            context.read<LoginBloc>().add(
+                                  LoginStudentEvent(
+                                    email: email,
+                                    password: password,
+                                    context: context,
+                                    destination: const HomePage(),
+                                  ),
+                                );
+                          }
+                        },
+                        child: const Text(
+                          'Sign In',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.white,
+                            fontFamily: "Rockwell",
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 20),
-                TextField(
-                  controller: passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    hintText: 'Enter Your Password',
-                    suffixIcon: const Icon(Icons.visibility_off),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'Forget Password',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: login, // Call login function
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15, horizontal: 70),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    backgroundColor: const Color(0xFF3579FF),
-                  ),
-                  child: const Text(
-                    'Sign In',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.white,
-                      fontFamily: "Rockwell",
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
+
+                // Divider
                 const Row(
                   children: [
                     Expanded(child: Divider(thickness: 1, color: Colors.grey)),
@@ -163,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 40),
 
-                // Social Media Icons
+                // Social Media Icons (optional)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -191,6 +172,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 30),
 
+                // Sign Up prompt
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
