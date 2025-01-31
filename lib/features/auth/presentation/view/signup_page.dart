@@ -66,9 +66,21 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text("Create an Account",
+            style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: Form(
             key: _formKey,
             child: Column(
@@ -90,13 +102,12 @@ class _SignUpPageState extends State<SignUpPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             ElevatedButton.icon(
-                              onPressed: () {
-                                _browseImage(ImageSource.camera);
-                                Navigator.pop(context);
-                              },
-                              icon: const Icon(Icons.camera),
-                              label: const Text('Camera'),
-                            ),
+                                onPressed: () {
+                                  _browseImage(ImageSource.camera);
+                                  Navigator.pop(context);
+                                },
+                                icon: const Icon(Icons.camera),
+                                label: const Text('Camera')),
                             ElevatedButton.icon(
                               onPressed: () {
                                 _browseImage(ImageSource.gallery);
@@ -111,14 +122,14 @@ class _SignUpPageState extends State<SignUpPage> {
                     );
                   },
                   child: CircleAvatar(
-                    radius: 50,
+                    radius: 90,
                     backgroundImage: _img != null
                         ? FileImage(_img!)
-                        : const AssetImage('assets/images/profile.png')
+                        : const AssetImage('assets/images/dummy.jpg')
                             as ImageProvider,
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 40),
                 _buildTextField(nameController, "Your Name", "Enter your name",
                     Icons.person),
                 const SizedBox(height: 20),
