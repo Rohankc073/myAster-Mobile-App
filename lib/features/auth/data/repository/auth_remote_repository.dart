@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:myasteer/core/error/failure.dart';
 import 'package:myasteer/features/auth/data/datasource/remote_data_source/remote_data_source.dart';
@@ -35,6 +37,15 @@ class AuthRemoteRepository implements IAuthRepository {
     try {
       await _authRemoteDataSource.registerUser(user);
       return const Right(null);
+    } catch (e) {
+      return Left(ApiFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> uploadProfilePicture(File file) async {
+    try {
+      return Right(await _authRemoteDataSource.uploadProfilePicture(file));
     } catch (e) {
       return Left(ApiFailure(message: e.toString()));
     }

@@ -1,12 +1,8 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myasteer/features/auth/presentation/view/signup_page.dart';
 import 'package:myasteer/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
-
-import '../../../../core/common/snackbar/my_snackbar.dart';
-import '../../../../core/network/api_service.dart';
-import '../../../home/presentation/view/home_view.dart';
+import 'package:myasteer/view/home_page.dart';
 
 class LoginView extends StatelessWidget {
   LoginView({super.key});
@@ -14,57 +10,9 @@ class LoginView extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController(text: 'kiran');
   final _passwordController = TextEditingController(text: 'test12345');
-
   final _gap = const SizedBox(height: 8);
 
   // Login Function
-  void login(BuildContext context) async {
-    if (_formKey.currentState!.validate()) {
-      final email = _emailController.text.trim();
-      final password = _passwordController.text.trim();
-
-      try {
-        final apiService = ApiService(Dio());
-        final user = await apiService.loginUser(email, password);
-
-        if (user != null && user['success'] == true) {
-          // Log the response for debugging purposes
-          print("Login successful: $user");
-
-          // Show success message and navigate
-          showMySnackBar(
-            context: context,
-            message: 'Login Successful!',
-            color: Colors.green,
-          );
-
-          // Navigate to Home screen
-          context.read<LoginBloc>().add(
-                NavigateHomeScreenEvent(
-                  destination: const HomeScreen(),
-                  context: context,
-                ),
-              );
-        } else {
-          // Handle failed login
-          print("Invalid login response: $user");
-          showMySnackBar(
-            context: context,
-            message: 'Invalid username or password',
-            color: Colors.red,
-          );
-        }
-      } catch (e) {
-        // Handle any error during the API call
-        print("Error during login: $e");
-        showMySnackBar(
-          context: context,
-          message: 'An error occurred. Please try again.',
-          color: Colors.red,
-        );
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,15 +95,21 @@ class LoginView extends StatelessWidget {
 
                       // Login Button
                       ElevatedButton(
-                        onPressed: () => login(context),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 15, horizontal: 70),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          backgroundColor: const Color(0xFF3579FF),
-                        ),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            final email = _emailController.text.trim();
+                            final password = _passwordController.text.trim();
+
+                            context.read<LoginBloc>().add(
+                                  LoginStudentEvent(
+                                    email: email,
+                                    password: password,
+                                    context: context,
+                                    destination: const HomePage(),
+                                  ),
+                                );
+                          }
+                        },
                         child: const Text(
                           'Sign In',
                           style: TextStyle(

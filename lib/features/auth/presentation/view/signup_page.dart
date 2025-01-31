@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:myasteer/features/auth/presentation/view/login_page.dart';
 import 'package:myasteer/features/auth/presentation/view_model/signup/bloc/signup_bloc.dart';
 
@@ -18,6 +21,21 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController passwordController = TextEditingController();
 
   bool _isPasswordVisible = false;
+  File? _img;
+
+  Future _browseImage(ImageSource imageSource) async {
+    try {
+      final image = await ImagePicker().pickImage(source: imageSource);
+      if (image != null) {
+        setState(() {
+          _img = File(image.path);
+          context.read<SignupBloc>().add(LoadImage(file: _img!));
+        });
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 
   void _registerUser() {
     if (_formKey.currentState!.validate()) {
@@ -57,20 +75,47 @@ class _SignUpPageState extends State<SignUpPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 50),
-                SizedBox(
-                  height: 300,
-                  width: 300,
-                  child: Image.asset('assets/images/login-i.png',
-                      fit: BoxFit.cover),
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  "Create An Account",
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF3579FF),
-                    fontFamily: 'Rockwell',
+                InkWell(
+                  onTap: () {
+                    showModalBottomSheet(
+                      backgroundColor: Colors.grey[300],
+                      context: context,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(20)),
+                      ),
+                      builder: (context) => Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                _browseImage(ImageSource.camera);
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(Icons.camera),
+                              label: const Text('Camera'),
+                            ),
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                _browseImage(ImageSource.gallery);
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(Icons.image),
+                              label: const Text('Gallery'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundImage: _img != null
+                        ? FileImage(_img!)
+                        : const AssetImage('assets/images/profile.png')
+                            as ImageProvider,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -102,8 +147,6 @@ class _SignUpPageState extends State<SignUpPage> {
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
-                        fontWeight: FontWeight.normal,
-                        fontFamily: "Rockwell",
                       ),
                     ),
                   ),
@@ -112,8 +155,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Already have an account?",
-                        style: TextStyle(fontFamily: 'Rockwell')),
+                    const Text("Already have an account?"),
                     TextButton(
                       onPressed: () {
                         Navigator.pushReplacement(
@@ -123,10 +165,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       },
                       child: const Text(
                         "Sign In",
-                        style: TextStyle(
-                          color: Color(0xFF3579FF),
-                          fontFamily: 'Rockwell',
-                        ),
+                        style: TextStyle(color: Color(0xFF3579FF)),
                       ),
                     ),
                   ],
@@ -147,18 +186,12 @@ class _SignUpPageState extends State<SignUpPage> {
         prefixIcon: Icon(icon, size: 18),
         labelText: labelText,
         hintText: hintText,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         filled: true,
         fillColor: Colors.white,
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter $labelText';
-        }
-        return null;
-      },
+      validator: (value) =>
+          value == null || value.isEmpty ? 'Please enter $labelText' : null,
     );
   }
 
@@ -169,30 +202,18 @@ class _SignUpPageState extends State<SignUpPage> {
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.lock, size: 18),
         labelText: "Password",
-        hintText: "Enter your password",
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         filled: true,
         fillColor: Colors.white,
         suffixIcon: IconButton(
           icon: Icon(
               _isPasswordVisible ? Icons.visibility : Icons.visibility_off),
-          onPressed: () {
-            setState(() {
-              _isPasswordVisible = !_isPasswordVisible;
-            });
-          },
+          onPressed: () =>
+              setState(() => _isPasswordVisible = !_isPasswordVisible),
         ),
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter password';
-        } else if (value.length < 6) {
-          return 'Password must be at least 6 characters long';
-        }
-        return null;
-      },
+      validator: (value) =>
+          value == null || value.isEmpty ? 'Please enter password' : null,
     );
   }
 }

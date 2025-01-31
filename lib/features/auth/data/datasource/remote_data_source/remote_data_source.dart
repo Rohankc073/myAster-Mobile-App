@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:myasteer/app/constants/api_endpoints.dart';
 import 'package:myasteer/features/auth/data/datasource/auth_data_source.dart';
@@ -49,6 +51,30 @@ class AuthRemoteDataSource implements IAuthDataSource {
       }
     } on DioException catch (e) {
       throw Exception('Network error during registration: ${e.message}');
+    } catch (e) {
+      throw Exception('Unexpected error: $e');
+    }
+  }
+
+  @override
+  Future<String> uploadProfilePicture(File file) async {
+    try {
+      String fileName = file.path.split('/').last;
+      FormData formData = FormData.fromMap({
+        "profilePicture":
+            await MultipartFile.fromFile(file.path, filename: fileName)
+      });
+
+      Response response =
+          await _dio.post(ApiEndpoints.uploadImage, data: formData);
+
+      if (response.statusCode == 200) {
+        return response.data['data'];
+      } else {
+        throw Exception(response.statusMessage);
+      }
+    } on DioException catch (e) {
+      throw Exception('Network error during profile upload: ${e.message}');
     } catch (e) {
       throw Exception('Unexpected error: $e');
     }

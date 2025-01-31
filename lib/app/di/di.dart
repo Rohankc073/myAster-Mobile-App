@@ -8,6 +8,7 @@ import 'package:myasteer/features/auth/data/repository/auth_local_repository.dar
 import 'package:myasteer/features/auth/data/repository/auth_remote_repository.dart';
 import 'package:myasteer/features/auth/domain/use_case/login_use_case.dart';
 import 'package:myasteer/features/auth/domain/use_case/signup_use_case.dart';
+import 'package:myasteer/features/auth/domain/use_case/upload_image_usecase.dart';
 import 'package:myasteer/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
 import 'package:myasteer/features/auth/presentation/view_model/signup/bloc/signup_bloc.dart';
 import 'package:myasteer/features/splash/presentation/view_model/cubit/splash_cubit.dart';
@@ -38,6 +39,12 @@ _initSignupDependencies() async {
     () => AuthLocalDataSource(getIt<HiveService>()),
   );
 
+  getIt.registerLazySingleton<UploadImageUsecase>(
+    () => UploadImageUsecase(
+      getIt<AuthRemoteRepository>(),
+    ),
+  );
+
   // init local repository
   getIt.registerLazySingleton(
     () => AuthLocalRepository(getIt<AuthLocalDataSource>()),
@@ -60,6 +67,7 @@ _initSignupDependencies() async {
   getIt.registerFactory<SignupBloc>(
     () => SignupBloc(
       registerUseCase: getIt(),
+      uploadImageUsecase: getIt(),
     ),
   );
 

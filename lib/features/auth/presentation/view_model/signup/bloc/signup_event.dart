@@ -7,6 +7,13 @@ sealed class SignupEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class LoadImage extends SignupEvent {
+  final File file;
+  const LoadImage({
+    required this.file,
+  });
+}
+
 class RegisterUser extends SignupEvent {
   final BuildContext context;
   final String email;
