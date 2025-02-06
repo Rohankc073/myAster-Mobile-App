@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:myasteer/app/shared_prefs/token_shared_prefs.dart';
 import 'package:myasteer/core/network/api_service.dart';
 import 'package:myasteer/core/network/hive_service.dart';
 import 'package:myasteer/features/auth/data/datasource/local_data_source/local_data_source.dart';
@@ -12,6 +13,7 @@ import 'package:myasteer/features/auth/domain/use_case/upload_image_usecase.dart
 import 'package:myasteer/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
 import 'package:myasteer/features/auth/presentation/view_model/signup/bloc/signup_bloc.dart';
 import 'package:myasteer/features/splash/presentation/view_model/cubit/splash_cubit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final getIt = GetIt.instance;
 
@@ -90,14 +92,23 @@ _initSignupDependencies() async {
 }
 
 _initLoginDependencies() async {
-  if (!getIt.isRegistered<LoginUseCase>()) {
-    getIt.registerLazySingleton<LoginUseCase>(
-        () => LoginUseCase(authRepository: getIt<AuthRemoteRepository>()));
-  }
+  // =========================== Token Shared Preferences ===========================
+  getIt.registerLazySingleton<TokenSharedPrefs>(
+    () => TokenSharedPrefs(getIt<SharedPreferences>()),
+  );
+
+  // =========================== Usecases ===========================
+  getIt.registerLazySingleton<LoginUseCase>(
+    () => LoginUseCase(
+      authRepository: getIt<AuthRemoteRepository>(),
+      tokenSharedPrefs: getIt<TokenSharedPrefs>(),
+    ),
+  );
+
   getIt.registerFactory<LoginBloc>(
     () => LoginBloc(
-      signupBloc: getIt<SignupBloc>(),
       loginUseCase: getIt<LoginUseCase>(),
+      signupBloc: getIt<SignupBloc>(),
     ),
   );
 }

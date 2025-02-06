@@ -22,6 +22,14 @@ class RegisterUserParams extends Equatable {
     required this.password,
   });
 
+  const RegisterUserParams.empty()
+      : userId = '_empty.string',
+        image = '_empyt.string',
+        email = '_empty.string',
+        name = '_empty.string',
+        phone = '_empty.string',
+        password = "_empty.string";
+
   //intial constructor
   const RegisterUserParams.initial({
     this.userId,
@@ -37,12 +45,12 @@ class RegisterUserParams extends Equatable {
 }
 
 class RegisterUseCase implements UsecaseWithParams<void, RegisterUserParams> {
-  final IAuthRepository repository;
+  final IAuthRepository userRepository;
 
-  RegisterUseCase(this.repository);
+  RegisterUseCase(this.userRepository);
 
   @override
-  Future<Either<Failure, void>> call(RegisterUserParams params) {
+  Future<Either<Failure, void>> call(RegisterUserParams params) async {
     final authEntity = AuthEntity(
       userId: params.userId,
       image: params.image,
@@ -51,6 +59,6 @@ class RegisterUseCase implements UsecaseWithParams<void, RegisterUserParams> {
       phone: params.phone,
       password: params.password,
     );
-    return repository.registerUser(authEntity);
+    return await userRepository.registerUser(authEntity);
   }
 }
