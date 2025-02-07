@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myasteer/core/common/snackbar/my_snackbar.dart';
 import 'package:myasteer/features/auth/domain/use_case/login_use_case.dart';
 import 'package:myasteer/features/auth/presentation/view_model/signup/bloc/signup_bloc.dart';
 
@@ -10,67 +9,61 @@ part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginUseCase _loginUseCase;
+  final SignupBloc _signupBloc;
 
   LoginBloc({
-    required SignupBloc signupBloc,
     required LoginUseCase loginUseCase,
+    required SignupBloc signupBloc,
   })  : _loginUseCase = loginUseCase,
+        _signupBloc = signupBloc,
         super(LoginState.initial()) {
-    // Handle navigation to the Login screen
-    on<NavigateRegisterScreenEvent>((event, emit) {
-      _handleNavigationToRegisterScreen(event);
-    });
+    // Register event handlers
+    on<NavigateRegisterScreenEvent>(_handleNavigationToRegisterScreen);
+    on<LoginUserEvent>(_handleLoginUser);
   }
 
-  void _handleNavigationToRegisterScreen(NavigateRegisterScreenEvent event) {
+  // Navigation to Register Screen
+  void _handleNavigationToRegisterScreen(
+      NavigateRegisterScreenEvent event, Emitter<LoginState> emit) {
     Navigator.push(
       event.context,
       MaterialPageRoute(
-        builder: (context) =>
-            event.destination, // Destination widget (e.g., LoginPage)
+        builder: (context) => event.destination, // SignUpPage
       ),
     );
+  }
 
-    on<LoginStudentEvent>((event, emit) async {
-      emit(state.copyWith(isLoading: true));
+  // Login Event Handler
+  Future<void> _handleLoginUser(
+      LoginUserEvent event, Emitter<LoginState> emit) async {
+    emit(state.copyWith(isLoading: true, errorMessage: null));
 
-      final params = LoginUserParams(
-        email: event.email,
-        password: event.password,
-      );
+    final params = LoginUserParams(
+      email: event.email,
+      password: event.password,
+    );
 
-      final result = await _loginUseCase.call(params);
+    final result = await _loginUseCase.call(params);
 
-      print('Login response: $result');
+    result.fold(
+      (failure) {
+        String errorMessage = failure.message ?? "Login failed. Try again.";
 
-      result.fold(
-        (failure) {
-          // If the failure has a message, use it; otherwise, use a fallback
-          String errorMessage = failure.message;
+        // Logging the failure
+        debugPrint('Login failed: $errorMessage');
 
-          // Handle failure (update the state with error message or show a failure alert)
-          emit(state.copyWith(isLoading: false, isSuccess: false));
+        emit(state.copyWith(
+          isLoading: false,
+          isSuccess: false,
+          errorMessage: errorMessage,
+        ));
+      },
+      (user) {
+        debugPrint('Login successful!');
 
-          showMySnackBar(
-            context: event.context,
-            // message: errorMessage,
-            message: "Invalid Credentials",
-            color: const Color(0xFF9B6763),
-          );
-        },
-        (user) {
-          // On success, update state and navigate to the home screen
-          emit(state.copyWith(isLoading: false, isSuccess: true));
-
-          // Trigger navigation
-          add(
-            NavigateHomeScreenEvent(
-              context: event.context,
-              destination: event.destination,
-            ),
-          );
-        },
-      );
-    });
+        emit(state.copyWith(
+            isLoading: false, isSuccess: true, errorMessage: null));
+      },
+    );
   }
 }

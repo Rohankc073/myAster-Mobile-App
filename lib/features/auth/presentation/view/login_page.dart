@@ -109,6 +109,11 @@ class LoginView extends StatelessWidget {
                               if (value!.isEmpty) {
                                 return 'Please enter your email';
                               }
+                              final emailRegex =
+                                  RegExp(r"^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
+                              if (!emailRegex.hasMatch(value)) {
+                                return "Enter a valid email";
+                              }
                               return null;
                             },
                           ),
@@ -128,8 +133,11 @@ class LoginView extends StatelessWidget {
                               suffixIcon: const Icon(Icons.visibility_off),
                             ),
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your password';
+                              if (value == null || value.trim().isEmpty) {
+                                return "Password is required";
+                              }
+                              if (value.length < 8) {
+                                return "Password must be at least 8 characters";
                               }
                               return null;
                             },
@@ -167,6 +175,7 @@ class LoginView extends StatelessWidget {
                                 ),
                               ),
                               child: const Text(
+                                key: ValueKey('loginButton'),
                                 'Sign In',
                                 style: TextStyle(
                                   fontSize: 18,
