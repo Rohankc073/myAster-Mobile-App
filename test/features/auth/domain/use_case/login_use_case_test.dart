@@ -32,7 +32,7 @@ void main() {
       (invocation) async {
         final email = invocation.positionalArguments[0] as String;
         final password = invocation.positionalArguments[1] as String;
-        if (email == 'anjali@gmail.com' && password == 'anjali123') {
+        if (email == 'rohan@gmail.com' && password == 'rohan123') {
           return Future.value(const Right('token'));
         } else {
           return Future.value(
@@ -45,8 +45,8 @@ void main() {
       (_) async => const Right(null),
     );
 
-    final result = await usecase(const LoginUserParams(
-        email: 'anjali@gmail.com', password: 'anjali123'));
+    final result = await usecase(
+        const LoginUserParams(email: 'rohan@gmail.com', password: 'rohan123'));
 
     expect(result, const Right('token'));
 
@@ -58,8 +58,8 @@ void main() {
   });
 
   test('should return a token when login is successful', () async {
-    const email = 'anjali@gmail.com';
-    const password = 'anjali123';
+    const email = 'rohan@gmail.com';
+    const password = 'rohani123';
     const token = 'mock_token';
     const loginParams = LoginUserParams(email: email, password: password);
 

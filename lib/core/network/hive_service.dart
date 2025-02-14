@@ -1,6 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:myasteer/app/constants/hive_table_constant.dart';
 import 'package:myasteer/features/auth/data/model/auth_hive_model.dart';
+import 'package:myasteer/features/doctor/data/model/doctor_hive_model.dart';
 import 'package:path_provider/path_provider.dart';
 
 class HiveService {
@@ -13,6 +14,10 @@ class HiveService {
 
     // Register Adapters
     Hive.registerAdapter(AuthHiveModelAdapter());
+
+    //Doctor Adapter
+
+    Hive.registerAdapter(DoctorHiveModelAdapter());
   }
 
   // **Register User**
@@ -50,6 +55,22 @@ class HiveService {
   // **Clear All Users**
   Future<void> clearAll() async {
     await Hive.deleteBoxFromDisk(HiveTableConstant.userBox);
+  }
+
+  // **Add Doctor**
+  Future<void> addDoctors(DoctorHiveModel doctor) async {
+    var box = await Hive.openBox<DoctorHiveModel>(HiveTableConstant.doctorBox);
+    await box.put(doctor.id, doctor);
+  }
+
+  Future<void> deleteDoctor(String id) async {
+    var box = await Hive.openBox<DoctorHiveModel>(HiveTableConstant.doctorBox);
+    await box.delete(id);
+  }
+
+  Future<List<DoctorHiveModel>> getAllDoctor() async {
+    var box = await Hive.openBox<DoctorHiveModel>(HiveTableConstant.doctorBox);
+    return box.values.toList();
   }
 
   // **Close Hive**

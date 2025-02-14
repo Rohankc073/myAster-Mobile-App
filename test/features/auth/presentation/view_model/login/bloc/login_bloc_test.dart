@@ -93,12 +93,12 @@ void main() {
     final emailField = find.byKey(const Key('email'));
     final passwordField = find.byKey(const Key('password'));
 
-    await tester.enterText(emailField, 'ashishmool@gmail.com');
+    await tester.enterText(emailField, 'rohan@gmail.com');
     await tester.enterText(passwordField, 'password@123');
 
     await tester.pump();
 
-    expect(find.text('ashishmool@gmail.com'), findsOneWidget);
+    expect(find.text('rohan@gmail.com'), findsOneWidget);
     expect(find.text('password@123'), findsOneWidget);
   });
 

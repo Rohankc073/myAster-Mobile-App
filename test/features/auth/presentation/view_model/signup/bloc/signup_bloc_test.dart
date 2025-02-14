@@ -49,7 +49,7 @@ void main() {
     await tester.enterText(nameField, 'R');
     await tester.enterText(emailField, 'invalid-email');
     await tester.enterText(phoneField, '123');
-    await tester.enterText(passwordField, 'short');
+    await tester.enterText(passwordField, 'sht');
 
     // Tap the signup button
     await tester.tap(signupButton);
