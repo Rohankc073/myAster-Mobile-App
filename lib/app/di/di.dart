@@ -17,7 +17,6 @@ import 'package:myasteer/features/doctor/data/data_source/remote_datasource/doct
 import 'package:myasteer/features/doctor/data/repository/doctor_local_repository.dart';
 import 'package:myasteer/features/doctor/data/repository/doctor_remote_repository.dart';
 import 'package:myasteer/features/doctor/domain/use_case/create_doctor_usecase.dart';
-import 'package:myasteer/features/doctor/presentation/view_model/bloc/doctor_bloc.dart';
 import 'package:myasteer/features/splash/presentation/view_model/cubit/splash_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -68,11 +67,11 @@ _initDoctorDependencies() {
     ),
   );
 
-  getIt.registerFactory<DoctorBloc>(
-    () => DoctorBloc(
-      createDoctorUseCase: getIt<CreateDoctorUsecase>(),
-    ),
-  );
+  // getIt.registerFactory<DoctorBloc>(
+  //   () => DoctorBloc(
+  //     createDoctorUseCase: getIt<CreateDoctorUsecase>(),
+  //   ),
+  // );
 }
 
 _initSignupDependencies() async {
