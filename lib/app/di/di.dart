@@ -17,6 +17,8 @@ import 'package:myasteer/features/doctor/data/data_source/remote_datasource/doct
 import 'package:myasteer/features/doctor/data/repository/doctor_local_repository.dart';
 import 'package:myasteer/features/doctor/data/repository/doctor_remote_repository.dart';
 import 'package:myasteer/features/doctor/domain/use_case/create_doctor_usecase.dart';
+import 'package:myasteer/features/home/presentation/view_model/cubit/home_cubit.dart';
+import 'package:myasteer/features/onboarding/presentation/view_model/onboarding_cubit.dart';
 import 'package:myasteer/features/splash/presentation/view_model/cubit/splash_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -25,10 +27,15 @@ final getIt = GetIt.instance;
 Future<void> initDependencies() async {
   await _initHiveService();
   await _initApiService();
-  await _initDoctorDependencies();
-  await _initSignupDependencies();
-  await _initLoginDependencies();
+  await _initSharedPreferences();
   await _initSplashDependencies();
+  await _initOnboardingDependencies();
+
+  await _initLoginDependencies();
+
+  await _initSignupDependencies();
+  await _initHomeDependencies();
+  await _initDoctorDependencies();
 }
 
 _initApiService() {
@@ -40,6 +47,11 @@ _initApiService() {
 
 _initHiveService() {
   getIt.registerLazySingleton<HiveService>(() => HiveService());
+}
+
+Future<void> _initSharedPreferences() async {
+  final sharedPreferences = await SharedPreferences.getInstance();
+  getIt.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
 }
 
 _initDoctorDependencies() {
@@ -74,6 +86,10 @@ _initDoctorDependencies() {
   // );
 }
 
+_initHomeDependencies() async {
+  getIt.registerSingleton<HomeCubit>(HomeCubit());
+}
+
 _initSignupDependencies() async {
   getIt.registerLazySingleton(
     () => AuthLocalDataSource(getIt<HiveService>()),
@@ -104,12 +120,12 @@ _initSignupDependencies() async {
   //   ),
   // );
 
-  getIt.registerFactory<SignupBloc>(
-    () => SignupBloc(
-      registerUseCase: getIt(),
-      uploadImageUsecase: getIt(),
-    ),
-  );
+  // getIt.registerFactory<SignupBloc>(
+  //   () => SignupBloc(
+  //     registerUseCase: getIt(),
+  //     uploadImageUsecase: getIt(),
+  //   ),
+  // );
 
   //Remote data source
   getIt.registerFactory<AuthRemoteDataSource>(
@@ -119,12 +135,12 @@ _initSignupDependencies() async {
   getIt.registerLazySingleton<AuthRemoteRepository>(
       () => AuthRemoteRepository(getIt<AuthRemoteDataSource>()));
 
-  // getIt.registerFactory<SignupBloc>(
-  //   () => SignupBloc(
-  //     loginBloc: getIt<LoginBloc>(),
-  //     registerUseCase: getIt(),
-  //   ),
-  // );
+  getIt.registerFactory<SignupBloc>(
+    () => SignupBloc(
+      registerUseCase: getIt(),
+      uploadImageUsecase: getIt<UploadImageUsecase>(),
+    ),
+  );
 
   //Remote data sourc
 }
@@ -136,23 +152,32 @@ _initLoginDependencies() async {
   );
 
   // =========================== Usecases ===========================
-  getIt.registerLazySingleton<LoginUseCase>(
-    () => LoginUseCase(
-      authRepository: getIt<AuthRemoteRepository>(),
-      tokenSharedPrefs: getIt<TokenSharedPrefs>(),
-    ),
-  );
+  if (!getIt.isRegistered<LoginUseCase>()) {
+    getIt.registerLazySingleton<LoginUseCase>(
+      () => LoginUseCase(
+        authRepository: getIt<AuthRemoteRepository>(),
+        tokenSharedPrefs: getIt<TokenSharedPrefs>(),
+      ),
+    );
+  }
 
   getIt.registerFactory<LoginBloc>(
     () => LoginBloc(
       loginUseCase: getIt<LoginUseCase>(),
       signupBloc: getIt<SignupBloc>(),
+      homeCubit: getIt<HomeCubit>(),
     ),
+  );
+}
+
+_initOnboardingDependencies() async {
+  getIt.registerFactory<OnboardingCubit>(
+    () => OnboardingCubit(getIt<LoginBloc>()),
   );
 }
 
 _initSplashDependencies() async {
   getIt.registerFactory<SplashCubit>(
-    () => SplashCubit(getIt<SignupBloc>()),
+    () => SplashCubit(),
   );
 }

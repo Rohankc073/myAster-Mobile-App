@@ -73,6 +73,22 @@ class HiveService {
     return box.values.toList();
   }
 
+  // // ** Product**
+  // Future<void> getAllProducts(ProductHiveModel product) async {
+  //   var box = await Hive.openBox<DoctorHiveModel>(HiveTableConstant.productBox);
+  //   await box.put(product.id, product);
+  // }
+
+  // Future<void> deleteProduct(String id) async {
+  //   var box = await Hive.openBox<DoctorHiveModel>(HiveTableConstant.doctorBox);
+  //   await box.delete(id);
+  // }
+
+  // Future<List<DoctorHiveModel>> getAllDoctor() async {
+  //   var box = await Hive.openBox<DoctorHiveModel>(HiveTableConstant.doctorBox);
+  //   return box.values.toList();
+  // }
+
   // **Close Hive**
   Future<void> close() async {
     await Hive.close();

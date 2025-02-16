@@ -1,11 +1,8 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myasteer/features/auth/presentation/view/signup_page.dart';
 import 'package:myasteer/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
-
-import '../../../../core/common/snackbar/my_snackbar.dart';
-import '../../../../core/network/api_service.dart';
+import 'package:myasteer/features/home/presentation/view/home_view.dart';
 
 class LoginView extends StatelessWidget {
   LoginView({super.key});
@@ -13,49 +10,6 @@ class LoginView extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
-  // Login Function
-  void login(BuildContext context) async {
-    if (_formKey.currentState!.validate()) {
-      final email = _emailController.text.trim();
-      final password = _passwordController.text.trim();
-
-      try {
-        final apiService = ApiService(Dio());
-        final user = await apiService.loginUser(email, password);
-
-        if (user != null && user['success'] == true) {
-          // Log the response for debugging purposes
-          print("Login successful: $user");
-
-          // Show success message and navigate
-          showMySnackBar(
-            context: context,
-            message: 'Login Successful!',
-            color: Colors.green,
-          );
-
-          // Navigate to Home screen
-        } else {
-          // Handle failed login
-          print("Invalid login response: $user");
-          showMySnackBar(
-            context: context,
-            message: 'Invalid username or password',
-            color: Colors.red,
-          );
-        }
-      } catch (e) {
-        // Handle any error during the API call
-        print("Error during login: $e");
-        showMySnackBar(
-          context: context,
-          message: 'An error occurred. Please try again.',
-          color: Colors.red,
-        );
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,9 +65,9 @@ class LoginView extends StatelessWidget {
                               }
                               final emailRegex =
                                   RegExp(r"^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
-                              if (!emailRegex.hasMatch(value)) {
-                                return "Enter a valid email";
-                              }
+                              // if (!emailRegex.hasMatch(value)) {
+                              //   return "Enter a valid email";
+                              // }
                               return null;
                             },
                           ),
@@ -164,7 +118,23 @@ class LoginView extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: ElevatedButton(
-                              onPressed: () => login(context),
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  final email = _emailController.text.trim();
+                                  final password =
+                                      _passwordController.text.trim();
+
+                                  // Navigate to Home screen
+                                  context.read<LoginBloc>().add(
+                                        LoginUserEvent(
+                                          context: context,
+                                          email: email,
+                                          password: password,
+                                          destination: const Dashboard(),
+                                        ),
+                                      );
+                                }
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,
                                 // shadowColor: Colors.transparent,

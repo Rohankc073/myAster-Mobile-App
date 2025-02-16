@@ -1,69 +1,98 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:myasteer/core/common/snackbar/my_snackbar.dart';
 import 'package:myasteer/features/auth/domain/use_case/login_use_case.dart';
 import 'package:myasteer/features/auth/presentation/view_model/signup/bloc/signup_bloc.dart';
+import 'package:myasteer/features/home/presentation/view_model/cubit/home_cubit.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final LoginUseCase _loginUseCase;
   final SignupBloc _signupBloc;
+  final HomeCubit _homeCubit;
+
+  final LoginUseCase _loginUseCase;
 
   LoginBloc({
-    required LoginUseCase loginUseCase,
     required SignupBloc signupBloc,
-  })  : _loginUseCase = loginUseCase,
-        _signupBloc = signupBloc,
+    required HomeCubit homeCubit,
+    required LoginUseCase loginUseCase,
+  })  : _signupBloc = signupBloc,
+        _homeCubit = homeCubit,
+        _loginUseCase = loginUseCase,
         super(LoginState.initial()) {
-    // Register event handlers
-    on<NavigateRegisterScreenEvent>(_handleNavigationToRegisterScreen);
-    on<LoginUserEvent>(_handleLoginUser);
-  }
+    on<NavigateRegisterScreenEvent>((event, emit) {
+      Navigator.push(
+        event.context,
+        MaterialPageRoute(
+          builder: (context) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: _signupBloc),
+            ],
+            child: event.destination,
+          ),
+        ),
+      );
+    });
 
-  // Navigation to Register Screen
-  void _handleNavigationToRegisterScreen(
-      NavigateRegisterScreenEvent event, Emitter<LoginState> emit) {
-    Navigator.push(
-      event.context,
-      MaterialPageRoute(
-        builder: (context) => event.destination, // SignUpPage
-      ),
-    );
-  }
+    on<NavigateHomeScreenEvent>((event, emit) {
+      Navigator.pushReplacement(
+        event.context,
+        MaterialPageRoute(
+          builder: (context) => BlocProvider.value(
+            value: _homeCubit,
+            child: event.destination,
+          ),
+        ),
+      );
+    });
 
-  // Login Event Handler
-  Future<void> _handleLoginUser(
-      LoginUserEvent event, Emitter<LoginState> emit) async {
-    emit(state.copyWith(isLoading: true, errorMessage: null));
+    // Toggle password visibitlity
+    on<TogglePasswordVisibilityEvent>((event, emit) {
+      emit(state.copyWith(isPasswordVisible: !state.isPasswordVisible));
+    });
 
-    final params = LoginUserParams(
-      email: event.email,
-      password: event.password,
-    );
+    // Handle login event
+    on<LoginUserEvent>((event, emit) async {
+      emit(state.copyWith(isLoading: true));
 
-    final result = await _loginUseCase.call(params);
+      final params = LoginUserParams(
+        email: event.email,
+        password: event.password,
+      );
 
-    result.fold(
-      (failure) {
-        String errorMessage = failure.message ?? "Login failed. Try again.";
+      final result = await _loginUseCase.call(params);
 
-        // Logging the failure
-        debugPrint('Login failed: $errorMessage');
+      result.fold(
+        (failure) {
+          // If the failure has a message, use it; otherwise, use a fallback
+          String errorMessage = failure.message;
 
-        emit(state.copyWith(
-          isLoading: false,
-          isSuccess: false,
-          errorMessage: errorMessage,
-        ));
-      },
-      (user) {
-        debugPrint('Login successful!');
+          // Handle failure (update the state with error message or show a failure alert)
+          emit(state.copyWith(isLoading: false, isSuccess: false));
 
-        emit(state.copyWith(
-            isLoading: false, isSuccess: true, errorMessage: null));
-      },
-    );
+          showMySnackBar(
+            context: event.context,
+            // message: errorMessage,
+            message: 'Invalid Credentials: $errorMessage',
+            color: const Color(0xFF9B6763),
+          );
+        },
+        (user) {
+          // On success, update state and navigate to the home screen
+          emit(state.copyWith(isLoading: false, isSuccess: true));
+
+          // Trigger navigation
+          add(
+            NavigateHomeScreenEvent(
+              context: event.context,
+              destination: event.destination,
+            ),
+          );
+        },
+      );
+    });
   }
 }

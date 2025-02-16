@@ -1,41 +1,30 @@
 part of 'login_bloc.dart';
 
-class LoginState extends Equatable {
+class LoginState {
   final bool isLoading;
   final bool isSuccess;
-  final String? errorMessage; // Added error message
+  final bool isPasswordVisible;
 
-  const LoginState({
+  LoginState({
     required this.isLoading,
     required this.isSuccess,
-    this.errorMessage, // Nullable error message
+    required this.isPasswordVisible,
   });
 
-  factory LoginState.initial() {
-    return const LoginState(
-      isLoading: false,
-      isSuccess: false,
-      errorMessage: null,
-    );
-  }
+  LoginState.initial()
+      : isLoading = false,
+        isSuccess = false,
+        isPasswordVisible = false;
 
   LoginState copyWith({
     bool? isLoading,
     bool? isSuccess,
-    String? errorMessage,
+    bool? isPasswordVisible,
   }) {
     return LoginState(
       isLoading: isLoading ?? this.isLoading,
       isSuccess: isSuccess ?? this.isSuccess,
-      errorMessage: errorMessage ??
-          this.errorMessage, // Preserve previous error if not updated
+      isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        isLoading,
-        isSuccess,
-        errorMessage
-      ]; // ✅ Includes errorMessage for state comparison
 }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myasteer/features/auth/presentation/view/signup_page.dart';
-import 'package:myasteer/features/auth/presentation/view_model/signup/bloc/signup_bloc.dart';
+import 'package:myasteer/features/auth/presentation/view/login_page.dart';
+import 'package:myasteer/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
 
 class OnboardingCubit extends Cubit<void> {
-  OnboardingCubit(this._signupBloc) : super(null);
+  OnboardingCubit(this._loginBloc) : super(null);
 
-  final SignupBloc _signupBloc;
+  final LoginBloc _loginBloc;
 
   Future<void> goToLogin(BuildContext context) async {
     // Add any delay if necessary
@@ -16,8 +16,8 @@ class OnboardingCubit extends Cubit<void> {
           context,
           MaterialPageRoute(
             builder: (context) => BlocProvider.value(
-              value: _signupBloc,
-              child: const SignUpPage(),
+              value: _loginBloc,
+              child: LoginView(),
             ),
           ),
         );

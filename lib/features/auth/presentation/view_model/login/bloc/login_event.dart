@@ -1,10 +1,10 @@
 part of 'login_bloc.dart';
 
-abstract class LoginEvent extends Equatable {
+sealed class LoginEvent extends Equatable {
   const LoginEvent();
 
   @override
-  List<Object?> get props => [];
+  List<Object> get props => [];
 }
 
 class NavigateRegisterScreenEvent extends LoginEvent {
@@ -15,22 +15,6 @@ class NavigateRegisterScreenEvent extends LoginEvent {
     required this.context,
     required this.destination,
   });
-
-  @override
-  List<Object?> get props => [context, destination];
-}
-
-class LoginUserEvent extends LoginEvent {
-  final String email;
-  final String password;
-
-  const LoginUserEvent({
-    required this.email,
-    required this.password,
-  });
-
-  @override
-  List<Object?> get props => [email, password];
 }
 
 class NavigateHomeScreenEvent extends LoginEvent {
@@ -42,4 +26,19 @@ class NavigateHomeScreenEvent extends LoginEvent {
     required this.destination,
   });
 }
-//login event
+
+class LoginUserEvent extends LoginEvent {
+  final BuildContext context;
+  final Widget destination;
+  final String email;
+  final String password;
+
+  const LoginUserEvent({
+    required this.context,
+    required this.email,
+    required this.password,
+    required this.destination,
+  });
+}
+
+class TogglePasswordVisibilityEvent extends LoginEvent {}
