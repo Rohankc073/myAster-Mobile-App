@@ -12,11 +12,12 @@ import 'package:myasteer/features/auth/domain/use_case/signup_use_case.dart';
 import 'package:myasteer/features/auth/domain/use_case/upload_image_usecase.dart';
 import 'package:myasteer/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
 import 'package:myasteer/features/auth/presentation/view_model/signup/bloc/signup_bloc.dart';
-import 'package:myasteer/features/doctor/data/data_source/local_datasource/doctor_local_datasource.dart';
-import 'package:myasteer/features/doctor/data/data_source/remote_datasource/doctor_remote_datasource.dart';
+import 'package:myasteer/features/doctor/data/data_source/local_datasource/doctor_local_data_source.dart';
+import 'package:myasteer/features/doctor/data/data_source/remote_datasource/doctor_remote_data_source.dart';
 import 'package:myasteer/features/doctor/data/repository/doctor_local_repository.dart';
 import 'package:myasteer/features/doctor/data/repository/doctor_remote_repository.dart';
-import 'package:myasteer/features/doctor/domain/use_case/create_doctor_usecase.dart';
+import 'package:myasteer/features/doctor/domain/use_case/get_all_doctor_usecase.dart';
+import 'package:myasteer/features/doctor/presentation/view_model/doctor_bloc.dart';
 import 'package:myasteer/features/home/presentation/view_model/cubit/home_cubit.dart';
 import 'package:myasteer/features/onboarding/presentation/view_model/onboarding_cubit.dart';
 import 'package:myasteer/features/splash/presentation/view_model/cubit/splash_cubit.dart';
@@ -32,7 +33,6 @@ Future<void> initDependencies() async {
   await _initOnboardingDependencies();
 
   await _initLoginDependencies();
-
   await _initSignupDependencies();
   await _initHomeDependencies();
   await _initDoctorDependencies();
@@ -52,38 +52,6 @@ _initHiveService() {
 Future<void> _initSharedPreferences() async {
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
-}
-
-_initDoctorDependencies() {
-  // Data Source
-  getIt.registerFactory<DoctorLocalDatasource>(
-      () => DoctorLocalDatasource(hiveService: getIt<HiveService>()));
-
-  // Remote Data Source
-  getIt.registerFactory<DoctorRemoteDatasource>(
-      () => DoctorRemoteDatasource(getIt<Dio>()));
-
-  // Repository
-  getIt.registerLazySingleton<DoctorLocalRepository>(() =>
-      DoctorLocalRepository(
-          doctorLocalDataSource: getIt<DoctorLocalDatasource>()));
-
-  //  Remote Repository
-  getIt.registerLazySingleton<DoctorRemoteRepository>(
-      () => DoctorRemoteRepository(getIt<DoctorRemoteRepository>()));
-
-  // Usecases
-  getIt.registerLazySingleton<CreateDoctorUsecase>(
-    () => CreateDoctorUsecase(
-      doctorRepository: getIt<DoctorRemoteRepository>(),
-    ),
-  );
-
-  // getIt.registerFactory<DoctorBloc>(
-  //   () => DoctorBloc(
-  //     createDoctorUseCase: getIt<CreateDoctorUsecase>(),
-  //   ),
-  // );
 }
 
 _initHomeDependencies() async {
@@ -143,6 +111,61 @@ _initSignupDependencies() async {
   );
 
   //Remote data sourc
+}
+
+_initDoctorDependencies() async {
+  // Local Data Source
+  getIt.registerFactory<DoctorLocalDataSource>(
+      () => DoctorLocalDataSource(getIt<HiveService>()));
+
+  // Remote Data Source
+  getIt.registerFactory<DoctorRemoteDataSource>(
+      () => DoctorRemoteDataSource(getIt<Dio>()));
+
+  // Local Repository
+  getIt.registerLazySingleton<DoctorLocalRepository>(() =>
+      DoctorLocalRepository(
+          doctorLocalDataSource: getIt<DoctorLocalDataSource>()));
+
+  // Remote Repository
+  getIt.registerLazySingleton<DoctorRemoteRepository>(() =>
+      DoctorRemoteRepository(
+          doctorRemoteDataSource: getIt<DoctorRemoteDataSource>()));
+
+  // // Remote Usecases
+  // getIt.registerLazySingleton<CreateDoctorUseCase>(() =>
+  //     CreateDoctorUseCase(
+  //         doctorRepository: getIt<DoctorRemoteRepository>()));
+
+  getIt.registerLazySingleton<GetAllDoctorsUseCase>(() =>
+      GetAllDoctorsUseCase(doctorRepository: getIt<DoctorRemoteRepository>()));
+
+  // getIt.registerLazySingleton<DeleteDoctorUseCase>(
+  //   () => DeleteDoctorUseCase(
+  //       doctorRepository: getIt<DoctorRemoteRepository>(),
+  //       tokenSharedPrefs: getIt<TokenSharedPrefs>()),
+  // );
+
+  // getIt.registerLazySingleton<UpdateDoctorUseCase>(
+  //   () => UpdateDoctorUseCase(
+  //       doctorRepository: getIt<DoctorRemoteRepository>(),
+  //       tokenSharedPrefs: getIt<TokenSharedPrefs>()),
+  // );
+
+  // getIt.registerLazySingleton<GetDoctorByIdUseCase>(
+  //   () => GetDoctorByIdUseCase(
+  //       doctorRepository: getIt<DoctorRemoteRepository>()),
+  // );
+
+  // Bloc
+  getIt.registerFactory<DoctorBloc>(
+    () => DoctorBloc(
+      // createDoctorUseCase: getIt<CreateDoctorUseCase>(),
+      getAllDoctorsUseCase: getIt<GetAllDoctorsUseCase>(),
+      // deleteDoctorUseCase: getIt<DeleteDoctorUseCase>(),
+      // updateDoctorUseCase: getIt<UpdateDoctorUseCase>(),
+    ),
+  );
 }
 
 _initLoginDependencies() async {

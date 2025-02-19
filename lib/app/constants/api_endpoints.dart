@@ -14,4 +14,5 @@ class ApiEndpoints {
   static const String imageUrl = "http://10.0.2.2:3000/uploads/";
   static const String uploadImage = "auth/uploadImage";
   static const String addDoctor = 'doctors/save';
+  static const String getAllDoctor = 'doctors/getAll';
 }

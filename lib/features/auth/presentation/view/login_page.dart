@@ -8,8 +8,8 @@ class LoginView extends StatelessWidget {
   LoginView({super.key});
 
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _emailController = TextEditingController(text: "admin@gmail.com");
+  final _passwordController = TextEditingController(text: "admin123");
 
   @override
   Widget build(BuildContext context) {
@@ -86,15 +86,15 @@ class LoginView extends StatelessWidget {
                               hintText: 'Enter Your Password',
                               suffixIcon: const Icon(Icons.visibility_off),
                             ),
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return "Password is required";
-                              }
-                              if (value.length < 8) {
-                                return "Password must be at least 8 characters";
-                              }
-                              return null;
-                            },
+                            // validator: (value) {
+                            //   if (value == null || value.trim().isEmpty) {
+                            //     return "Password is required";
+                            //   }
+                            //   if (value.length < 8) {
+                            //     return "Password must be at least 8 characters";
+                            //   }
+                            //   return null;
+                            // },
                           ),
                           const SizedBox(height: 10),
 

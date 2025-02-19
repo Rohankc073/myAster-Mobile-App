@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:myasteer/features/home/presentation/view/bottom_view/dashboard_view.dart';
 import 'package:myasteer/view/bottom_screen/appointment_screen.dart';
-import 'package:myasteer/view/bottom_screen/home_screen.dart';
 import 'package:myasteer/view/bottom_screen/profile_screen.dart';
 
 class Dashboard extends StatefulWidget {

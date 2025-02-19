@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:myasteer/app/di/di.dart';
+import 'package:myasteer/core/common/snackbar/my_snackbar.dart';
+import 'package:myasteer/features/doctor/presentation/view/doctor_view.dart';
+import 'package:myasteer/features/doctor/presentation/view_model/doctor_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -6,9 +11,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text("Home"),
-      // ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         child: Column(
@@ -150,7 +152,24 @@ class HomeScreen extends StatelessWidget {
                         const SizedBox(height: 8),
                         ElevatedButton(
                           onPressed: () {
-                            // Handle Book Now action
+                            // Show the snackbar
+                            showMySnackBar(
+                                context: context, message: "Doctors Viewed");
+
+                            // Navigate to the Doctor List Screen after a delay
+                            Future.delayed(const Duration(seconds: 1), () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BlocProvider(
+                                    create: (context) =>
+                                        getIt<DoctorBloc>()..add(LoadDoctors()),
+                                    child:
+                                        DoctorView(), // Ensure this screen is implemented
+                                  ),
+                                ),
+                              );
+                            });
                           },
                           child: const Text("Book Now"),
                         ),

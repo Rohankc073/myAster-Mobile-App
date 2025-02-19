@@ -19,31 +19,22 @@ class DoctorHiveModelAdapter extends TypeAdapter<DoctorHiveModel> {
     return DoctorHiveModel(
       id: fields[0] as String?,
       name: fields[1] as String,
-      specialization: fields[2] as String,
-      availableDays: fields[3] as String,
-      availableTimes: fields[4] as String,
-      contact: fields[5] as String,
-      email: fields[6] as String,
+      contact: fields[2] as String?,
+      email: fields[3] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, DoctorHiveModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.specialization)
-      ..writeByte(3)
-      ..write(obj.availableDays)
-      ..writeByte(4)
-      ..write(obj.availableTimes)
-      ..writeByte(5)
       ..write(obj.contact)
-      ..writeByte(6)
+      ..writeByte(3)
       ..write(obj.email);
   }
 

@@ -4,69 +4,64 @@ import 'package:myasteer/features/doctor/domain/entity/doctor_entity.dart';
 
 part 'doctor_api_model.g.dart';
 
+// Include the generated part file.
+
 @JsonSerializable()
 class DoctorApiModel extends Equatable {
   @JsonKey(name: '_id')
   final String? id;
   final String name;
-  final String specialization;
-  final String availableDays;
-  final String availableTimes;
-  final String contact;
-  final String email;
+  final String? contact;
+  final String? email;
 
-  const DoctorApiModel(
-      {this.id,
-      required this.name,
-      required this.specialization,
-      required this.availableDays,
-      required this.availableTimes,
-      required this.contact,
-      required this.email});
+  const DoctorApiModel({
+    this.id,
+    required this.name,
+    this.contact,
+    this.email,
+  });
 
+  const DoctorApiModel.empty()
+      : id = '',
+        name = '',
+        contact = '',
+        email = null;
+
+  // From JSON
   factory DoctorApiModel.fromJson(Map<String, dynamic> json) =>
       _$DoctorApiModelFromJson(json);
 
+  // To JSON
   Map<String, dynamic> toJson() => _$DoctorApiModelToJson(this);
 
-  // To entity
-
-// From Entity
-  factory DoctorApiModel.fromEntity(DoctorEntity entity) {
-    return DoctorApiModel(
-        id: entity.id,
-        name: entity.name,
-        specialization: entity.specialization,
-        availableDays: entity.availableDays,
-        availableTimes: entity.availableTimes,
-        email: entity.email,
-        contact: entity.contact);
-  }
-
-  // To Entity
-  DoctorEntity toEntity() {
-    return DoctorEntity(
+  // Convert API Object to Entity
+  DoctorEntity toEntity() => DoctorEntity(
         id: id,
         name: name,
-        specialization: specialization,
-        availableDays: availableDays,
-        availableTimes: availableTimes,
+        contact: contact,
         email: email,
-        contact: contact);
+      );
+
+  // Convert Entity to API Object
+  factory DoctorApiModel.fromEntity(DoctorEntity doctor) {
+    return DoctorApiModel(
+      id: doctor.id,
+      name: doctor.name,
+      contact: doctor.contact,
+      email: doctor.email,
+    );
   }
 
-  // To Entity List
-  static List<DoctorEntity> toEntityList(List<DoctorApiModel> entityList) {
-    return entityList.map((data) => data.toEntity()).toList();
-  }
-
-  // From entity list
-  static List<DoctorApiModel> fromEntityList(List<DoctorEntity> entityList) {
-    return entityList
-        .map((entity) => DoctorApiModel.fromEntity(entity))
-        .toList();
+  // Convert API List to Entity List
+  static List<DoctorEntity> toEntityList(List<DoctorApiModel> models) {
+    return models.map((model) => model.toEntity()).toList();
   }
 
   @override
-  List<Object?> get props => [name, specialization, contact];
+  List<Object?> get props => [
+        id,
+        name,
+        email,
+        contact,
+      ];
 }

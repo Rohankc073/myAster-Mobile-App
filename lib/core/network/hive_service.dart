@@ -2,6 +2,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:myasteer/app/constants/hive_table_constant.dart';
 import 'package:myasteer/features/auth/data/model/auth_hive_model.dart';
 import 'package:myasteer/features/doctor/data/model/doctor_hive_model.dart';
+// import 'package:myasteer/features/doctor/data/model/doctor_hive_model.dart';
 import 'package:path_provider/path_provider.dart';
 
 class HiveService {
@@ -17,7 +18,7 @@ class HiveService {
 
     //Doctor Adapter
 
-    Hive.registerAdapter(DoctorHiveModelAdapter());
+    // Hive.registerAdapter(DoctorHiveModelAdapter());
   }
 
   // **Register User**
@@ -58,7 +59,7 @@ class HiveService {
   }
 
   // **Add Doctor**
-  Future<void> addDoctors(DoctorHiveModel doctor) async {
+  Future<void> addDoctor(DoctorHiveModel doctor) async {
     var box = await Hive.openBox<DoctorHiveModel>(HiveTableConstant.doctorBox);
     await box.put(doctor.id, doctor);
   }
@@ -79,10 +80,10 @@ class HiveService {
   //   await box.put(product.id, product);
   // }
 
-  // Future<void> deleteProduct(String id) async {
-  //   var box = await Hive.openBox<DoctorHiveModel>(HiveTableConstant.doctorBox);
-  //   await box.delete(id);
-  // }
+  Future<void> deleteProduct(String id) async {
+    var box = await Hive.openBox<DoctorHiveModel>(HiveTableConstant.doctorBox);
+    await box.delete(id);
+  }
 
   // Future<List<DoctorHiveModel>> getAllDoctor() async {
   //   var box = await Hive.openBox<DoctorHiveModel>(HiveTableConstant.doctorBox);
