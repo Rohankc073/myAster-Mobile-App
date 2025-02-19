@@ -20,6 +20,12 @@ import 'package:myasteer/features/doctor/domain/use_case/get_all_doctor_usecase.
 import 'package:myasteer/features/doctor/presentation/view_model/doctor_bloc.dart';
 import 'package:myasteer/features/home/presentation/view_model/cubit/home_cubit.dart';
 import 'package:myasteer/features/onboarding/presentation/view_model/onboarding_cubit.dart';
+import 'package:myasteer/features/product/data/data_source/local_datasource/product_local_data_source.dart';
+import 'package:myasteer/features/product/data/data_source/remote_datasource/product_remote_data_source.dart';
+import 'package:myasteer/features/product/data/repository/product_local_repository.dart';
+import 'package:myasteer/features/product/data/repository/product_remote_repository.dart';
+import 'package:myasteer/features/product/domain/use_case/get_all_doctor_usecase.dart';
+import 'package:myasteer/features/product/presentation/view_model/product_bloc.dart';
 import 'package:myasteer/features/splash/presentation/view_model/cubit/splash_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,6 +42,7 @@ Future<void> initDependencies() async {
   await _initSignupDependencies();
   await _initHomeDependencies();
   await _initDoctorDependencies();
+  await _initProductDependencies();
 }
 
 _initApiService() {
@@ -162,6 +169,64 @@ _initDoctorDependencies() async {
     () => DoctorBloc(
       // createDoctorUseCase: getIt<CreateDoctorUseCase>(),
       getAllDoctorsUseCase: getIt<GetAllDoctorsUseCase>(),
+      // deleteDoctorUseCase: getIt<DeleteDoctorUseCase>(),
+      // updateDoctorUseCase: getIt<UpdateDoctorUseCase>(),
+    ),
+  );
+}
+
+// Product Dependencies
+
+_initProductDependencies() async {
+  // Local Data Source
+  getIt.registerFactory<ProductLocalDataSource>(
+      () => ProductLocalDataSource(getIt<HiveService>()));
+
+  // Remote Data Source
+  getIt.registerFactory<ProductRemoteDataSource>(
+      () => ProductRemoteDataSource(getIt<Dio>()));
+
+  // Local Repository
+  getIt.registerLazySingleton<ProductLocalRepository>(() =>
+      ProductLocalRepository(
+          productLocalDataSource: getIt<ProductLocalDataSource>()));
+
+  // Remote Repository
+  getIt.registerLazySingleton<ProductRemoteRepository>(() =>
+      ProductRemoteRepository(
+          productRemoteDataSource: getIt<ProductRemoteDataSource>()));
+
+  // // Remote Usecases
+  // getIt.registerLazySingleton<CreateDoctorUseCase>(() =>
+  //     CreateDoctorUseCase(
+  //         doctorRepository: getIt<DoctorRemoteRepository>()));
+
+  getIt.registerLazySingleton<GetAllProductsUseCase>(() =>
+      GetAllProductsUseCase(
+          productRepository: getIt<ProductRemoteRepository>()));
+
+  // getIt.registerLazySingleton<DeleteDoctorUseCase>(
+  //   () => DeleteDoctorUseCase(
+  //       doctorRepository: getIt<DoctorRemoteRepository>(),
+  //       tokenSharedPrefs: getIt<TokenSharedPrefs>()),
+  // );
+
+  // getIt.registerLazySingleton<UpdateDoctorUseCase>(
+  //   () => UpdateDoctorUseCase(
+  //       doctorRepository: getIt<DoctorRemoteRepository>(),
+  //       tokenSharedPrefs: getIt<TokenSharedPrefs>()),
+  // );
+
+  // getIt.registerLazySingleton<GetDoctorByIdUseCase>(
+  //   () => GetDoctorByIdUseCase(
+  //       doctorRepository: getIt<DoctorRemoteRepository>()),
+  // );
+
+  // Bloc
+  getIt.registerFactory<ProductBloc>(
+    () => ProductBloc(
+      // createDoctorUseCase: getIt<CreateDoctorUseCase>(),
+      getAllProductsUseCase: getIt<GetAllProductsUseCase>(),
       // deleteDoctorUseCase: getIt<DeleteDoctorUseCase>(),
       // updateDoctorUseCase: getIt<UpdateDoctorUseCase>(),
     ),

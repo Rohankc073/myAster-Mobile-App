@@ -15,4 +15,5 @@ class ApiEndpoints {
   static const String uploadImage = "auth/uploadImage";
   static const String addDoctor = 'doctors/save';
   static const String getAllDoctor = 'doctors/getAll';
+  static const String getAllProduct = 'products/all';
 }

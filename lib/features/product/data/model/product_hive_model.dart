@@ -1,17 +1,17 @@
 import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:myasteer/features/doctor/domain/entity/doctor_entity.dart';
+import 'package:myasteer/features/product/domain/entity/product_entity.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../app/constants/hive_table_constant.dart';
 
-part 'doctor_hive_model.g.dart';
+part 'product_hive_model.g.dart';
 
 // Command to Generate Adapter: dart run build_runner build -d
 // Need to run each time changes are made to the model.
 
-@HiveType(typeId: HiveTableConstant.doctorTableId)
-class DoctorHiveModel extends Equatable {
+@HiveType(typeId: HiveTableConstant.productTableId)
+class ProductHiveModel extends Equatable {
   @HiveField(0)
   final String? id;
 
@@ -24,54 +24,52 @@ class DoctorHiveModel extends Equatable {
   @HiveField(3)
   final String? email;
 
-  @HiveField(4)
-  final String image;
-
-  DoctorHiveModel({
+  ProductHiveModel({
     String? id,
     required this.name,
     this.contact,
     this.email,
-    required this.image,
   }) : id = id ?? const Uuid().v4();
 
   // Initial Constructor
-  const DoctorHiveModel.initial()
+  const ProductHiveModel.initial()
       : id = '',
         name = '',
         contact = null,
-        image = '',
         email = null;
 
   // From Entity
-  factory DoctorHiveModel.fromEntity(DoctorEntity entity) {
-    return DoctorHiveModel(
+  factory ProductHiveModel.fromEntity(ProductEntity entity) {
+    return ProductHiveModel(
       id: entity.id,
       name: entity.name,
-      contact: entity.contact,
-      email: entity.email,
-      image: entity.image,
+      // contact: entity.contact,
+      // email: entity.email,
     );
   }
 
   // To Entity
-  DoctorEntity toEntity() {
-    return DoctorEntity(
+  ProductEntity toEntity() {
+    return ProductEntity(
       id: id,
       name: name,
-      contact: contact,
-      image: image,
-      email: email,
+      // contact: contact,
+      // email: email,
     );
   }
 
   // To Entity List
-  static List<DoctorHiveModel> fromEntityList(List<DoctorEntity> entityList) {
+  static List<ProductHiveModel> fromEntityList(List<ProductEntity> entityList) {
     return entityList
-        .map((entity) => DoctorHiveModel.fromEntity(entity))
+        .map((entity) => ProductHiveModel.fromEntity(entity))
         .toList();
   }
 
   @override
-  List<Object?> get props => [id, name, contact, email, image];
+  List<Object?> get props => [
+        id,
+        name,
+        contact,
+        email,
+      ];
 }

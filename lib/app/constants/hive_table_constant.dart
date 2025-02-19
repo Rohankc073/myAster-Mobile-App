@@ -6,4 +6,7 @@ class HiveTableConstant {
 
   static const int doctorTableId = 1;
   static const String doctorBox = 'doctorBox';
+
+  static const int productTableId = 2;
+  static const String productBox = 'productBox';
 }

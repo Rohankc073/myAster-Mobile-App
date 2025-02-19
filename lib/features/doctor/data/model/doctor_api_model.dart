@@ -13,18 +13,21 @@ class DoctorApiModel extends Equatable {
   final String name;
   final String? contact;
   final String? email;
+  final String image;
 
   const DoctorApiModel({
     this.id,
     required this.name,
     this.contact,
     this.email,
+    required this.image,
   });
 
   const DoctorApiModel.empty()
       : id = '',
         name = '',
         contact = '',
+        image = '',
         email = null;
 
   // From JSON
@@ -38,6 +41,7 @@ class DoctorApiModel extends Equatable {
   DoctorEntity toEntity() => DoctorEntity(
         id: id,
         name: name,
+        image: image,
         contact: contact,
         email: email,
       );
@@ -46,6 +50,7 @@ class DoctorApiModel extends Equatable {
   factory DoctorApiModel.fromEntity(DoctorEntity doctor) {
     return DoctorApiModel(
       id: doctor.id,
+      image: doctor.image,
       name: doctor.name,
       contact: doctor.contact,
       email: doctor.email,
@@ -61,6 +66,7 @@ class DoctorApiModel extends Equatable {
   List<Object?> get props => [
         id,
         name,
+        image,
         email,
         contact,
       ];

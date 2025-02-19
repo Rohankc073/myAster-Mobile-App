@@ -4,6 +4,8 @@ import 'package:myasteer/app/di/di.dart';
 import 'package:myasteer/core/common/snackbar/my_snackbar.dart';
 import 'package:myasteer/features/doctor/presentation/view/doctor_view.dart';
 import 'package:myasteer/features/doctor/presentation/view_model/doctor_bloc.dart';
+import 'package:myasteer/features/product/presentation/view/product_view.dart';
+import 'package:myasteer/features/product/presentation/view_model/product_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -19,18 +21,14 @@ class HomeScreen extends StatelessWidget {
             const Text(
               "Good Afternoon",
               style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-                color: Colors.grey,
-              ),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.grey),
             ),
             const SizedBox(height: 5),
             const Text(
               "Guest",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             TextField(
@@ -49,20 +47,11 @@ class HomeScreen extends StatelessWidget {
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "Categories",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  "See All",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.blue,
-                  ),
-                ),
+                Text("Categories",
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text("See All",
+                    style: TextStyle(fontSize: 16, color: Colors.blue)),
               ],
             ),
             const SizedBox(height: 10),
@@ -74,113 +63,37 @@ class HomeScreen extends StatelessWidget {
               crossAxisSpacing: 10,
               children: const [
                 CategoryItem(
-                  icon: Icons.medical_services,
-                  label: "Dentistry",
-                  color: Colors.pinkAccent,
-                ),
+                    icon: Icons.medical_services,
+                    label: "Dentistry",
+                    color: Colors.pinkAccent),
                 CategoryItem(
-                  icon: Icons.favorite,
-                  label: "Cardiology",
-                  color: Colors.green,
-                ),
+                    icon: Icons.favorite,
+                    label: "Cardiology",
+                    color: Colors.green),
                 CategoryItem(
-                  icon: Icons.lan,
-                  label: "Pulmonology",
-                  color: Colors.orange,
-                ),
+                    icon: Icons.lan,
+                    label: "Pulmonology",
+                    color: Colors.orange),
                 CategoryItem(
-                  icon: Icons.stop,
-                  label: "General",
-                  color: Colors.purple,
-                ),
+                    icon: Icons.stop, label: "General", color: Colors.purple),
                 CategoryItem(
-                  icon: Icons.people,
-                  label: "Neurology",
-                  color: Colors.teal,
-                ),
+                    icon: Icons.people, label: "Neurology", color: Colors.teal),
                 CategoryItem(
-                  icon: Icons.lunch_dining,
-                  label: "Gastro",
-                  color: Colors.deepPurple,
-                ),
+                    icon: Icons.lunch_dining,
+                    label: "Gastro",
+                    color: Colors.deepPurple),
                 CategoryItem(
-                  icon: Icons.science,
-                  label: "Lab",
-                  color: Colors.redAccent,
-                ),
+                    icon: Icons.science, label: "Lab", color: Colors.redAccent),
                 CategoryItem(
-                  icon: Icons.local_pharmacy,
-                  label: "Pharmacy",
-                  color: Colors.blueAccent,
-                ),
+                    icon: Icons.local_pharmacy,
+                    label: "Pharmacy",
+                    color: Colors.blueAccent),
               ],
             ),
             const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.lightBlueAccent.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  Image.asset(
-                    'assets/images/doctor.png', // Replace with your image path
-                    height: 80,
-                    width: 80,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Icon(
-                        Icons.broken_image,
-                        size: 80,
-                        color: Colors.grey,
-                      );
-                    },
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Online and Offline Consultations",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Show the snackbar
-                            showMySnackBar(
-                                context: context, message: "Doctors Viewed");
-
-                            // Navigate to the Doctor List Screen after a delay
-                            Future.delayed(const Duration(seconds: 1), () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => BlocProvider(
-                                    create: (context) =>
-                                        getIt<DoctorBloc>()..add(LoadDoctors()),
-                                    child:
-                                        DoctorView(), // Ensure this screen is implemented
-                                  ),
-                                ),
-                              );
-                            });
-                          },
-                          child: const Text("Book Now"),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildDoctorBookingSection(context),
             const SizedBox(height: 20),
-            const Row(
+            Row(
               children: [
                 Expanded(
                   child: ActionCard(
@@ -189,9 +102,13 @@ class HomeScreen extends StatelessWidget {
                     icon: Icons.support_agent,
                     backgroundColor: Colors.pinkAccent,
                     buttonLabel: "Book",
+                    onPressed: () {
+                      showMySnackBar(
+                          context: context, message: "Booking Service...");
+                    },
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Expanded(
                   child: ActionCard(
                     title: "Pharmacy",
@@ -199,12 +116,81 @@ class HomeScreen extends StatelessWidget {
                     icon: Icons.local_pharmacy,
                     backgroundColor: Colors.lightBlue,
                     buttonLabel: "Buy",
+                    onPressed: () {
+                      showMySnackBar(
+                          context: context, message: "Navigating to Products");
+                      Future.delayed(const Duration(seconds: 1), () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BlocProvider(
+                              create: (context) =>
+                                  getIt<ProductBloc>()..add(LoadProducts()),
+                              child: const ProductView(),
+                            ),
+                          ),
+                        );
+                      });
+                    },
                   ),
                 ),
               ],
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildDoctorBookingSection(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.lightBlueAccent.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Image.asset(
+            'assets/images/doctor.png',
+            height: 80,
+            width: 80,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.broken_image, size: 80, color: Colors.grey),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Online and Offline Consultations",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    showMySnackBar(context: context, message: "Doctors Viewed");
+                    Future.delayed(const Duration(seconds: 1), () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                            create: (context) =>
+                                getIt<DoctorBloc>()..add(LoadDoctors()),
+                            child: const DoctorView(),
+                          ),
+                        ),
+                      );
+                    });
+                  },
+                  child: const Text("Book Now"),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -232,11 +218,9 @@ class CategoryItem extends StatelessWidget {
           child: Icon(icon, size: 30, color: color),
         ),
         const SizedBox(height: 8),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-          textAlign: TextAlign.center,
-        ),
+        Text(label,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            textAlign: TextAlign.center),
       ],
     );
   }
@@ -248,6 +232,7 @@ class ActionCard extends StatelessWidget {
   final IconData icon;
   final Color backgroundColor;
   final String buttonLabel;
+  final VoidCallback? onPressed;
 
   const ActionCard({
     super.key,
@@ -256,6 +241,7 @@ class ActionCard extends StatelessWidget {
     required this.icon,
     required this.backgroundColor,
     required this.buttonLabel,
+    this.onPressed,
   });
 
   @override
@@ -267,7 +253,6 @@ class ActionCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -278,34 +263,22 @@ class ActionCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      subtitle,
-                      style:
-                          const TextStyle(fontSize: 12, color: Colors.black54),
-                    ),
+                    Text(title,
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.bold)),
+                    Text(subtitle,
+                        style: const TextStyle(
+                            fontSize: 12, color: Colors.black54)),
                   ],
                 ),
               ),
             ],
           ),
+          const SizedBox(height: 10),
           Align(
             alignment: Alignment.bottomRight,
             child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: backgroundColor,
-                minimumSize: const Size(70, 30), // Minimum size for the button
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                textStyle: const TextStyle(fontSize: 12), // Adjust font size
-              ),
-              onPressed: () {},
+              onPressed: onPressed ?? () {},
               child: Text(buttonLabel),
             ),
           ),

@@ -1,0 +1,67 @@
+import 'package:dartz/dartz.dart';
+import 'package:myasteer/features/product/data/data_source/local_datasource/product_local_data_source.dart';
+import 'package:myasteer/features/product/domain/entity/product_entity.dart';
+import 'package:myasteer/features/product/domain/repository/doctor_repository.dart';
+
+import '../../../../core/error/failure.dart';
+
+class ProductLocalRepository implements IProductRepository {
+  final ProductLocalDataSource _productLocalDataSource;
+
+  ProductLocalRepository({
+    required ProductLocalDataSource productLocalDataSource,
+  }) : _productLocalDataSource = productLocalDataSource;
+
+  // @override
+  // Future<Either<Failure, void>> createProduct(ProductEntity product) async {
+  //   try {
+  //     await _productLocalDataSource.createProduct(product);
+  //     return const Right(null);
+  //   } catch (e) {
+  //     return Left(LocalDatabaseFailure(message: 'Error creating product: $e'));
+  //   }
+  // }
+
+  // @override
+  // Future<Either<Failure, void>> deleteProduct(String id, String? token) async {
+  //   try {
+  //     await _productLocalDataSource.deleteProduct(id, token);
+  //     return const Right(null);
+  //   } catch (e) {
+  //     return Left(LocalDatabaseFailure(message: 'Error deleting product: $e'));
+  //   }
+  // }
+
+  // @override
+  // Future<Either<Failure, ProductEntity>> getProductById(String id) async {
+  //   try {
+  //     final product = await _productLocalDataSource.getProductById(id);
+  //     return Right(product);
+  //   } catch (e) {
+  //     return Left(
+  //         LocalDatabaseFailure(message: 'Error fetching product by ID: $e'));
+  //   }
+  // }
+
+  // @override
+  // Future<Either<Failure, void>> updateProduct(
+  //     ProductEntity product, String? token) async {
+  //   try {
+  //     await _productLocalDataSource.updateProduct(product);
+  //     return const Right(null);
+  //   } catch (e) {
+  //     return Left(LocalDatabaseFailure(message: 'Error updating product: $e'));
+  //   }
+  // }
+
+  @override
+  Future<Either<Failure, List<ProductEntity>>> getAllProducts() async {
+    try {
+      final categories = await _productLocalDataSource.getAllProducts();
+      return Right(categories);
+    } catch (e) {
+      return Left(
+          LocalDatabaseFailure(message: 'Error fetching all categories: $e'));
+    }
+  }
+}

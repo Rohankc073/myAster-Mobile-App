@@ -2,6 +2,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:myasteer/app/constants/hive_table_constant.dart';
 import 'package:myasteer/features/auth/data/model/auth_hive_model.dart';
 import 'package:myasteer/features/doctor/data/model/doctor_hive_model.dart';
+import 'package:myasteer/features/product/data/model/product_hive_model.dart';
 // import 'package:myasteer/features/doctor/data/model/doctor_hive_model.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -74,11 +75,12 @@ class HiveService {
     return box.values.toList();
   }
 
-  // // ** Product**
-  // Future<void> getAllProducts(ProductHiveModel product) async {
-  //   var box = await Hive.openBox<DoctorHiveModel>(HiveTableConstant.productBox);
-  //   await box.put(product.id, product);
-  // }
+  // ** Product**
+  Future<List<ProductHiveModel>> getAllProduct() async {
+    var box =
+        await Hive.openBox<ProductHiveModel>(HiveTableConstant.productBox);
+    return box.values.toList();
+  }
 
   Future<void> deleteProduct(String id) async {
     var box = await Hive.openBox<DoctorHiveModel>(HiveTableConstant.doctorBox);
