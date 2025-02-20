@@ -3,6 +3,7 @@ import 'package:myasteer/app/constants/hive_table_constant.dart';
 import 'package:myasteer/features/auth/data/model/auth_hive_model.dart';
 import 'package:myasteer/features/doctor/data/model/doctor_hive_model.dart';
 import 'package:myasteer/features/product/data/model/product_hive_model.dart';
+import 'package:myasteer/features/user/data/model/user_hive_model.dart';
 // import 'package:myasteer/features/doctor/data/model/doctor_hive_model.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -85,6 +86,11 @@ class HiveService {
   Future<void> deleteProduct(String id) async {
     var box = await Hive.openBox<DoctorHiveModel>(HiveTableConstant.doctorBox);
     await box.delete(id);
+  }
+
+  Future<List<UserHiveModel>> getUserById() async {
+    var box = await Hive.openBox<UserHiveModel>(HiveTableConstant.userBox);
+    return box.values.toList();
   }
 
   // Future<List<DoctorHiveModel>> getAllDoctor() async {

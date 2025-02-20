@@ -11,19 +11,24 @@ class ProductApiModel extends Equatable {
   @JsonKey(name: '_id')
   final String? id;
   final String name;
-  // final String? contact;
-  // final String? email;
+  final String image;
+  final double price;
 
   const ProductApiModel({
     this.id,
     required this.name,
+    required this.image,
+    required this.price,
     // this.contact,
     // this.email,
   });
 
   const ProductApiModel.empty()
       : id = '',
-        name = '';
+        name = '',
+        image = '',
+        price = 0.0;
+
   // contact = '',
   // email = null;
 
@@ -38,6 +43,8 @@ class ProductApiModel extends Equatable {
   ProductEntity toEntity() => ProductEntity(
         id: id,
         name: name,
+        price: price,
+        image: image,
         // contact: contact,
         // email: email,
       );
@@ -47,6 +54,8 @@ class ProductApiModel extends Equatable {
     return ProductApiModel(
       id: product.id,
       name: product.name,
+      price: product.price,
+      image: product.image,
       // contact: product.contact,
       // email: product.email,
     );
@@ -61,6 +70,8 @@ class ProductApiModel extends Equatable {
   List<Object?> get props => [
         id,
         name,
+        image,
+        price,
         // email,
         // contact,
       ];

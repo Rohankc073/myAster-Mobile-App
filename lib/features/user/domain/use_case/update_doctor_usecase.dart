@@ -4,16 +4,16 @@
 // import '../../../../app/shared_prefs/token_shared_prefs.dart';
 // import '../../../../app/usecase/usecase.dart';
 // import '../../../../core/error/failure.dart';
-// import '../../../workshop_user/domain/entity/user_entity.dart';
-// import '../../../workshop_user/domain/repository/user_repository.dart';
+// import '../../../workshop_doctor/domain/entity/doctor_entity.dart';
+// import '../../../workshop_doctor/domain/repository/doctor_repository.dart';
 
-// class UpdateUserParams extends Equatable {
+// class UpdateDoctorParams extends Equatable {
 //   final String? id;
 //   final String name;
 //   final String? description;
 //   final String? photo;
 
-//   const UpdateUserParams({
+//   const UpdateDoctorParams({
 //     this.id,
 //     required this.name,
 //     this.description,
@@ -36,17 +36,17 @@
 //   }
 // }
 
-// class UpdateUserUseCase
-//     implements UsecaseWithParams<void, UpdateUserParams> {
-//   final IUserRepository userRepository;
+// class UpdateDoctorUseCase
+//     implements UsecaseWithParams<void, UpdateDoctorParams> {
+//   final IDoctorRepository doctorRepository;
 //   final TokenSharedPrefs tokenSharedPrefs;
 
-//   const UpdateUserUseCase(
-//       {required this.userRepository, required this.tokenSharedPrefs});
+//   const UpdateDoctorUseCase(
+//       {required this.doctorRepository, required this.tokenSharedPrefs});
 
 //   @override
-//   Future<Either<Failure, void>> call(UpdateUserParams params) async {
-//     final userEntity = UserEntity(
+//   Future<Either<Failure, void>> call(UpdateDoctorParams params) async {
+//     final doctorEntity = DoctorEntity(
 //       id: null,
 //       name: params.name,
 //       description: params.description,
@@ -58,9 +58,9 @@
 //     return token.fold((l) {
 //       return Left(l);
 //     }, (r) async {
-//       return await userRepository.updateUser(userEntity, r);
+//       return await doctorRepository.updateDoctor(doctorEntity, r);
 //     });
 
-//     // return await userRepository.updateUser(userEntity);
+//     // return await doctorRepository.updateDoctor(doctorEntity);
 //   }
 // }

@@ -19,32 +19,31 @@ class ProductHiveModel extends Equatable {
   final String name;
 
   @HiveField(2)
-  final String? contact;
+  final String image;
 
   @HiveField(3)
-  final String? email;
+  final double price;
 
   ProductHiveModel({
     String? id,
     required this.name,
-    this.contact,
-    this.email,
+    required this.image,
+    required this.price,
   }) : id = id ?? const Uuid().v4();
 
   // Initial Constructor
   const ProductHiveModel.initial()
       : id = '',
         name = '',
-        contact = null,
-        email = null;
-
+        image = '',
+        price = 0.0;
   // From Entity
   factory ProductHiveModel.fromEntity(ProductEntity entity) {
     return ProductHiveModel(
       id: entity.id,
       name: entity.name,
-      // contact: entity.contact,
-      // email: entity.email,
+      image: entity.image,
+      price: entity.price,
     );
   }
 
@@ -53,8 +52,8 @@ class ProductHiveModel extends Equatable {
     return ProductEntity(
       id: id,
       name: name,
-      // contact: contact,
-      // email: email,
+      image: image,
+      price: price,
     );
   }
 
@@ -69,7 +68,7 @@ class ProductHiveModel extends Equatable {
   List<Object?> get props => [
         id,
         name,
-        contact,
-        email,
+        image,
+        price,
       ];
 }

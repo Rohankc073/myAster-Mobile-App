@@ -6,32 +6,113 @@ import 'package:myasteer/features/product/presentation/view_model/product_state.
 class ProductView extends StatelessWidget {
   const ProductView({super.key});
 
+  // Function to handle localhost issue in iOS simulator
+  String getImageUrl(String? imagePath) {
+    if (imagePath == null || imagePath.trim().isEmpty) {
+      return "https://via.placeholder.com/150"; // Placeholder image
+    }
+    if (imagePath.contains("localhost")) {
+      return imagePath.replaceFirst("localhost", "127.0.0.1");
+    }
+    return imagePath.trim();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Products List')),
+      appBar: AppBar(
+        title: const Text('Products'),
+        centerTitle: true,
+        backgroundColor: Colors.blueAccent,
+      ),
       body: BlocBuilder<ProductBloc, ProductState>(
         builder: (context, state) {
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
           if (state.error != null) {
-            return Center(child: Text('Error: ${state.error}'));
+            return Center(
+              child: Text(
+                'Error: ${state.error}',
+                style: const TextStyle(color: Colors.red, fontSize: 16),
+              ),
+            );
           }
           if (state.products.isEmpty) {
-            return const Center(child: Text('No Products Available'));
+            return const Center(
+              child: Text(
+                'No Products Available',
+                style: TextStyle(fontSize: 18),
+              ),
+            );
           }
-          return ListView.builder(
-            itemCount: state.products.length,
-            itemBuilder: (context, index) {
-              final product = state.products[index];
 
-              return ListTile(
-                title: Text(product.name),
-                // subtitle: Text(product.contact ?? 'No contact info'),
-                leading: const Icon(Icons.person),
-              );
-            },
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GridView.builder(
+              itemCount: state.products.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // Two products per row
+                childAspectRatio: 0.75,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemBuilder: (context, index) {
+                final product = state.products[index];
+
+                return Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(10)),
+                          child: Image.network(
+                            getImageUrl(product.image),
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Image.network(
+                              "https://via.placeholder.com/150",
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              product.name,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "\$${product.price}",
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           );
         },
       ),

@@ -3,8 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myasteer/features/doctor/presentation/view_model/doctor_bloc.dart';
 import 'package:myasteer/features/doctor/presentation/view_model/doctor_state.dart';
 
-class DoctorView extends StatelessWidget {
+class DoctorView extends StatefulWidget {
   const DoctorView({super.key});
+
+  @override
+  State<DoctorView> createState() => _DoctorViewState();
+}
+
+class _DoctorViewState extends State<DoctorView> {
+  String? selectedSpecialization;
 
   String getImageUrl(String? imagePath) {
     if (imagePath == null || imagePath.trim().isEmpty) {
@@ -19,11 +26,15 @@ class DoctorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100], // Light background for a clean UI
       appBar: AppBar(
-        title: const Text('Doctors List',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Find the Best Doctors',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
         backgroundColor: Colors.blueAccent,
+        elevation: 0,
       ),
       body: BlocBuilder<DoctorBloc, DoctorState>(
         builder: (context, state) {
@@ -32,62 +43,221 @@ class DoctorView extends StatelessWidget {
           }
           if (state.error != null) {
             return Center(
-                child: Text('Error: ${state.error}',
-                    style: const TextStyle(color: Colors.red, fontSize: 16)));
+                child: Text(
+              'Error: ${state.error}',
+              style: const TextStyle(color: Colors.red, fontSize: 16),
+            ));
           }
           if (state.doctors.isEmpty) {
             return const Center(
-                child: Text('No Doctors Available',
-                    style: TextStyle(fontSize: 18)));
+                child: Text(
+              'No Doctors Available',
+              style: TextStyle(fontSize: 18),
+            ));
           }
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListView.builder(
-              itemCount: state.doctors.length,
-              itemBuilder: (context, index) {
-                final doctor = state.doctors[index];
-                return Card(
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+
+          // Extract specializations dynamically
+          List<String> specializations = state.doctors
+              .map((doctor) => doctor.specialization ?? "General")
+              .toSet()
+              .toList();
+
+          // Ensure "All" is the first category
+          specializations.insert(0, "All");
+
+          // Filter doctors based on selected category
+          List doctorsToShow =
+              selectedSpecialization == null || selectedSpecialization == "All"
+                  ? state.doctors
+                  : state.doctors
+                      .where((doctor) =>
+                          doctor.specialization == selectedSpecialization)
+                      .toList();
+
+          return Column(
+            children: [
+              // Top Section with Modern Banner
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.blueAccent, Colors.lightBlue],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.all(10),
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(getImageUrl(doctor.image)),
-                      radius: 30,
-                      onBackgroundImageError: (_, __) {
-                        const AssetImage('assets/default_avatar.png');
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                  ),
+                ),
+                child: const Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.health_and_safety,
+                        color: Colors.white, size: 40),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Find Your Specialist",
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            "Book an appointment with top doctors",
+                            style:
+                                TextStyle(fontSize: 14, color: Colors.white70),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              // Specialization Categories with modern UI
+              SizedBox(
+                height: 50,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: specializations.length,
+                  itemBuilder: (context, index) {
+                    String specialization = specializations[index];
+                    bool isSelected =
+                        specialization == selectedSpecialization ||
+                            (selectedSpecialization == null &&
+                                specialization == "All");
+
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedSpecialization =
+                              isSelected ? "All" : specialization;
+                        });
                       },
-                    ),
-                    title: Text(
-                      doctor.name,
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Text(
-                        //   doctor.specialization,
-                        //   style: const TextStyle(
-                        //       fontSize: 14,
-                        //       fontWeight: FontWeight.w500,
-                        //       color: Colors.blue),
-                        // ),
-                        Text(
-                          doctor.contact ?? 'No contact info',
-                          style:
-                              const TextStyle(fontSize: 14, color: Colors.grey),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 10),
+                        margin: const EdgeInsets.symmetric(horizontal: 5),
+                        decoration: BoxDecoration(
+                          color: isSelected ? Colors.blueAccent : Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                              color: isSelected
+                                  ? Colors.blueAccent
+                                  : Colors.grey[300]!),
+                          boxShadow: isSelected
+                              ? [
+                                  BoxShadow(
+                                      color: Colors.blueAccent.withOpacity(0.2),
+                                      blurRadius: 5,
+                                      spreadRadius: 1)
+                                ]
+                              : [],
                         ),
-                      ],
-                    ),
-                    trailing: const Icon(Icons.arrow_forward_ios,
-                        color: Colors.blueAccent),
+                        child: Text(
+                          specialization,
+                          style: TextStyle(
+                              color:
+                                  isSelected ? Colors.white : Colors.blueAccent,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              // Doctor List
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: ListView.builder(
+                    itemCount: doctorsToShow.length,
+                    itemBuilder: (context, index) {
+                      final doctor = doctorsToShow[index];
+                      return Card(
+                        elevation: 2,
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(12),
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.network(
+                              getImageUrl(doctor.image),
+                              width: 55,
+                              height: 55,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Image.network(
+                                      "https://via.placeholder.com/150",
+                                      width: 55,
+                                      height: 55,
+                                      fit: BoxFit.cover),
+                            ),
+                          ),
+                          title: Text(
+                            doctor.name,
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                doctor.specialization ?? "General",
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.blue),
+                              ),
+                              Text(
+                                doctor.contact ?? 'No contact info',
+                                style: const TextStyle(
+                                    fontSize: 14, color: Colors.grey),
+                              ),
+                              Text(
+                                doctor.email ?? 'No email provided',
+                                style: const TextStyle(
+                                    fontSize: 14, color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                          trailing: ElevatedButton(
+                            onPressed: () {
+                              // Implement booking functionality
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            child: const Text("Book",
+                                style: TextStyle(color: Colors.white)),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
+                ),
+              ),
+            ],
           );
         },
       ),

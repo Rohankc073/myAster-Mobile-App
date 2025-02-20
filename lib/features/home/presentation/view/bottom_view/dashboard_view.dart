@@ -26,10 +26,10 @@ class HomeScreen extends StatelessWidget {
                   color: Colors.grey),
             ),
             const SizedBox(height: 5),
-            const Text(
-              "Guest",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
+            // const Text(
+            //   "Guest",
+            //   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            // ),
             const SizedBox(height: 20),
             TextField(
               decoration: InputDecoration(
@@ -185,6 +185,10 @@ class HomeScreen extends StatelessWidget {
                       );
                     });
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white, // Button text is white
+                  ),
                   child: const Text("Book Now"),
                 ),
               ],
@@ -279,6 +283,10 @@ class ActionCard extends StatelessWidget {
             alignment: Alignment.bottomRight,
             child: ElevatedButton(
               onPressed: onPressed ?? () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: backgroundColor,
+                foregroundColor: Colors.white, // Button text is now white
+              ),
               child: Text(buttonLabel),
             ),
           ),

@@ -24,7 +24,7 @@ import 'package:myasteer/features/product/data/data_source/local_datasource/prod
 import 'package:myasteer/features/product/data/data_source/remote_datasource/product_remote_data_source.dart';
 import 'package:myasteer/features/product/data/repository/product_local_repository.dart';
 import 'package:myasteer/features/product/data/repository/product_remote_repository.dart';
-import 'package:myasteer/features/product/domain/use_case/get_all_doctor_usecase.dart';
+import 'package:myasteer/features/product/domain/use_case/get_all_product_usecase.dart';
 import 'package:myasteer/features/product/presentation/view_model/product_bloc.dart';
 import 'package:myasteer/features/splash/presentation/view_model/cubit/splash_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';

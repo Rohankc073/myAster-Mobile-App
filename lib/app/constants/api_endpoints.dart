@@ -16,4 +16,5 @@ class ApiEndpoints {
   static const String addDoctor = 'doctors/save';
   static const String getAllDoctor = 'doctors/getAll';
   static const String getAllProduct = 'products/all';
+  static const String getUserById = 'users/:id';
 }

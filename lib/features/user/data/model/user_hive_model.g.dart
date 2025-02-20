@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'doctor_hive_model.dart';
+part of 'user_hive_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class DoctorHiveModelAdapter extends TypeAdapter<DoctorHiveModel> {
+class UserHiveModelAdapter extends TypeAdapter<UserHiveModel> {
   @override
-  final int typeId = 1;
+  final int typeId = 0;
 
   @override
-  DoctorHiveModel read(BinaryReader reader) {
+  UserHiveModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return DoctorHiveModel(
+    return UserHiveModel(
       id: fields[0] as String?,
       name: fields[1] as String,
       contact: fields[2] as String?,
@@ -27,7 +27,7 @@ class DoctorHiveModelAdapter extends TypeAdapter<DoctorHiveModel> {
   }
 
   @override
-  void write(BinaryWriter writer, DoctorHiveModel obj) {
+  void write(BinaryWriter writer, UserHiveModel obj) {
     writer
       ..writeByte(6)
       ..writeByte(0)
@@ -50,7 +50,7 @@ class DoctorHiveModelAdapter extends TypeAdapter<DoctorHiveModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is DoctorHiveModelAdapter &&
+      other is UserHiveModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

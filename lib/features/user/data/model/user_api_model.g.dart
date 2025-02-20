@@ -1,23 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'product_api_model.dart';
+part of 'user_api_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-ProductApiModel _$ProductApiModelFromJson(Map<String, dynamic> json) =>
-    ProductApiModel(
+UserApiModel _$UserApiModelFromJson(Map<String, dynamic> json) => UserApiModel(
       id: json['_id'] as String?,
       name: json['name'] as String,
+      contact: json['contact'] as String?,
+      email: json['email'] as String?,
       image: json['image'] as String,
-      price: (json['price'] as num).toDouble(),
+      specialization: json['specialization'] as String,
     );
 
-Map<String, dynamic> _$ProductApiModelToJson(ProductApiModel instance) =>
+Map<String, dynamic> _$UserApiModelToJson(UserApiModel instance) =>
     <String, dynamic>{
       '_id': instance.id,
       'name': instance.name,
+      'contact': instance.contact,
+      'email': instance.email,
       'image': instance.image,
-      'price': instance.price,
+      'specialization': instance.specialization,
     };

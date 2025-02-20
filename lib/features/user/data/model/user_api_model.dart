@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:myasteer/features/doctor/domain/entity/doctor_entity.dart';
+import 'package:myasteer/features/user/domain/entity/user_entity.dart';
 
-part 'doctor_api_model.g.dart';
+part 'user_api_model.g.dart';
 
 // Include the generated part file.
 
 @JsonSerializable()
-class DoctorApiModel extends Equatable {
+class UserApiModel extends Equatable {
   @JsonKey(name: '_id')
   final String? id;
   final String name;
@@ -16,7 +16,7 @@ class DoctorApiModel extends Equatable {
   final String image;
   final String specialization;
 
-  const DoctorApiModel({
+  const UserApiModel({
     this.id,
     required this.name,
     this.contact,
@@ -25,7 +25,7 @@ class DoctorApiModel extends Equatable {
     required this.specialization,
   });
 
-  const DoctorApiModel.empty()
+  const UserApiModel.empty()
       : id = '',
         name = '',
         contact = '',
@@ -34,14 +34,14 @@ class DoctorApiModel extends Equatable {
         email = null;
 
   // From JSON
-  factory DoctorApiModel.fromJson(Map<String, dynamic> json) =>
-      _$DoctorApiModelFromJson(json);
+  factory UserApiModel.fromJson(Map<String, dynamic> json) =>
+      _$UserApiModelFromJson(json);
 
   // To JSON
-  Map<String, dynamic> toJson() => _$DoctorApiModelToJson(this);
+  Map<String, dynamic> toJson() => _$UserApiModelToJson(this);
 
   // Convert API Object to Entity
-  DoctorEntity toEntity() => DoctorEntity(
+  UserEntity toEntity() => UserEntity(
         id: id,
         name: name,
         image: image,
@@ -51,19 +51,19 @@ class DoctorApiModel extends Equatable {
       );
 
   // Convert Entity to API Object
-  factory DoctorApiModel.fromEntity(DoctorEntity doctor) {
-    return DoctorApiModel(
-      id: doctor.id,
-      image: doctor.image,
-      name: doctor.name,
-      contact: doctor.contact,
-      email: doctor.email,
-      specialization: doctor.specialization,
+  factory UserApiModel.fromEntity(UserEntity user) {
+    return UserApiModel(
+      id: user.id,
+      image: user.image,
+      name: user.name,
+      contact: user.contact,
+      email: user.email,
+      specialization: user.specialization,
     );
   }
 
   // Convert API List to Entity List
-  static List<DoctorEntity> toEntityList(List<DoctorApiModel> models) {
+  static List<UserEntity> toEntityList(List<UserApiModel> models) {
     return models.map((model) => model.toEntity()).toList();
   }
 

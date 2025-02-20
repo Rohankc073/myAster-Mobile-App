@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class DoctorEntity extends Equatable {
+class UserEntity extends Equatable {
   final String? id;
   final String name;
   final String? email;
@@ -8,7 +8,7 @@ class DoctorEntity extends Equatable {
   final String image;
   final String specialization;
 
-  const DoctorEntity({
+  const UserEntity({
     this.id,
     required this.image,
     required this.name,
@@ -18,7 +18,7 @@ class DoctorEntity extends Equatable {
   });
 
   // Initialize Empty Constructor
-  const DoctorEntity.empty()
+  const UserEntity.empty()
       : id = '_empty.id',
         image = '_empty.image',
         name = '_empty.name',

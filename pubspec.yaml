@@ -57,6 +57,7 @@ dependencies:
   flutter_bloc: ^8.1.6
   bloc: ^8.1.4
   smooth_page_indicator: ^1.2.0+3
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:

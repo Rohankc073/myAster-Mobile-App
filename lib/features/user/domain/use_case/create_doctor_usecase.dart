@@ -2,21 +2,21 @@
 // import 'package:equatable/equatable.dart';
 // import 'package:myasteer/app/useccase/usecase.dart';
 // import 'package:myasteer/core/error/failure.dart';
-// import 'package:myasteer/features/user/domain/repository/user_repository.dart';
+// import 'package:myasteer/features/doctor/domain/repository/doctor_repository.dart';
 
-// class CreateUserParams extends Equatable {
+// class CreateDoctorParams extends Equatable {
 //   final String name;
 //   final String? description;
 //   final String? photo;
 
-//   const CreateUserParams({
+//   const CreateDoctorParams({
 //     required this.name,
 //     this.description,
 //     this.photo,
 //   });
 
 //   // Initialize Empty Constructor
-//   const CreateUserParams.empty()
+//   const CreateDoctorParams.empty()
 //       : name = '_empty.name',
 //         description = '_empty.description',
 //         photo = '_empty.photo';
@@ -29,16 +29,16 @@
 //       ];
 // }
 
-// class CreateUserUseCase
-//     implements UsecaseWithParams<void, CreateUserParams> {
-//   final IUserRepository userRepository;
+// class CreateDoctorUseCase
+//     implements UsecaseWithParams<void, CreateDoctorParams> {
+//   final IDoctorRepository doctorRepository;
 
-//   CreateUserUseCase({required this.userRepository});
+//   CreateDoctorUseCase({required this.doctorRepository});
 
 //   @override
-//   Future<Either<Failure, void>> call(CreateUserParams params) async {
-//     return await userRepository.createUser(
-//       UserEntity(
+//   Future<Either<Failure, void>> call(CreateDoctorParams params) async {
+//     return await doctorRepository.createDoctor(
+//       DoctorEntity(
 //         name: params.name,
 //         description: params.description,
 //         photo: params.photo,

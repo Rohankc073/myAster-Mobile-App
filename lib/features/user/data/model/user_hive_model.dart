@@ -1,17 +1,17 @@
 import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:myasteer/features/doctor/domain/entity/doctor_entity.dart';
+import 'package:myasteer/features/user/domain/entity/user_entity.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../app/constants/hive_table_constant.dart';
 
-part 'doctor_hive_model.g.dart';
+part 'user_hive_model.g.dart';
 
 // Command to Generate Adapter: dart run build_runner build -d
 // Need to run each time changes are made to the model.
 
-@HiveType(typeId: HiveTableConstant.doctorTableId)
-class DoctorHiveModel extends Equatable {
+@HiveType(typeId: HiveTableConstant.userTableId)
+class UserHiveModel extends Equatable {
   @HiveField(0)
   final String? id;
 
@@ -30,7 +30,7 @@ class DoctorHiveModel extends Equatable {
   @HiveField(5)
   final String specialization;
 
-  DoctorHiveModel({
+  UserHiveModel({
     String? id,
     required this.name,
     this.contact,
@@ -40,7 +40,7 @@ class DoctorHiveModel extends Equatable {
   }) : id = id ?? const Uuid().v4();
 
   // Initial Constructor
-  const DoctorHiveModel.initial()
+  const UserHiveModel.initial()
       : id = '',
         name = '',
         contact = null,
@@ -49,8 +49,8 @@ class DoctorHiveModel extends Equatable {
         email = null;
 
   // From Entity
-  factory DoctorHiveModel.fromEntity(DoctorEntity entity) {
-    return DoctorHiveModel(
+  factory UserHiveModel.fromEntity(UserEntity entity) {
+    return UserHiveModel(
       id: entity.id,
       name: entity.name,
       contact: entity.contact,
@@ -61,8 +61,8 @@ class DoctorHiveModel extends Equatable {
   }
 
   // To Entity
-  DoctorEntity toEntity() {
-    return DoctorEntity(
+  UserEntity toEntity() {
+    return UserEntity(
       id: id,
       name: name,
       contact: contact,
@@ -73,9 +73,9 @@ class DoctorHiveModel extends Equatable {
   }
 
   // To Entity List
-  static List<DoctorHiveModel> fromEntityList(List<DoctorEntity> entityList) {
+  static List<UserHiveModel> fromEntityList(List<UserEntity> entityList) {
     return entityList
-        .map((entity) => DoctorHiveModel.fromEntity(entity))
+        .map((entity) => UserHiveModel.fromEntity(entity))
         .toList();
   }
 

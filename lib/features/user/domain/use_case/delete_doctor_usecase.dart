@@ -4,36 +4,36 @@
 
 // import '../../../../app/usecase/usecase.dart';
 // import '../../../../core/error/failure.dart';
-// import '../../../workshop_user/domain/repository/user_repository.dart';
+// import '../../../workshop_doctor/domain/repository/doctor_repository.dart';
 
-// class DeleteUserParams extends Equatable {
+// class DeleteDoctorParams extends Equatable {
 //   final String id;
 
-//   const DeleteUserParams({required this.id});
+//   const DeleteDoctorParams({required this.id});
 
 //   // Initialize Empty Constructor
-//   const DeleteUserParams.empty() : id = '_empty.id';
+//   const DeleteDoctorParams.empty() : id = '_empty.id';
 
 //   @override
 //   List<Object?> get props => [id];
 // }
 
-// class DeleteUserUseCase
-//     implements UsecaseWithParams<void, DeleteUserParams> {
-//   final IUserRepository userRepository;
+// class DeleteDoctorUseCase
+//     implements UsecaseWithParams<void, DeleteDoctorParams> {
+//   final IDoctorRepository doctorRepository;
 //   final TokenSharedPrefs tokenSharedPrefs;
 
-//   DeleteUserUseCase(
-//       {required this.userRepository, required this.tokenSharedPrefs});
+//   DeleteDoctorUseCase(
+//       {required this.doctorRepository, required this.tokenSharedPrefs});
 
 //   @override
-//   Future<Either<Failure, void>> call(DeleteUserParams params) async {
+//   Future<Either<Failure, void>> call(DeleteDoctorParams params) async {
 //     // Get token from Shared Preferences and send it to server
 //     final token = await tokenSharedPrefs.getToken();
 //     return token.fold((l) {
 //       return Left(l);
 //     }, (r) async {
-//       return await userRepository.deleteUser(params.id, r);
+//       return await doctorRepository.deleteDoctor(params.id, r);
 //     });
 //   }
 // }

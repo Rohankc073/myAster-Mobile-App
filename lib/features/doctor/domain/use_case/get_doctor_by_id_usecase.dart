@@ -3,26 +3,26 @@
 
 // import '../../../../app/usecase/usecase.dart';
 // import '../../../../core/error/failure.dart';
-// import '../../../workshop_doctor/domain/entity/doctor_entity.dart';
-// import '../../../workshop_doctor/domain/repository/doctor_repository.dart';
+// import '../../../workshop_user/domain/entity/user_entity.dart';
+// import '../../../workshop_user/domain/repository/user_repository.dart';
 
-// class GetDoctorByIdParams extends Equatable {
+// class GetUserByIdParams extends Equatable {
 //   final String id;
 
-//   const GetDoctorByIdParams({required this.id});
+//   const GetUserByIdParams({required this.id});
 
 //   @override
 //   List<Object?> get props => [id];
 // }
 
-// class GetDoctorByIdUseCase
-//     implements UsecaseWithParams<DoctorEntity, GetDoctorByIdParams> {
-//   final IDoctorRepository doctorRepository;
+// class GetUserByIdUseCase
+//     implements UsecaseWithParams<UserEntity, GetUserByIdParams> {
+//   final IUserRepository userRepository;
 
-//   GetDoctorByIdUseCase({required this.doctorRepository});
+//   GetUserByIdUseCase({required this.userRepository});
 
 //   @override
-//   Future<Either<Failure, DoctorEntity>> call(GetDoctorByIdParams params) async {
-//     return doctorRepository.getDoctorById(params.id);
+//   Future<Either<Failure, UserEntity>> call(GetUserByIdParams params) async {
+//     return userRepository.getUserById(params.id);
 //   }
 // }
