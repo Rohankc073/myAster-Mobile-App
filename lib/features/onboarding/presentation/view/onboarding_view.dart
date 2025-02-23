@@ -70,8 +70,10 @@ class OnboardingView extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  // Navigate to Login Page using OnboardingCubit
-                  context.read<OnboardingCubit>().goToLogin(context);
+                  // ✅ Check token & navigate automatically
+                  context
+                      .read<OnboardingCubit>()
+                      .checkTokenAndNavigate(context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blueAccent,

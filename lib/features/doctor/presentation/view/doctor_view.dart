@@ -13,6 +13,7 @@ class DoctorView extends StatefulWidget {
 class _DoctorViewState extends State<DoctorView> {
   String? selectedSpecialization;
 
+  // ✅ Ensure a valid image URL is returned
   String getImageUrl(String? imagePath) {
     if (imagePath == null || imagePath.trim().isEmpty) {
       return "https://via.placeholder.com/150"; // Placeholder image
@@ -26,7 +27,7 @@ class _DoctorViewState extends State<DoctorView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100], // Light background for a clean UI
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: const Text(
           'Find the Best Doctors',
@@ -43,29 +44,30 @@ class _DoctorViewState extends State<DoctorView> {
           }
           if (state.error != null) {
             return Center(
-                child: Text(
-              'Error: ${state.error}',
-              style: const TextStyle(color: Colors.red, fontSize: 16),
-            ));
+              child: Text(
+                'Error: ${state.error}',
+                style: const TextStyle(color: Colors.red, fontSize: 16),
+              ),
+            );
           }
           if (state.doctors.isEmpty) {
             return const Center(
-                child: Text(
-              'No Doctors Available',
-              style: TextStyle(fontSize: 18),
-            ));
+              child: Text(
+                'No Doctors Available',
+                style: TextStyle(fontSize: 18),
+              ),
+            );
           }
 
-          // Extract specializations dynamically
+          // Extract specializations dynamically while handling `null` values
           List<String> specializations = state.doctors
               .map((doctor) => doctor.specialization ?? "General")
               .toSet()
               .toList();
 
-          // Ensure "All" is the first category
           specializations.insert(0, "All");
 
-          // Filter doctors based on selected category
+          // ✅ Filter doctors based on selected category
           List doctorsToShow =
               selectedSpecialization == null || selectedSpecialization == "All"
                   ? state.doctors
@@ -76,110 +78,9 @@ class _DoctorViewState extends State<DoctorView> {
 
           return Column(
             children: [
-              // Top Section with Modern Banner
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.blueAccent, Colors.lightBlue],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20),
-                  ),
-                ),
-                child: const Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(Icons.health_and_safety,
-                        color: Colors.white, size: 40),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Find Your Specialist",
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            "Book an appointment with top doctors",
-                            style:
-                                TextStyle(fontSize: 14, color: Colors.white70),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
               const SizedBox(height: 12),
 
-              // Specialization Categories with modern UI
-              SizedBox(
-                height: 50,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: specializations.length,
-                  itemBuilder: (context, index) {
-                    String specialization = specializations[index];
-                    bool isSelected =
-                        specialization == selectedSpecialization ||
-                            (selectedSpecialization == null &&
-                                specialization == "All");
-
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedSpecialization =
-                              isSelected ? "All" : specialization;
-                        });
-                      },
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 10),
-                        margin: const EdgeInsets.symmetric(horizontal: 5),
-                        decoration: BoxDecoration(
-                          color: isSelected ? Colors.blueAccent : Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                              color: isSelected
-                                  ? Colors.blueAccent
-                                  : Colors.grey[300]!),
-                          boxShadow: isSelected
-                              ? [
-                                  BoxShadow(
-                                      color: Colors.blueAccent.withOpacity(0.2),
-                                      blurRadius: 5,
-                                      spreadRadius: 1)
-                                ]
-                              : [],
-                        ),
-                        child: Text(
-                          specialization,
-                          style: TextStyle(
-                              color:
-                                  isSelected ? Colors.white : Colors.blueAccent,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              // Doctor List
+              // ✅ Doctor List with Clickable Pop-up
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -212,35 +113,20 @@ class _DoctorViewState extends State<DoctorView> {
                             ),
                           ),
                           title: Text(
-                            doctor.name,
+                            doctor.name ?? "Unknown Doctor",
                             style: const TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                doctor.specialization ?? "General",
-                                style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.blue),
-                              ),
-                              Text(
-                                doctor.contact ?? 'No contact info',
-                                style: const TextStyle(
-                                    fontSize: 14, color: Colors.grey),
-                              ),
-                              Text(
-                                doctor.email ?? 'No email provided',
-                                style: const TextStyle(
-                                    fontSize: 14, color: Colors.grey),
-                              ),
-                            ],
+                          subtitle: Text(
+                            doctor.specialization ?? "General",
+                            style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.blue),
                           ),
                           trailing: ElevatedButton(
                             onPressed: () {
-                              // Implement booking functionality
+                              _showDoctorPopup(doctor);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.green,
@@ -248,7 +134,7 @@ class _DoctorViewState extends State<DoctorView> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             ),
-                            child: const Text("Book",
+                            child: const Text("View",
                                 style: TextStyle(color: Colors.white)),
                           ),
                         ),
@@ -261,6 +147,102 @@ class _DoctorViewState extends State<DoctorView> {
           );
         },
       ),
+    );
+  }
+
+  // 📌 Show Popup for Doctor Details
+  void _showDoctorPopup(dynamic doctor) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          contentPadding: const EdgeInsets.all(20),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start, // Left align text
+            children: [
+              // 📷 Doctor Image
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    getImageUrl(doctor.image),
+                    width: 220,
+                    height: 150,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Image.network(
+                        "https://via.placeholder.com/150",
+                        width: 150,
+                        height: 150,
+                        fit: BoxFit.cover),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+
+              // 📖 Doctor Details
+              Text(
+                doctor.name ?? "Unknown Doctor",
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                doctor.specialization ?? "General Practitioner",
+                style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.blue),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                "Contact: ${doctor.contact ?? "No contact available"}",
+                style: const TextStyle(color: Colors.black54, fontSize: 14),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                "Email: ${doctor.email ?? "No email provided"}",
+                style: const TextStyle(color: Colors.black54, fontSize: 14),
+              ),
+              const SizedBox(height: 20),
+
+              // 🛒 Buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      // TODO: Implement Booking functionality
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue.shade700,
+                      minimumSize: const Size(120, 40),
+                    ),
+                    child: const Text(
+                      "Book Now",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  OutlinedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(120, 40),
+                    ),
+                    child: const Text(
+                      "Close",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

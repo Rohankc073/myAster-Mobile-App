@@ -49,9 +49,9 @@ class LoginUseCase implements UsecaseWithParams<void, LoginUserParams> {
         (failure) => left(failure),
         (token) {
           tokenSharedPrefs.saveToken(token);
-          // tokenSharedPrefs.getToken().then((value) {
-          //   print(value);
-          // });
+          tokenSharedPrefs.getToken().then((value) {
+            print(value);
+          });
           return Right(token);
         },
       );

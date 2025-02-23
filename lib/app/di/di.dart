@@ -260,7 +260,10 @@ _initLoginDependencies() async {
 
 _initOnboardingDependencies() async {
   getIt.registerFactory<OnboardingCubit>(
-    () => OnboardingCubit(getIt<LoginBloc>()),
+    () => OnboardingCubit(
+      getIt<LoginBloc>(),
+      getIt<TokenSharedPrefs>(),
+    ),
   );
 }
 
