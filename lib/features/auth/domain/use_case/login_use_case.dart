@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:myasteer/app/shared_prefs/token_shared_prefs.dart';
+import 'package:myasteer/app/shared_prefs/user_shared_prefs.dart';
 import 'package:myasteer/app/useccase/usecase.dart';
 import 'package:myasteer/core/error/failure.dart';
 import 'package:myasteer/features/auth/domain/repository/auth_repository.dart';
@@ -33,28 +34,61 @@ class LoginUserParams extends Equatable {
 //   }
 // }
 
-class LoginUseCase implements UsecaseWithParams<void, LoginUserParams> {
-  final IAuthRepository authRepository;
-  final TokenSharedPrefs tokenSharedPrefs;
+class AuthResponse extends Equatable {
+  final String token;
+  final String userId;
+  final String name;
+  final String email;
+  final String role;
 
-  LoginUseCase({required this.authRepository, required this.tokenSharedPrefs});
+  const AuthResponse({
+    required this.token,
+    required this.userId,
+    required this.name,
+    required this.email,
+    required this.role,
+  });
 
   @override
-  Future<Either<Failure, void>> call(LoginUserParams params) {
-    //save token in shared preferences
-    return authRepository
-        .loginUser(params.email, params.password)
-        .then((value) {
-      return value.fold(
-        (failure) => left(failure),
-        (token) {
-          tokenSharedPrefs.saveToken(token);
-          tokenSharedPrefs.getToken().then((value) {
-            print(value);
-          });
-          return Right(token);
-        },
-      );
-    });
+  List<Object?> get props => [token, userId, name, email, role];
+}
+
+class LoginUseCase implements UsecaseWithParams<void, LoginUserParams> {
+  final IAuthRepository repository;
+  final TokenSharedPrefs tokenSharedPrefs;
+  final UserSharedPrefs userSharedPrefs;
+
+  LoginUseCase({
+    required this.repository,
+    required this.tokenSharedPrefs,
+    required this.userSharedPrefs,
+  });
+
+  @override
+  Future<Either<Failure, AuthResponse>> call(LoginUserParams params) async {
+    final result = await repository.loginUser(params.email, params.password);
+
+    return result.fold(
+      (failure) => Left(failure),
+      (authResponse) async {
+        print(
+            "Raw Response: ${authResponse.token} - ${authResponse.userId}"); // Debugging output
+
+        // Extract user details
+        final String token = authResponse.token;
+        final String userId = authResponse.userId;
+        final String name = authResponse.name;
+        final String email = authResponse.email;
+        final String role = authResponse.role;
+
+        // Save token & user details
+        await tokenSharedPrefs.saveToken(token);
+        await userSharedPrefs.saveUserData(userId, name, email, role);
+
+        print("User Data Stored: ID=$userId, Name=$name, Role=$role");
+
+        return Right(authResponse);
+      },
+    );
   }
 }

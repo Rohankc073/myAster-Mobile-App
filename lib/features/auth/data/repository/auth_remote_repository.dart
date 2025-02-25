@@ -5,6 +5,7 @@ import 'package:myasteer/core/error/failure.dart';
 import 'package:myasteer/features/auth/data/datasource/remote_data_source/remote_data_source.dart';
 import 'package:myasteer/features/auth/domain/entity/auth_entity.dart';
 import 'package:myasteer/features/auth/domain/repository/auth_repository.dart';
+import 'package:myasteer/features/auth/domain/use_case/login_use_case.dart';
 
 class AuthRemoteRepository implements IAuthRepository {
   final AuthRemoteDataSource _authRemoteDataSource;
@@ -18,17 +19,14 @@ class AuthRemoteRepository implements IAuthRepository {
   }
 
   @override
-  Future<Either<Failure, String>> loginUser(
-      String email, String password) async {
+  Future<Either<Failure, AuthResponse>> loginUser(
+      String userName, String password) async {
     try {
-      final student = await _authRemoteDataSource.loginUser(email, password);
-      return Right(student);
+      final authResponse =
+          await _authRemoteDataSource.loginUser(userName, password);
+      return Right(authResponse);
     } catch (e) {
-      return Left(
-        LocalDatabaseFailure(
-          message: 'Login failed: $e',
-        ),
-      );
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 

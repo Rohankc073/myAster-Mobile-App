@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:myasteer/app/shared_prefs/token_shared_prefs.dart';
+import 'package:myasteer/app/shared_prefs/user_shared_prefs.dart';
 import 'package:myasteer/core/network/api_service.dart';
 import 'package:myasteer/core/network/hive_service.dart';
 import 'package:myasteer/features/auth/data/datasource/local_data_source/local_data_source.dart';
@@ -12,6 +13,10 @@ import 'package:myasteer/features/auth/domain/use_case/signup_use_case.dart';
 import 'package:myasteer/features/auth/domain/use_case/upload_image_usecase.dart';
 import 'package:myasteer/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
 import 'package:myasteer/features/auth/presentation/view_model/signup/bloc/signup_bloc.dart';
+import 'package:myasteer/features/cart/data/data_source/cart_datasource.dart';
+import 'package:myasteer/features/cart/data/repository/cart_remote_repository.dart';
+import 'package:myasteer/features/cart/domain/use_case/add_product_usecase.dart';
+import 'package:myasteer/features/cart/presentation/view_model/cart_bloc.dart';
 import 'package:myasteer/features/doctor/data/data_source/local_datasource/doctor_local_data_source.dart';
 import 'package:myasteer/features/doctor/data/data_source/remote_datasource/doctor_remote_data_source.dart';
 import 'package:myasteer/features/doctor/data/repository/doctor_local_repository.dart';
@@ -35,11 +40,12 @@ Future<void> initDependencies() async {
   await _initHiveService();
   await _initApiService();
   await _initSharedPreferences();
-  await _initSplashDependencies();
-  await _initOnboardingDependencies();
 
   await _initLoginDependencies();
   await _initSignupDependencies();
+  await _initCartDependencies();
+  await _initOnboardingDependencies();
+  await _initSplashDependencies();
   await _initHomeDependencies();
   await _initDoctorDependencies();
   await _initProductDependencies();
@@ -58,7 +64,39 @@ _initHiveService() {
 
 Future<void> _initSharedPreferences() async {
   final sharedPreferences = await SharedPreferences.getInstance();
-  getIt.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
+  getIt.registerLazySingleton<SharedPreferences>(
+    () => sharedPreferences,
+  );
+
+  getIt.registerLazySingleton<UserSharedPrefs>(
+    () => UserSharedPrefs(getIt<SharedPreferences>()),
+  );
+}
+
+_initLoginDependencies() async {
+  // =========================== Token Shared Preferences ===========================
+  getIt.registerLazySingleton<TokenSharedPrefs>(
+    () => TokenSharedPrefs(getIt<SharedPreferences>()),
+  );
+
+  // =========================== Usecases ===========================
+  if (!getIt.isRegistered<LoginUseCase>()) {
+    getIt.registerLazySingleton<LoginUseCase>(
+      () => LoginUseCase(
+        repository: getIt<AuthRemoteRepository>(),
+        tokenSharedPrefs: getIt<TokenSharedPrefs>(),
+        userSharedPrefs: getIt<UserSharedPrefs>(),
+      ),
+    );
+  }
+
+  getIt.registerFactory<LoginBloc>(
+    () => LoginBloc(
+      loginUseCase: getIt<LoginUseCase>(),
+      signupBloc: getIt<SignupBloc>(),
+      homeCubit: getIt<HomeCubit>(),
+    ),
+  );
 }
 
 _initHomeDependencies() async {
@@ -175,6 +213,38 @@ _initDoctorDependencies() async {
   );
 }
 
+_initCartDependencies() {
+  getIt.registerLazySingleton<CartDatasource>(
+    () => CartDatasource(
+        userSharedPrefs: getIt<UserSharedPrefs>(), dio: getIt<Dio>()),
+  );
+  getIt.registerLazySingleton<CartRemoteRepository>(
+    () => CartRemoteRepository(cartDatasource: getIt<CartDatasource>()),
+  );
+
+  getIt.registerLazySingleton<AddProductUsecase>(
+    () => AddProductUsecase(repository: getIt<CartRemoteRepository>()),
+  );
+  // getIt.registerLazySingleton<RemoveProductUsecase>(
+  //   () => RemoveProductUsecase(repository: getIt<CartRemoteRepository>()),
+  // );
+  // getIt.registerLazySingleton<ClearCartUsecase>(
+  //   () => ClearCartUsecase(repository: getIt<CartRemoteRepository>()),
+  // );
+  // getIt.registerLazySingleton<GetCartUsecase>(
+  //   () => GetCartUsecase(repository: getIt<CartRemoteRepository>()),
+  // );
+
+  getIt.registerFactory<CartBloc>(
+    () => CartBloc(
+      addProductUsecase: getIt(),
+      // removeProductUsecase: getIt(),
+      // clearCartUsecase: getIt(),
+      // getCartUsecase: getIt()
+    ),
+  );
+}
+
 // Product Dependencies
 
 _initProductDependencies() async {
@@ -229,31 +299,6 @@ _initProductDependencies() async {
       getAllProductsUseCase: getIt<GetAllProductsUseCase>(),
       // deleteDoctorUseCase: getIt<DeleteDoctorUseCase>(),
       // updateDoctorUseCase: getIt<UpdateDoctorUseCase>(),
-    ),
-  );
-}
-
-_initLoginDependencies() async {
-  // =========================== Token Shared Preferences ===========================
-  getIt.registerLazySingleton<TokenSharedPrefs>(
-    () => TokenSharedPrefs(getIt<SharedPreferences>()),
-  );
-
-  // =========================== Usecases ===========================
-  if (!getIt.isRegistered<LoginUseCase>()) {
-    getIt.registerLazySingleton<LoginUseCase>(
-      () => LoginUseCase(
-        authRepository: getIt<AuthRemoteRepository>(),
-        tokenSharedPrefs: getIt<TokenSharedPrefs>(),
-      ),
-    );
-  }
-
-  getIt.registerFactory<LoginBloc>(
-    () => LoginBloc(
-      loginUseCase: getIt<LoginUseCase>(),
-      signupBloc: getIt<SignupBloc>(),
-      homeCubit: getIt<HomeCubit>(),
     ),
   );
 }

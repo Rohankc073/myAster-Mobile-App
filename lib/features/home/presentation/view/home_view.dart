@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:myasteer/features/auth/presentation/view/login_page.dart';
 import 'package:myasteer/features/home/presentation/view/bottom_view/dashboard_view.dart';
 import 'package:myasteer/view/bottom_screen/appointment_screen.dart';
 import 'package:myasteer/view/bottom_screen/profile_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -13,14 +15,12 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
 
-  // Define the screens for the bottom navigation
   final List<Widget> _screens = [
     const HomeScreen(),
     const AppointmentScreen(),
     const ProfileScreen(),
   ];
 
-  // Define AppBar titles for each screen
   final List<String> _appBarTitles = [
     "Home",
     "Appointments",
@@ -33,12 +33,36 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
+  // Logout Function
+  Future<void> _logout(BuildContext context) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token'); // Remove token
+    await prefs.remove('user'); // Remove user data
+
+    print("User logged out successfully!");
+
+    // Navigate back to login screen
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginView()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_appBarTitles[_selectedIndex]), // Dynamic AppBar title
+        title: Text(_appBarTitles[_selectedIndex]),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              _logout(context); // Call Logout Function
+            },
+            tooltip: "Logout",
+          ),
+        ],
       ),
       body: _screens[_selectedIndex], // Dynamic screen based on selection
       bottomNavigationBar: BottomNavigationBar(
@@ -62,11 +86,3 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 }
-
-// Dummy Home Screen
-
-
-// Dummy Appointment Screen
-
-
-
