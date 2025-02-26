@@ -98,6 +98,12 @@ class HiveService {
   //   return box.values.toList();
   // }
 
+  Future<List<ProductHiveModel>> getProductById() async {
+    var box =
+        await Hive.openBox<ProductHiveModel>(HiveTableConstant.productBox);
+    return box.values.toList();
+  }
+
   // **Close Hive**
   Future<void> close() async {
     await Hive.close();

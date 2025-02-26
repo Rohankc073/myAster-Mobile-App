@@ -1,4 +1,5 @@
 import 'package:myasteer/features/product/data/data_source/product_data_source.dart';
+import 'package:myasteer/features/product/data/model/product_hive_model.dart';
 import 'package:myasteer/features/product/domain/entity/product_entity.dart';
 
 import '../../../../../core/network/hive_service.dart';
@@ -37,19 +38,15 @@ class ProductLocalDataSource implements IProductDataSource {
     }
   }
 
-  // @override
-  // Future<ProductEntity> getProductById(String id) async {
-  //   try {
-  //     final productHiveModel = await _hiveService.getProductById(id);
-  //     if (productHiveModel != null) {
-  //       return productHiveModel.toEntity();
-  //     } else {
-  //       throw Exception('Product not found');
-  //     }
-  //   } catch (e) {
-  //     throw Exception('Error fetching product by ID: $e');
-  //   }
-  // }
+  @override
+  Future<List<ProductHiveModel>> getProductById(String id) async {
+    try {
+      final productHiveModel = await _hiveService.getProductById();
+      return productHiveModel;
+    } catch (e) {
+      throw Exception('Error fetching product by ID: $e');
+    }
+  }
 
   // @override
   // Future<void> updateProduct(ProductEntity productEntity) async {

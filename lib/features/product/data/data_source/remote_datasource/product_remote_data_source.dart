@@ -47,20 +47,20 @@ class ProductRemoteDataSource {
     }
   }
 
-  // Future<ProductEntity> getProductById(String id) async {
-  //   try {
-  //     var response = await _dio.get('${ApiEndpoints.getProductById}/$id');
-  //     if (response.statusCode == 200) {
-  //       return ProductApiModel.fromJson(response.data).toEntity();
-  //     } else {
-  //       throw Exception(response.statusMessage);
-  //     }
-  //   } on DioException catch (e) {
-  //     throw Exception(e.message);
-  //   } catch (e) {
-  //     throw Exception(e.toString());
-  //   }
-  // }
+  Future<ProductEntity> getProductById(String id) async {
+    try {
+      var response = await _dio.get('${ApiEndpoints.getProductById}/$id');
+      if (response.statusCode == 200) {
+        return ProductApiModel.fromJson(response.data).toEntity();
+      } else {
+        throw Exception(response.statusMessage);
+      }
+    } on DioException catch (e) {
+      throw Exception(e.message);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 
   // Future<void> updateProduct(ProductEntity productEntity) async {
   //   try {

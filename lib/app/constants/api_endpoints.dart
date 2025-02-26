@@ -19,4 +19,6 @@ class ApiEndpoints {
   static const String getUserById = 'users/:id';
 
   static const String addProductToCart = 'cart/add';
+
+  static const String getProductById = 'prducts/:id';
 }

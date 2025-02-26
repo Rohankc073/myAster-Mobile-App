@@ -32,16 +32,21 @@ class ProductLocalRepository implements IProductRepository {
   //   }
   // }
 
-  // @override
-  // Future<Either<Failure, ProductEntity>> getProductById(String id) async {
-  //   try {
-  //     final product = await _productLocalDataSource.getProductById(id);
-  //     return Right(product);
-  //   } catch (e) {
-  //     return Left(
-  //         LocalDatabaseFailure(message: 'Error fetching product by ID: $e'));
-  //   }
-  // }
+  @override
+  Future<Either<Failure, ProductEntity>> getProductById(String id) async {
+    try {
+      final productList = await _productLocalDataSource.getProductById(id);
+      if (productList.isNotEmpty) {
+        final product = productList.first.toEntity();
+        return Right(product);
+      } else {
+        return const Left(LocalDatabaseFailure(message: 'Product not found'));
+      }
+    } catch (e) {
+      return Left(
+          LocalDatabaseFailure(message: 'Error fetching product by ID: $e'));
+    }
+  }
 
   // @override
   // Future<Either<Failure, void>> updateProduct(

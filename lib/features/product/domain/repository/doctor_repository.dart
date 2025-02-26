@@ -8,7 +8,7 @@ abstract interface class IProductRepository {
 
   Future<Either<Failure, List<ProductEntity>>> getAllProducts();
 
-  // Future<Either<Failure, ProductEntity>> getProductById(String id);
+  Future<Either<Failure, ProductEntity>> getProductById(String id);
 
   // Future<Either<Failure, void>> updateProduct(
   //     ProductEntity productEntity, String? token);
