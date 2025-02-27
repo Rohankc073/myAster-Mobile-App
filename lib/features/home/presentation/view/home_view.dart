@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:myasteer/features/auth/presentation/view/login_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myasteer/features/home/presentation/view/bottom_view/dashboard_view.dart';
+import 'package:myasteer/features/home/presentation/view_model/cubit/home_cubit.dart';
 import 'package:myasteer/view/bottom_screen/appointment_screen.dart';
 import 'package:myasteer/view/bottom_screen/profile_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,10 +43,7 @@ class _DashboardState extends State<Dashboard> {
     print("User logged out successfully!");
 
     // Navigate back to login screen
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => LoginView()),
-    );
+    context.read<HomeCubit>().logout(context);
   }
 
   @override

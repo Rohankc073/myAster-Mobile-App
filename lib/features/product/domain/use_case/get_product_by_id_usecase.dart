@@ -1,18 +1,17 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:myasteer/app/useccase/usecase.dart';
+import 'package:myasteer/core/error/failure.dart';
 import 'package:myasteer/features/product/domain/entity/product_entity.dart';
-import 'package:myasteer/features/product/domain/repository/doctor_repository.dart';
-
-import '../../../../core/error/failure.dart';
+import 'package:myasteer/features/product/domain/repository/product_repository.dart';
 
 class GetProductByIdParams extends Equatable {
-  final String id;
+  final String productId;
 
-  const GetProductByIdParams({required this.id});
+  const GetProductByIdParams({required this.productId});
 
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [productId];
 }
 
 class GetProductByIdUseCase
@@ -24,6 +23,6 @@ class GetProductByIdUseCase
   @override
   Future<Either<Failure, ProductEntity>> call(
       GetProductByIdParams params) async {
-    return productRepository.getProductById(params.id);
+    return productRepository.getProductById(params.productId);
   }
 }

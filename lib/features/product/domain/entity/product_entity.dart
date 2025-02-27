@@ -36,4 +36,13 @@ class ProductEntity extends Equatable {
         // email,
         // contact,
       ];
+
+  factory ProductEntity.fromJson(Map<String, dynamic> json) {
+    return ProductEntity(
+      id: json['_id'] ?? '',
+      name: json['name'] ?? 'No Name',
+      image: json['image'] ?? '',
+      price: (json['price'] ?? 0).toDouble(),
+    );
+  }
 }

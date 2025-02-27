@@ -16,7 +16,6 @@ class LoginView extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Gradient Background
           Container(
             decoration: const BoxDecoration(),
           ),

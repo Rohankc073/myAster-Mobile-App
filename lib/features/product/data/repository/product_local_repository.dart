@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:myasteer/features/product/data/data_source/local_datasource/product_local_data_source.dart';
 import 'package:myasteer/features/product/domain/entity/product_entity.dart';
-import 'package:myasteer/features/product/domain/repository/doctor_repository.dart';
+import 'package:myasteer/features/product/domain/repository/product_repository.dart';
 
 import '../../../../core/error/failure.dart';
 
