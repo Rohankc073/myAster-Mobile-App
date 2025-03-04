@@ -77,7 +77,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             context: event.context,
             // message: errorMessage,
             message: 'Invalid Credentials: $errorMessage',
-            color: const Color(0xFF9B6763),
+            color: const Color.fromARGB(255, 58, 221, 37),
           );
         },
         (user) {

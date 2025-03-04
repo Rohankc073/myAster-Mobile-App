@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:myAster/features/doctor/domain/entity/doctor_entity.dart';
 import 'package:myAster/features/doctor/presentation/view_model/doctor_bloc.dart';
 import 'package:myAster/features/doctor/presentation/view_model/doctor_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -87,7 +88,7 @@ class _DoctorViewState extends State<DoctorView> {
             padding: const EdgeInsets.all(12.0),
             itemCount: state.doctors.length,
             itemBuilder: (context, index) {
-              final doctor = state.doctors[index];
+              final DoctorEntity doctor = state.doctors[index];
               return Card(
                 elevation: 3,
                 margin: const EdgeInsets.symmetric(vertical: 8),
@@ -142,7 +143,7 @@ class _DoctorViewState extends State<DoctorView> {
     );
   }
 
-  void _showBookingForm(dynamic doctor) {
+  void _showBookingForm(DoctorEntity doctor) {
     final TextEditingController ageController = TextEditingController();
     final TextEditingController problemController = TextEditingController();
     final TextEditingController dateController = TextEditingController();
@@ -154,12 +155,16 @@ class _DoctorViewState extends State<DoctorView> {
       builder: (context) {
         return AlertDialog(
           title: const Text("Book an Appointment"),
-          content: SizedBox(
-            width: double.maxFinite,
+          content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildTextField(ageController, "Your Age", isNumeric: true),
+                TextField(
+                  controller: ageController,
+                  keyboardType: TextInputType.number,
+                  decoration: _inputDecoration("Your Age"),
+                ),
+                const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
                   value: selectedGender,
                   decoration: _inputDecoration("Select Gender"),
@@ -174,59 +179,55 @@ class _DoctorViewState extends State<DoctorView> {
                   },
                 ),
                 const SizedBox(height: 10),
-
-                // ✅ Date Picker
-                GestureDetector(
+                TextField(
+                  controller: dateController,
+                  decoration: _inputDecoration("Appointment Date"),
+                  readOnly: true,
                   onTap: () async {
-                    DateTime? pickedDate = await showDatePicker(
+                    DateTime? picked = await showDatePicker(
                       context: context,
                       initialDate: DateTime.now(),
                       firstDate: DateTime.now(),
                       lastDate: DateTime(2100),
                     );
-                    if (pickedDate != null) {
+                    if (picked != null) {
                       dateController.text =
-                          DateFormat('yyyy-MM-dd').format(pickedDate);
+                          DateFormat('yyyy-MM-dd').format(picked);
                     }
                   },
-                  child: AbsorbPointer(
-                    child: _buildTextField(dateController, "Appointment Date"),
-                  ),
                 ),
                 const SizedBox(height: 10),
-
-                // ✅ Time Picker
-                GestureDetector(
+                TextField(
+                  controller: timeController,
+                  decoration: _inputDecoration("Appointment Time"),
+                  readOnly: true,
                   onTap: () async {
-                    TimeOfDay? pickedTime = await showTimePicker(
+                    TimeOfDay? picked = await showTimePicker(
                       context: context,
                       initialTime: TimeOfDay.now(),
                     );
-                    if (pickedTime != null) {
-                      timeController.text = pickedTime.format(context);
+                    if (picked != null) {
+                      timeController.text = picked.format(context);
                     }
                   },
-                  child: AbsorbPointer(
-                    child: _buildTextField(timeController, "Appointment Time"),
-                  ),
                 ),
                 const SizedBox(height: 10),
-
-                _buildTextField(problemController, "Describe Your Problem"),
+                TextField(
+                  controller: problemController,
+                  decoration: _inputDecoration("Describe Your Problem"),
+                ),
               ],
             ),
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
+              onPressed: () => Navigator.pop(context),
               child: const Text("Back"),
             ),
             ElevatedButton(
               onPressed: () {
                 _scheduleAppointment(
-                    doctor.id,
+                    doctor.id ?? "", // ✅ Ensures it is always a String
                     ageController.text,
                     selectedGender,
                     problemController.text,
@@ -253,7 +254,7 @@ class _DoctorViewState extends State<DoctorView> {
 
     try {
       final response = await http.post(
-        Uri.parse("http://localhost:5003/appointment/schedule"),
+        Uri.parse("http://localhost:5003/appointments/schedule"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "userId": userId,
@@ -266,10 +267,10 @@ class _DoctorViewState extends State<DoctorView> {
         }),
       );
 
-      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Appointment booked successfully!")),
       );
+      Navigator.pop(context);
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: ${error.toString()}")),
@@ -281,15 +282,6 @@ class _DoctorViewState extends State<DoctorView> {
     return InputDecoration(
       labelText: hint,
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-    );
-  }
-
-  Widget _buildTextField(TextEditingController controller, String hint,
-      {bool isNumeric = false}) {
-    return TextField(
-      controller: controller,
-      keyboardType: isNumeric ? TextInputType.number : TextInputType.text,
-      decoration: _inputDecoration(hint),
     );
   }
 }

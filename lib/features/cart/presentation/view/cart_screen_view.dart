@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:myAster/features/checkout/checkout_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CartPage extends StatefulWidget {
@@ -110,6 +111,14 @@ class _CartPageState extends State<CartPage> {
     }
   }
 
+  double _calculateTotalPrice() {
+    return cartItems.fold<double>(
+      0.0,
+      (sum, item) =>
+          sum + ((item['price'] as num) * (item['quantity'] as int)).toDouble(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,7 +194,7 @@ class _CartPageState extends State<CartPage> {
                           ),
                         ),
 
-                        // ✅ Total Price and Clear Cart Button
+                        // ✅ Total Price and Buttons
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
@@ -202,26 +211,30 @@ class _CartPageState extends State<CartPage> {
                           ),
                           child: Column(
                             children: [
-                              const Row(
+                              // ✅ Total Price Display
+                              Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
+                                  const Text(
                                     "Total:",
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  // Text(
-                                  //   "NPR ${cartItems.fold(0, (sum, item) => sum + (item['price'] * item['quantity']))}",
-                                  //   style: const TextStyle(
-                                  //       fontSize: 20,
-                                  //       fontWeight: FontWeight.bold,
-                                  //       color: Colors.green),
-                                  // ),
+                                  Text(
+                                    "NPR ${_calculateTotalPrice().toStringAsFixed(2)}",
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.green,
+                                    ),
+                                  ),
                                 ],
                               ),
                               const SizedBox(height: 10),
+
+                              // ✅ Clear Cart Button
                               ElevatedButton(
                                 onPressed: _clearCart,
                                 style: ElevatedButton.styleFrom(
@@ -231,6 +244,31 @@ class _CartPageState extends State<CartPage> {
                                 ),
                                 child: const Text(
                                   "Clear Cart",
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.white),
+                                ),
+                              ),
+
+                              const SizedBox(height: 10),
+
+                              // ✅ Checkout Button (Navigates to Checkout Page)
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          CheckoutPage(cartItems: cartItems),
+                                    ),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blueAccent,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 50, vertical: 12),
+                                ),
+                                child: const Text(
+                                  "Proceed to Checkout",
                                   style: TextStyle(
                                       fontSize: 18, color: Colors.white),
                                 ),

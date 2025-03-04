@@ -5,7 +5,9 @@ class ApiEndpoints {
   static const Duration receiveTimeout = Duration(seconds: 5000);
 
   //IP for iPhone
-  static const String baseUrl = 'http://localhost:5003/';
+  // static const String baseUrl = 'http://localhost:5003/';
+
+  static const String baseUrl= 'http://10.0.2.2:5003/';
 
   //Auth Endpoints
 
@@ -20,5 +22,5 @@ class ApiEndpoints {
   static const String addProductToCart = 'cart/add';
   static const String cart = 'cart/:id';
 
-  static const String getProductById = 'prducts/:id';
+  static const String getProductById = 'products/:id';
 }

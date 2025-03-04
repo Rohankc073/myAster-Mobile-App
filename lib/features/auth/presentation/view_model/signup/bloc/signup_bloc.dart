@@ -22,41 +22,44 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     on<RegisterUser>(_onRegisterEvent);
   }
 
+  // ✅ Handle User Registration Event
   void _onRegisterEvent(
     RegisterUser event,
     Emitter<SignupState> emit,
   ) async {
-    emit(state.copyWith(isLoading: true));
+    emit(state.copyWith(isLoading: true, isSuccess: false, errorMessage: null));
+
     final result = await _registerUseCase.call(RegisterUserParams(
-        name: event.name,
-        email: event.email,
-        phone: event.phone,
-        password: event.password));
+      name: event.name,
+      email: event.email,
+      phone: event.phone,
+      password: event.password,
+      image: state.imageName, // ✅ Use uploaded image name from state
+    ));
 
     result.fold(
-      (l) => emit(state.copyWith(
-          isLoading: false, isSuccess: false, errorMessage: l.message)),
-      (r) {
-        emit(state.copyWith(isLoading: false, isSuccess: true));
-      },
+      (failure) => emit(state.copyWith(
+          isLoading: false, isSuccess: false, errorMessage: failure.message)),
+      (_) => emit(state.copyWith(isLoading: false, isSuccess: true)),
     );
   }
 
+  // ✅ Handle Image Upload Event
   void _onLoadImage(
     LoadImage event,
     Emitter<SignupState> emit,
   ) async {
     emit(state.copyWith(isLoading: true));
+
     final result = await _uploadImageUsecase.call(
       UploadImageParams(file: event.file),
     );
 
     result.fold(
-      (l) => emit(state.copyWith(
-          isLoading: false, isSuccess: false, errorMessage: l.message)),
-      (r) {
-        emit(state.copyWith(isLoading: false, isSuccess: true, imageName: r));
-      },
+      (failure) => emit(state.copyWith(
+          isLoading: false, isSuccess: false, errorMessage: failure.message)),
+      (imageName) => emit(state.copyWith(
+          isLoading: false, isSuccess: false, imageName: imageName)),
     );
   }
 }

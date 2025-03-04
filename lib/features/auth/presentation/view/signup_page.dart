@@ -61,10 +61,12 @@ class _SignUpPageState extends State<SignUpPage> {
               backgroundColor: Colors.green,
             ),
           );
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => LoginView()),
-          );
+          Future.delayed(const Duration(seconds: 1), () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LoginView()),
+            );
+          });
         } else if (state.errorMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
