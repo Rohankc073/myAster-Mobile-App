@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:myasteer/core/network/hive_service.dart';
-import 'package:myasteer/features/auth/data/datasource/auth_data_source.dart';
-import 'package:myasteer/features/auth/data/model/auth_hive_model.dart';
-import 'package:myasteer/features/auth/domain/entity/auth_entity.dart';
-import 'package:myasteer/features/auth/domain/use_case/login_use_case.dart';
+import 'package:myAster/core/network/hive_service.dart';
+import 'package:myAster/features/auth/data/datasource/auth_data_source.dart';
+import 'package:myAster/features/auth/data/model/auth_hive_model.dart';
+import 'package:myAster/features/auth/domain/entity/auth_entity.dart';
+import 'package:myAster/features/auth/domain/use_case/login_use_case.dart';
 
 class AuthLocalDataSource implements IAuthDataSource {
   final HiveService _hiveService;

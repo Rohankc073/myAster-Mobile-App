@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:myasteer/app/useccase/usecase.dart';
-import 'package:myasteer/core/error/failure.dart';
-import 'package:myasteer/features/auth/domain/repository/auth_repository.dart';
+import 'package:myAster/app/useccase/usecase.dart';
+import 'package:myAster/core/error/failure.dart';
+import 'package:myAster/features/auth/domain/repository/auth_repository.dart';
 
 class UploadImageParams {
   final File file;

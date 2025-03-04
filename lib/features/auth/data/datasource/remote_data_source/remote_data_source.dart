@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:myasteer/app/constants/api_endpoints.dart';
-import 'package:myasteer/features/auth/data/datasource/auth_data_source.dart';
-import 'package:myasteer/features/auth/data/model/auth_api_model.dart';
-import 'package:myasteer/features/auth/domain/entity/auth_entity.dart';
-import 'package:myasteer/features/auth/domain/use_case/login_use_case.dart';
+import 'package:myAster/app/constants/api_endpoints.dart';
+import 'package:myAster/features/auth/data/datasource/auth_data_source.dart';
+import 'package:myAster/features/auth/data/model/auth_api_model.dart';
+import 'package:myAster/features/auth/domain/entity/auth_entity.dart';
+import 'package:myAster/features/auth/domain/use_case/login_use_case.dart';
 
 class AuthRemoteDataSource implements IAuthDataSource {
   final Dio _dio;

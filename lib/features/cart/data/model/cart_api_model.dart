@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:myasteer/features/cart/data/model/cart_item_api_model.dart';
-import 'package:myasteer/features/cart/domain/entity/cart_entity.dart';
+import 'package:myAster/features/cart/data/model/cart_item_api_model.dart';
+import 'package:myAster/features/cart/domain/entity/cart_entity.dart';
 
 part 'cart_api_model.g.dart';
 

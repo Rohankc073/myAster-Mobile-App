@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:myasteer/features/product/domain/entity/product_entity.dart';
+import 'package:myAster/features/product/domain/entity/product_entity.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../app/constants/hive_table_constant.dart';
@@ -54,6 +54,9 @@ class ProductHiveModel extends Equatable {
       name: name,
       image: image,
       price: price,
+      genericName: '',
+      manufacturer: '',
+      description: '',
     );
   }
 

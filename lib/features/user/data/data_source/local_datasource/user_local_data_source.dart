@@ -1,5 +1,5 @@
-import 'package:myasteer/features/user/data/data_source/user_data_source.dart';
-import 'package:myasteer/features/user/domain/entity/user_entity.dart';
+import 'package:myAster/features/user/data/data_source/user_data_source.dart';
+import 'package:myAster/features/user/domain/entity/user_entity.dart';
 
 import '../../../../../core/network/hive_service.dart';
 

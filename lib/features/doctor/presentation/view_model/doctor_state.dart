@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:myasteer/features/doctor/domain/entity/doctor_entity.dart';
+import 'package:myAster/features/doctor/domain/entity/doctor_entity.dart';
 
 class DoctorState extends Equatable {
   final List<DoctorEntity> doctors;

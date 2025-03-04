@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myasteer/features/product/presentation/view/single_product.dart';
-import 'package:myasteer/features/product/presentation/view_model/product_bloc.dart';
-import 'package:myasteer/features/product/presentation/view_model/product_state.dart';
+import 'package:myAster/features/product/presentation/view/single_product.dart';
+import 'package:myAster/features/product/presentation/view_model/product_bloc.dart';
+import 'package:myAster/features/product/presentation/view_model/product_state.dart';
 
 class ProductView extends StatelessWidget {
   const ProductView({super.key});
@@ -67,9 +67,14 @@ class ProductView extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => SingleProductView(
                           productId: product.id ?? "",
-                          image: getImageUrl(product.image),
-                          price: product.price ?? 0.0,
                           productName: product.name ?? "Unknown Product",
+                          price: product.price ?? 0.0,
+                          image: getImageUrl(product.image),
+                          description:
+                              product.description ?? "No Description Available",
+                          genericName: product.genericName ?? "Not Provided",
+                          manufacturer:
+                              product.manufacturer ?? "Unknown Manufacturer",
                         ),
                       ),
                     );

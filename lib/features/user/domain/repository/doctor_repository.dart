@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:myasteer/features/user/domain/entity/user_entity.dart';
+import 'package:myAster/features/user/domain/entity/user_entity.dart';
 
 import '../../../../core/error/failure.dart';
 

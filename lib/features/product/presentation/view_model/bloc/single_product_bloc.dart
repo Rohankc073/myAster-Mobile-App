@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:myasteer/features/product/domain/use_case/get_product_by_id_usecase.dart';
+import 'package:myAster/features/product/domain/use_case/get_product_by_id_usecase.dart';
 
 import 'single_product_event.dart';
 import 'single_product_state.dart';

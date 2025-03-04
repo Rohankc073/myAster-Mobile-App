@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:myasteer/features/doctor/data/model/doctor_api_model.dart';
-import 'package:myasteer/features/doctor/domain/entity/doctor_entity.dart';
+import 'package:myAster/features/doctor/data/model/doctor_api_model.dart';
+import 'package:myAster/features/doctor/domain/entity/doctor_entity.dart';
 
 import '../../../../../app/constants/api_endpoints.dart';
 

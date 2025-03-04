@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:myasteer/core/error/failure.dart';
-import 'package:myasteer/features/auth/data/datasource/local_data_source/local_data_source.dart';
-import 'package:myasteer/features/auth/domain/entity/auth_entity.dart';
-import 'package:myasteer/features/auth/domain/repository/auth_repository.dart';
-import 'package:myasteer/features/auth/domain/use_case/login_use_case.dart';
+import 'package:myAster/core/error/failure.dart';
+import 'package:myAster/features/auth/data/datasource/local_data_source/local_data_source.dart';
+import 'package:myAster/features/auth/domain/entity/auth_entity.dart';
+import 'package:myAster/features/auth/domain/repository/auth_repository.dart';
+import 'package:myAster/features/auth/domain/use_case/login_use_case.dart';
 
 class AuthLocalRepository implements IAuthRepository {
   final AuthLocalDataSource _authLocalDataSource;

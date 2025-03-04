@@ -1,37 +1,37 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
-import 'package:myasteer/app/shared_prefs/token_shared_prefs.dart';
-import 'package:myasteer/app/shared_prefs/user_shared_prefs.dart';
-import 'package:myasteer/core/network/api_service.dart';
-import 'package:myasteer/core/network/hive_service.dart';
-import 'package:myasteer/features/auth/data/datasource/local_data_source/local_data_source.dart';
-import 'package:myasteer/features/auth/data/datasource/remote_data_source/remote_data_source.dart';
-import 'package:myasteer/features/auth/data/repository/auth_local_repository.dart';
-import 'package:myasteer/features/auth/data/repository/auth_remote_repository.dart';
-import 'package:myasteer/features/auth/domain/use_case/login_use_case.dart';
-import 'package:myasteer/features/auth/domain/use_case/signup_use_case.dart';
-import 'package:myasteer/features/auth/domain/use_case/upload_image_usecase.dart';
-import 'package:myasteer/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
-import 'package:myasteer/features/auth/presentation/view_model/signup/bloc/signup_bloc.dart';
-import 'package:myasteer/features/cart/data/data_source/cart_datasource.dart';
-import 'package:myasteer/features/cart/data/repository/cart_remote_repository.dart';
-import 'package:myasteer/features/cart/domain/use_case/add_product_usecase.dart';
-import 'package:myasteer/features/cart/presentation/view_model/cart_bloc.dart';
-import 'package:myasteer/features/doctor/data/data_source/local_datasource/doctor_local_data_source.dart';
-import 'package:myasteer/features/doctor/data/data_source/remote_datasource/doctor_remote_data_source.dart';
-import 'package:myasteer/features/doctor/data/repository/doctor_local_repository.dart';
-import 'package:myasteer/features/doctor/data/repository/doctor_remote_repository.dart';
-import 'package:myasteer/features/doctor/domain/use_case/get_all_doctor_usecase.dart';
-import 'package:myasteer/features/doctor/presentation/view_model/doctor_bloc.dart';
-import 'package:myasteer/features/home/presentation/view_model/cubit/home_cubit.dart';
-import 'package:myasteer/features/onboarding/presentation/view_model/onboarding_cubit.dart';
-import 'package:myasteer/features/product/data/data_source/local_datasource/product_local_data_source.dart';
-import 'package:myasteer/features/product/data/data_source/remote_datasource/product_remote_data_source.dart';
-import 'package:myasteer/features/product/data/repository/product_local_repository.dart';
-import 'package:myasteer/features/product/data/repository/product_remote_repository.dart';
-import 'package:myasteer/features/product/domain/use_case/get_all_product_usecase.dart';
-import 'package:myasteer/features/product/presentation/view_model/product_bloc.dart';
-import 'package:myasteer/features/splash/presentation/view_model/cubit/splash_cubit.dart';
+import 'package:myAster/app/shared_prefs/token_shared_prefs.dart';
+import 'package:myAster/app/shared_prefs/user_shared_prefs.dart';
+import 'package:myAster/core/network/api_service.dart';
+import 'package:myAster/core/network/hive_service.dart';
+import 'package:myAster/features/auth/data/datasource/local_data_source/local_data_source.dart';
+import 'package:myAster/features/auth/data/datasource/remote_data_source/remote_data_source.dart';
+import 'package:myAster/features/auth/data/repository/auth_local_repository.dart';
+import 'package:myAster/features/auth/data/repository/auth_remote_repository.dart';
+import 'package:myAster/features/auth/domain/use_case/login_use_case.dart';
+import 'package:myAster/features/auth/domain/use_case/signup_use_case.dart';
+import 'package:myAster/features/auth/domain/use_case/upload_image_usecase.dart';
+import 'package:myAster/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
+import 'package:myAster/features/auth/presentation/view_model/signup/bloc/signup_bloc.dart';
+import 'package:myAster/features/cart/data/data_source/cart_datasource.dart';
+import 'package:myAster/features/cart/data/repository/cart_remote_repository.dart';
+import 'package:myAster/features/cart/domain/use_case/add_product_usecase.dart';
+import 'package:myAster/features/cart/presentation/view_model/cart_bloc.dart';
+import 'package:myAster/features/doctor/data/data_source/local_datasource/doctor_local_data_source.dart';
+import 'package:myAster/features/doctor/data/data_source/remote_datasource/doctor_remote_data_source.dart';
+import 'package:myAster/features/doctor/data/repository/doctor_local_repository.dart';
+import 'package:myAster/features/doctor/data/repository/doctor_remote_repository.dart';
+import 'package:myAster/features/doctor/domain/use_case/get_all_doctor_usecase.dart';
+import 'package:myAster/features/doctor/presentation/view_model/doctor_bloc.dart';
+import 'package:myAster/features/home/presentation/view_model/cubit/home_cubit.dart';
+import 'package:myAster/features/onboarding/presentation/view_model/onboarding_cubit.dart';
+import 'package:myAster/features/product/data/data_source/local_datasource/product_local_data_source.dart';
+import 'package:myAster/features/product/data/data_source/remote_datasource/product_remote_data_source.dart';
+import 'package:myAster/features/product/data/repository/product_local_repository.dart';
+import 'package:myAster/features/product/data/repository/product_remote_repository.dart';
+import 'package:myAster/features/product/domain/use_case/get_all_product_usecase.dart';
+import 'package:myAster/features/product/presentation/view_model/product_bloc.dart';
+import 'package:myAster/features/splash/presentation/view_model/cubit/splash_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final getIt = GetIt.instance;
@@ -237,11 +237,10 @@ _initCartDependencies() {
 
   getIt.registerFactory<CartBloc>(
     () => CartBloc(
-      addProductUsecase: getIt(),
-      // removeProductUsecase: getIt(),
-      // clearCartUsecase: getIt(),
-      // getCartUsecase: getIt()
-    ),
+        addProductUsecase: getIt(),
+        removeProductUsecase: getIt(),
+        clearCartUsecase: getIt(),
+        getCartUsecase: getIt()),
   );
 }
 

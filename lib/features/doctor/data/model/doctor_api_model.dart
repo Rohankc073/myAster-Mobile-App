@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:myasteer/features/doctor/domain/entity/doctor_entity.dart';
+import 'package:myAster/features/doctor/domain/entity/doctor_entity.dart';
 
 part 'doctor_api_model.g.dart';
 

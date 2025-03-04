@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:myasteer/app/app.dart';
-import 'package:myasteer/app/di/di.dart';
-import 'package:myasteer/core/network/hive_service.dart';
+import 'package:myAster/app/app.dart';
+import 'package:myAster/app/di/di.dart';
+import 'package:myAster/core/network/hive_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,7 +12,6 @@ void main() async {
   // await HiveService().clearAll();
   // Initialize Dependencies
   await initDependencies();
-
 
   runApp(
     const App(),

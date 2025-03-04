@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:myasteer/features/auth/domain/entity/auth_entity.dart';
+import 'package:myAster/features/auth/domain/entity/auth_entity.dart';
 
 part 'auth_api_model.g.dart';
 

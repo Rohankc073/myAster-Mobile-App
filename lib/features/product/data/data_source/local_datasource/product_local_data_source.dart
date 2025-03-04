@@ -1,6 +1,6 @@
-import 'package:myasteer/features/product/data/data_source/product_data_source.dart';
-import 'package:myasteer/features/product/data/model/product_hive_model.dart';
-import 'package:myasteer/features/product/domain/entity/product_entity.dart';
+import 'package:myAster/features/product/data/data_source/product_data_source.dart';
+import 'package:myAster/features/product/data/model/product_hive_model.dart';
+import 'package:myAster/features/product/domain/entity/product_entity.dart';
 
 import '../../../../../core/network/hive_service.dart';
 

@@ -1,9 +1,9 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:myasteer/app/constants/hive_table_constant.dart';
-import 'package:myasteer/features/auth/data/model/auth_hive_model.dart';
-import 'package:myasteer/features/doctor/data/model/doctor_hive_model.dart';
-import 'package:myasteer/features/product/data/model/product_hive_model.dart';
-import 'package:myasteer/features/user/data/model/user_hive_model.dart';
+import 'package:myAster/app/constants/hive_table_constant.dart';
+import 'package:myAster/features/auth/data/model/auth_hive_model.dart';
+import 'package:myAster/features/doctor/data/model/doctor_hive_model.dart';
+import 'package:myAster/features/product/data/model/product_hive_model.dart';
+import 'package:myAster/features/user/data/model/user_hive_model.dart';
 // import 'package:myasteer/features/doctor/data/model/doctor_hive_model.dart';
 import 'package:path_provider/path_provider.dart';
 

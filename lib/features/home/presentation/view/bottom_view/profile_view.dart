@@ -32,7 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 10),
             const Text(
-              "rohan@gmail.com",
+              "rohan073@gmail.com",
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey,
@@ -44,7 +44,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ListTile(
               leading: const Icon(Icons.phone),
               title: const Text("Phone Number"),
-              subtitle: const Text("+977 9000000000"),
+              subtitle: const Text("+977 9827904325"),
               trailing: IconButton(
                 icon: const Icon(Icons.edit),
                 onPressed: () {

@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myasteer/features/auth/domain/use_case/signup_use_case.dart';
-import 'package:myasteer/features/auth/domain/use_case/upload_image_usecase.dart';
+import 'package:myAster/features/auth/domain/use_case/signup_use_case.dart';
+import 'package:myAster/features/auth/domain/use_case/upload_image_usecase.dart';
 
 part 'signup_event.dart';
 part 'signup_state.dart';

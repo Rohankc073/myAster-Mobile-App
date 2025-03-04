@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myasteer/app/di/di.dart';
-import 'package:myasteer/core/common/snackbar/my_snackbar.dart';
-import 'package:myasteer/features/doctor/presentation/view/doctor_view.dart';
-import 'package:myasteer/features/doctor/presentation/view_model/doctor_bloc.dart';
-import 'package:myasteer/features/product/presentation/view/product_view.dart';
-import 'package:myasteer/features/product/presentation/view_model/product_bloc.dart';
+import 'package:myAster/app/di/di.dart';
+import 'package:myAster/core/common/snackbar/my_snackbar.dart';
+import 'package:myAster/features/doctor/presentation/view/doctor_view.dart';
+import 'package:myAster/features/doctor/presentation/view_model/doctor_bloc.dart';
+import 'package:myAster/features/product/presentation/view/product_view.dart';
+import 'package:myAster/features/product/presentation/view_model/product_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

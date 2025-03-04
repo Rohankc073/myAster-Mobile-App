@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:myasteer/app/constants/hive_table_constant.dart';
-import 'package:myasteer/features/auth/domain/entity/auth_entity.dart';
+import 'package:myAster/app/constants/hive_table_constant.dart';
+import 'package:myAster/features/auth/domain/entity/auth_entity.dart';
 import 'package:uuid/uuid.dart';
 
 part 'auth_hive_model.g.dart';

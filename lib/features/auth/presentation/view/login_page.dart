@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myasteer/features/auth/presentation/view/signup_page.dart';
-import 'package:myasteer/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
-import 'package:myasteer/features/home/presentation/view/home_view.dart';
+import 'package:myAster/features/auth/presentation/view/signup_page.dart';
+import 'package:myAster/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
+import 'package:myAster/features/home/presentation/view/home_view.dart';
 
 class LoginView extends StatelessWidget {
   LoginView({super.key});

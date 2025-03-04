@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myasteer/features/home/presentation/view/bottom_view/dashboard_view.dart';
-import 'package:myasteer/features/home/presentation/view_model/cubit/home_cubit.dart';
-import 'package:myasteer/view/bottom_screen/appointment_screen.dart';
-import 'package:myasteer/view/bottom_screen/profile_screen.dart';
+import 'package:myAster/features/cart/presentation/view/cart_screen_view.dart';
+import 'package:myAster/features/home/presentation/view/bottom_view/dashboard_view.dart';
+import 'package:myAster/features/home/presentation/view/bottom_view/profile_view.dart';
+import 'package:myAster/features/home/presentation/view_model/cubit/home_cubit.dart';
+import 'package:myAster/features/product/presentation/view/product_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+// Import the Cart Page
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -18,7 +21,7 @@ class _DashboardState extends State<Dashboard> {
 
   final List<Widget> _screens = [
     const HomeScreen(),
-    const AppointmentScreen(),
+    const ProductView(),
     const ProfileScreen(),
   ];
 
@@ -53,10 +56,23 @@ class _DashboardState extends State<Dashboard> {
         title: Text(_appBarTitles[_selectedIndex]),
         centerTitle: true,
         actions: [
+          // 🛒 Cart Button
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CartPage()),
+              );
+            },
+            tooltip: "Cart",
+          ),
+
+          // 🔑 Logout Button
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              _logout(context); // Call Logout Function
+              _logout(context);
             },
             tooltip: "Logout",
           ),

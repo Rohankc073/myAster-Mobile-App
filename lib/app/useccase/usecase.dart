@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:myasteer/core/error/failure.dart';
+import 'package:myAster/core/error/failure.dart';
 
 abstract interface class UsecaseWithParams<SuccessType, Params> {
   Future<Either<Failure, SuccessType>> call(Params params);

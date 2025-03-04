@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myasteer/features/splash/presentation/view_model/cubit/splash_cubit.dart';
+import 'package:myAster/features/splash/presentation/view_model/cubit/splash_cubit.dart';
+
 // import 'package:myasteer/features/splash/presentation/view_model/splash_cubit.dart';
 
 class SplashScreen extends StatefulWidget {

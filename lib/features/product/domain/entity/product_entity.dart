@@ -5,6 +5,9 @@ class ProductEntity extends Equatable {
   final String name;
   final String image;
   final double price;
+  final String description;
+  final String genericName;
+  final String manufacturer;
 
   // final String? email;
   // final String? contact;
@@ -12,8 +15,11 @@ class ProductEntity extends Equatable {
   const ProductEntity({
     this.id,
     required this.name,
+    required this.genericName,
+    required this.manufacturer,
     required this.image,
     required this.price,
+    required this.description,
     // this.email,
     // this.contact,
   });
@@ -23,7 +29,11 @@ class ProductEntity extends Equatable {
       : id = '_empty.id',
         image = '_empty.image',
         name = '_empty.name',
-        price = 0.0;
+        price = 0.0,
+        genericName = '_empty.genericName',
+        manufacturer = '_empty.manufacturer',
+        description = '_empty.description';
+
   // email = '_empty.email',
   // contact = '_empty.contact';
 
@@ -33,6 +43,9 @@ class ProductEntity extends Equatable {
         name,
         image,
         price,
+        description,
+        genericName,
+        manufacturer
         // email,
         // contact,
       ];
@@ -43,6 +56,9 @@ class ProductEntity extends Equatable {
       name: json['name'] ?? 'No Name',
       image: json['image'] ?? '',
       price: (json['price'] ?? 0).toDouble(),
+      description: json['description'] ?? '',
+      genericName: json['genericName'] ?? '',
+      manufacturer: json['manufacturer'] ?? '',
     );
   }
 }

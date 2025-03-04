@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:myasteer/features/product/domain/entity/product_entity.dart';
+import 'package:myAster/features/product/domain/entity/product_entity.dart';
 
 part 'product_api_model.g.dart';
 
@@ -13,17 +13,21 @@ class ProductApiModel extends Equatable {
   final String name;
   final String image;
   final double price;
+  final String genericName;
+  final String manufacturer;
 
   const ProductApiModel({
     this.id,
     required this.name,
     required this.image,
+    required this.manufacturer,
+    required this.genericName,
     required this.price,
     // this.contact,
     // this.email,
   });
 
-  const ProductApiModel.empty()
+  const ProductApiModel.empty(this.genericName, this.manufacturer)
       : id = '',
         name = '',
         image = '',
@@ -44,7 +48,7 @@ class ProductApiModel extends Equatable {
         id: id,
         name: name,
         price: price,
-        image: image,
+        image: image, genericName: '', manufacturer: '', description: '',
         // contact: contact,
         // email: email,
       );
@@ -55,7 +59,8 @@ class ProductApiModel extends Equatable {
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.image,
+      image: product.image, manufacturer: product.manufacturer,
+      genericName: product.genericName,
       // contact: product.contact,
       // email: product.email,
     );

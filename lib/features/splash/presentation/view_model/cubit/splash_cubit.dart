@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myasteer/features/onboarding/presentation/view/onboarding_view.dart';
-import 'package:myasteer/features/onboarding/presentation/view_model/onboarding_cubit.dart';
+import 'package:myAster/features/onboarding/presentation/view/onboarding_view.dart';
+import 'package:myAster/features/onboarding/presentation/view_model/onboarding_cubit.dart';
 
 import '../../../../../app/di/di.dart';
 // import 'package:myasteer/features/auth/presentation/view_model/signup/signup_bloc.dart';

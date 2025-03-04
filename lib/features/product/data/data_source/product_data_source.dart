@@ -1,4 +1,4 @@
-import 'package:myasteer/features/product/domain/entity/product_entity.dart';
+import 'package:myAster/features/product/domain/entity/product_entity.dart';
 
 abstract interface class IProductDataSource {
   // Future<void> createProduct(ProductEntity productEntity);

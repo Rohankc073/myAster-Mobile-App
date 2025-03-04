@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:myasteer/features/auth/data/model/auth_api_model.dart';
+import 'package:myAster/features/auth/data/model/auth_api_model.dart';
 
 part 'get_all_auth.g.dart';
 

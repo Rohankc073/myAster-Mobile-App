@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:myasteer/features/user/domain/use_case/get_user_by_id_usecase.dart';
-import 'package:myasteer/features/user/presentation/view_model/user_state.dart';
+import 'package:myAster/features/user/domain/use_case/get_user_by_id_usecase.dart';
+import 'package:myAster/features/user/presentation/view_model/user_state.dart';
 
 part 'user_event.dart';
 

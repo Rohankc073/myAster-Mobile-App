@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:myasteer/features/product/domain/use_case/get_all_product_usecase.dart';
-import 'package:myasteer/features/product/presentation/view_model/product_state.dart';
+import 'package:myAster/features/product/domain/use_case/get_all_product_usecase.dart';
+import 'package:myAster/features/product/presentation/view_model/product_state.dart';
 
 part 'product_event.dart';
 

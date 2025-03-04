@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:myasteer/app/useccase/usecase.dart';
-import 'package:myasteer/core/error/failure.dart';
-import 'package:myasteer/features/product/domain/entity/product_entity.dart';
-import 'package:myasteer/features/product/domain/repository/product_repository.dart';
+import 'package:myAster/app/useccase/usecase.dart';
+import 'package:myAster/core/error/failure.dart';
+import 'package:myAster/features/product/domain/entity/product_entity.dart';
+import 'package:myAster/features/product/domain/repository/product_repository.dart';
 
 class GetProductByIdParams extends Equatable {
   final String productId;

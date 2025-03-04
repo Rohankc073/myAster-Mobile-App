@@ -16,37 +16,39 @@ class LoadCartEvent extends CartEvent {
 class AddProductToCartEvent extends CartEvent {
   final String productId;
   final String userId;
-  final String productName;
-  final double productPrice;
-  final BuildContext context;
+  final String name;
+  final double price;
+  final String quantity;
 
   const AddProductToCartEvent({
     required this.productId,
     required this.userId,
-    required this.productName,
-    required this.productPrice,
-    required this.context,
+    required this.name,
+    required this.price,
+    required this.quantity,
   });
+
+  @override
+  List<Object> get props => [productId, userId, name, price, quantity];
 }
 
 class RemoveProductFromCartEvent extends CartEvent {
   final String productId;
   final String userId;
-  final String productName;
-  final double productPrice;
-  final int productQuantity;
+  final String name;
+  final double price;
+  final String quantity;
 
   const RemoveProductFromCartEvent({
     required this.productId,
     required this.userId,
-    required this.productName,
-    required this.productPrice,
-    required this.productQuantity,
+    required this.name,
+    required this.price,
+    required this.quantity,
   });
 
   @override
-  List<Object> get props =>
-      [productId, userId, productName, productPrice, productQuantity];
+  List<Object> get props => [productId, userId, name, price, quantity];
 }
 
 class ClearCartEvent extends CartEvent {

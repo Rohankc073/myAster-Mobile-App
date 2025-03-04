@@ -1,31 +1,27 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:myasteer/app/useccase/usecase.dart';
-import 'package:myasteer/core/error/failure.dart';
-import 'package:myasteer/features/cart/domain/entity/cart_item_entity.dart';
-import 'package:myasteer/features/cart/domain/repository/cart_repository.dart';
+import 'package:myAster/app/useccase/usecase.dart';
+import 'package:myAster/core/error/failure.dart';
+import 'package:myAster/features/cart/domain/entity/cart_item_entity.dart';
+import 'package:myAster/features/cart/domain/repository/cart_repository.dart';
 
 class AddProductParams extends Equatable {
   final String productId;
   final String userId;
-  final String productName;
+  final String name;
 
-  final double productPrice;
-  // final int productQuantity;
+  final double price;
+  final String quantity;
 
-  const AddProductParams({
-    required this.productId,
-    required this.userId,
-    required this.productName,
-    required this.productPrice,
-    // required this.productQuantity
-  });
+  const AddProductParams(
+      {required this.productId,
+      required this.userId,
+      required this.name,
+      required this.price,
+      required this.quantity});
 
   @override
-  List<Object?> get props => [
-        productId,
-        userId,
-      ];
+  List<Object?> get props => [productId, userId, quantity];
 }
 
 class AddProductUsecase implements UsecaseWithParams<void, AddProductParams> {
@@ -39,11 +35,11 @@ class AddProductUsecase implements UsecaseWithParams<void, AddProductParams> {
     final result = await _repository.addProductToCart(
       CartItemEntity(
         productId: params.productId,
-        productName: params.productName,
-        productImage: '',
-        productDescription: '',
-        // quantity: params.productQuantity,
-        price: params.productPrice,
+        name: params.name,
+        image: '',
+        description: '',
+        quantity: '',
+        price: params.price,
       ),
     );
 

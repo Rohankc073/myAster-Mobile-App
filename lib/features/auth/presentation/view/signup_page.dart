@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:myasteer/features/auth/presentation/view/login_page.dart';
-import 'package:myasteer/features/auth/presentation/view_model/signup/bloc/signup_bloc.dart';
+import 'package:myAster/features/auth/presentation/view/login_page.dart';
+import 'package:myAster/features/auth/presentation/view_model/signup/bloc/signup_bloc.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});

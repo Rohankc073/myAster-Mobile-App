@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:myasteer/features/product/domain/entity/product_entity.dart';
+import 'package:myAster/features/product/domain/entity/product_entity.dart';
 
 abstract class SingleProductState extends Equatable {
   const SingleProductState();

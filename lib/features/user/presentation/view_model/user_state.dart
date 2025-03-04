@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:myasteer/features/user/domain/entity/user_entity.dart';
+import 'package:myAster/features/user/domain/entity/user_entity.dart';
 
 class UserState extends Equatable {
   final List<UserEntity> users;

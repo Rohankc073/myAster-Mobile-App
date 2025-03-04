@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myasteer/features/auth/presentation/view/login_page.dart';
+import 'package:myAster/features/auth/presentation/view/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {

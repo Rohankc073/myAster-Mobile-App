@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:myasteer/app/shared_prefs/token_shared_prefs.dart';
-import 'package:myasteer/app/shared_prefs/user_shared_prefs.dart';
-import 'package:myasteer/app/useccase/usecase.dart';
-import 'package:myasteer/core/error/failure.dart';
-import 'package:myasteer/features/auth/domain/repository/auth_repository.dart';
+import 'package:myAster/app/shared_prefs/token_shared_prefs.dart';
+import 'package:myAster/app/shared_prefs/user_shared_prefs.dart';
+import 'package:myAster/app/useccase/usecase.dart';
+import 'package:myAster/core/error/failure.dart';
+import 'package:myAster/features/auth/domain/repository/auth_repository.dart';
 
 class LoginUserParams extends Equatable {
   final String email;

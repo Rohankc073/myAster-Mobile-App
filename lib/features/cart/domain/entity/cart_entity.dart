@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:myasteer/features/cart/domain/entity/cart_item_entity.dart';
+import 'package:myAster/features/cart/domain/entity/cart_item_entity.dart';
 
 class CartEntity extends Equatable {
   final String userId;

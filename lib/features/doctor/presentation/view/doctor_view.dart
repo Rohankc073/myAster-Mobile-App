@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myasteer/features/doctor/presentation/view_model/doctor_bloc.dart';
-import 'package:myasteer/features/doctor/presentation/view_model/doctor_state.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:myAster/features/doctor/presentation/view_model/doctor_bloc.dart';
+import 'package:myAster/features/doctor/presentation/view_model/doctor_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DoctorView extends StatefulWidget {
   const DoctorView({super.key});
@@ -11,12 +16,31 @@ class DoctorView extends StatefulWidget {
 }
 
 class _DoctorViewState extends State<DoctorView> {
-  String? selectedSpecialization;
+  String? userId;
+  String? userName;
 
-  // ✅ Ensure a valid image URL is returned
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final id = prefs.getString('userId');
+    final name = prefs.getString('userName');
+
+    if (id != null && id.isNotEmpty) {
+      setState(() {
+        userId = id;
+        userName = name ?? "Unknown";
+      });
+    }
+  }
+
   String getImageUrl(String? imagePath) {
     if (imagePath == null || imagePath.trim().isEmpty) {
-      return "https://via.placeholder.com/150"; // Placeholder image
+      return "https://via.placeholder.com/150";
     }
     if (imagePath.contains("localhost")) {
       return imagePath.replaceFirst("localhost", "127.0.0.1");
@@ -59,190 +83,213 @@ class _DoctorViewState extends State<DoctorView> {
             );
           }
 
-          // Extract specializations dynamically while handling `null` values
-          List<String> specializations = state.doctors
-              .map((doctor) => doctor.specialization ?? "General")
-              .toSet()
-              .toList();
-
-          specializations.insert(0, "All");
-
-          // ✅ Filter doctors based on selected category
-          List doctorsToShow =
-              selectedSpecialization == null || selectedSpecialization == "All"
-                  ? state.doctors
-                  : state.doctors
-                      .where((doctor) =>
-                          doctor.specialization == selectedSpecialization)
-                      .toList();
-
-          return Column(
-            children: [
-              const SizedBox(height: 12),
-
-              // ✅ Doctor List with Clickable Pop-up
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: ListView.builder(
-                    itemCount: doctorsToShow.length,
-                    itemBuilder: (context, index) {
-                      final doctor = doctorsToShow[index];
-                      return Card(
-                        elevation: 2,
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 8),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.all(12),
-                          leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: Image.network(
-                              getImageUrl(doctor.image),
-                              width: 55,
-                              height: 55,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Image.network(
-                                      "https://via.placeholder.com/150",
-                                      width: 55,
-                                      height: 55,
-                                      fit: BoxFit.cover),
-                            ),
-                          ),
-                          title: Text(
-                            doctor.name ?? "Unknown Doctor",
-                            style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text(
-                            doctor.specialization ?? "General",
-                            style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.blue),
-                          ),
-                          trailing: ElevatedButton(
-                            onPressed: () {
-                              _showDoctorPopup(doctor);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                            child: const Text("View",
-                                style: TextStyle(color: Colors.white)),
-                          ),
-                        ),
-                      );
+          return ListView.builder(
+            padding: const EdgeInsets.all(12.0),
+            itemCount: state.doctors.length,
+            itemBuilder: (context, index) {
+              final doctor = state.doctors[index];
+              return Card(
+                elevation: 3,
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(12),
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: Image.network(
+                      getImageUrl(doctor.image),
+                      width: 65,
+                      height: 65,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          Image.network("https://via.placeholder.com/150",
+                              width: 65, height: 65, fit: BoxFit.cover),
+                    ),
+                  ),
+                  title: Text(
+                    doctor.name ?? "Unknown Doctor",
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    doctor.specialization ?? "General",
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.blue),
+                  ),
+                  trailing: ElevatedButton(
+                    onPressed: () {
+                      _showBookingForm(doctor);
                     },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: const Text("Book Now",
+                        style: TextStyle(color: Colors.white)),
                   ),
                 ),
-              ),
-            ],
+              );
+            },
           );
         },
       ),
     );
   }
 
-  // 📌 Show Popup for Doctor Details
-  void _showDoctorPopup(dynamic doctor) {
+  void _showBookingForm(dynamic doctor) {
+    final TextEditingController ageController = TextEditingController();
+    final TextEditingController problemController = TextEditingController();
+    final TextEditingController dateController = TextEditingController();
+    final TextEditingController timeController = TextEditingController();
+    String selectedGender = "Male";
+
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          contentPadding: const EdgeInsets.all(20),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start, // Left align text
-            children: [
-              // 📷 Doctor Image
-              Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    getImageUrl(doctor.image),
-                    width: 220,
-                    height: 150,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Image.network(
-                        "https://via.placeholder.com/150",
-                        width: 150,
-                        height: 150,
-                        fit: BoxFit.cover),
+          title: const Text("Book an Appointment"),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildTextField(ageController, "Your Age", isNumeric: true),
+                DropdownButtonFormField<String>(
+                  value: selectedGender,
+                  decoration: _inputDecoration("Select Gender"),
+                  items: ["Male", "Female", "Other"]
+                      .map((gender) =>
+                          DropdownMenuItem(value: gender, child: Text(gender)))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedGender = value!;
+                    });
+                  },
+                ),
+                const SizedBox(height: 10),
+
+                // ✅ Date Picker
+                GestureDetector(
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2100),
+                    );
+                    if (pickedDate != null) {
+                      dateController.text =
+                          DateFormat('yyyy-MM-dd').format(pickedDate);
+                    }
+                  },
+                  child: AbsorbPointer(
+                    child: _buildTextField(dateController, "Appointment Date"),
                   ),
                 ),
-              ),
-              const SizedBox(height: 15),
+                const SizedBox(height: 10),
 
-              // 📖 Doctor Details
-              Text(
-                doctor.name ?? "Unknown Doctor",
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                doctor.specialization ?? "General Practitioner",
-                style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.blue),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                "Contact: ${doctor.contact ?? "No contact available"}",
-                style: const TextStyle(color: Colors.black54, fontSize: 14),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                "Email: ${doctor.email ?? "No email provided"}",
-                style: const TextStyle(color: Colors.black54, fontSize: 14),
-              ),
-              const SizedBox(height: 20),
+                // ✅ Time Picker
+                GestureDetector(
+                  onTap: () async {
+                    TimeOfDay? pickedTime = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.now(),
+                    );
+                    if (pickedTime != null) {
+                      timeController.text = pickedTime.format(context);
+                    }
+                  },
+                  child: AbsorbPointer(
+                    child: _buildTextField(timeController, "Appointment Time"),
+                  ),
+                ),
+                const SizedBox(height: 10),
 
-              // 🛒 Buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      // TODO: Implement Booking functionality
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue.shade700,
-                      minimumSize: const Size(120, 40),
-                    ),
-                    child: const Text(
-                      "Book Now",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  OutlinedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: OutlinedButton.styleFrom(
-                      minimumSize: const Size(120, 40),
-                    ),
-                    child: const Text(
-                      "Close",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                _buildTextField(problemController, "Describe Your Problem"),
+              ],
+            ),
           ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Back"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _scheduleAppointment(
+                    doctor.id,
+                    ageController.text,
+                    selectedGender,
+                    problemController.text,
+                    dateController.text,
+                    timeController.text);
+              },
+              child: const Text("Confirm Booking"),
+            ),
+          ],
         );
       },
+    );
+  }
+
+  Future<void> _scheduleAppointment(String doctorId, String age, String gender,
+      String problemDescription, String date, String time) async {
+    if (userId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text("User not logged in"), backgroundColor: Colors.red),
+      );
+      return;
+    }
+
+    try {
+      final response = await http.post(
+        Uri.parse("http://localhost:5003/appointment/schedule"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "userId": userId,
+          "doctorId": doctorId,
+          "age": age,
+          "gender": gender,
+          "problemDescription": problemDescription,
+          "date": date,
+          "time": time,
+        }),
+      );
+
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Appointment booked successfully!")),
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: ${error.toString()}")),
+      );
+    }
+  }
+
+  InputDecoration _inputDecoration(String hint) {
+    return InputDecoration(
+      labelText: hint,
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String hint,
+      {bool isNumeric = false}) {
+    return TextField(
+      controller: controller,
+      keyboardType: isNumeric ? TextInputType.number : TextInputType.text,
+      decoration: _inputDecoration(hint),
     );
   }
 }

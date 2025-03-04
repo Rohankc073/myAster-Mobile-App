@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:myasteer/app/constants/api_endpoints.dart';
-import 'package:myasteer/core/network/dio_error_interceptor.dart';
+import 'package:myAster/app/constants/api_endpoints.dart';
+import 'package:myAster/core/network/dio_error_interceptor.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class ApiService {

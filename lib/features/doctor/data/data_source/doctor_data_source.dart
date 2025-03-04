@@ -1,4 +1,4 @@
-import 'package:myasteer/features/doctor/domain/entity/doctor_entity.dart';
+import 'package:myAster/features/doctor/domain/entity/doctor_entity.dart';
 
 abstract interface class IDoctorDataSource {
   Future<void> createDoctor(DoctorEntity doctorEntity);

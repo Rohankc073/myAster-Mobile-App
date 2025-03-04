@@ -1,6 +1,6 @@
-import 'package:myasteer/features/doctor/data/data_source/doctor_data_source.dart';
-import 'package:myasteer/features/doctor/data/model/doctor_hive_model.dart';
-import 'package:myasteer/features/doctor/domain/entity/doctor_entity.dart';
+import 'package:myAster/features/doctor/data/data_source/doctor_data_source.dart';
+import 'package:myAster/features/doctor/data/model/doctor_hive_model.dart';
+import 'package:myAster/features/doctor/domain/entity/doctor_entity.dart';
 
 import '../../../../../core/network/hive_service.dart';
 

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:myasteer/features/doctor/domain/entity/doctor_entity.dart';
+import 'package:myAster/features/doctor/domain/entity/doctor_entity.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../app/constants/hive_table_constant.dart';

@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:myasteer/features/doctor/presentation/view_model/doctor_state.dart';
+import 'package:myAster/features/doctor/presentation/view_model/doctor_state.dart';
 
 import '../../domain/use_case/get_all_doctor_usecase.dart';
 

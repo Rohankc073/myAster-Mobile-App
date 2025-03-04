@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myasteer/core/common/snackbar/my_snackbar.dart';
-import 'package:myasteer/features/auth/domain/use_case/login_use_case.dart';
-import 'package:myasteer/features/auth/presentation/view_model/signup/bloc/signup_bloc.dart';
-import 'package:myasteer/features/home/presentation/view_model/cubit/home_cubit.dart';
+import 'package:myAster/core/common/snackbar/my_snackbar.dart';
+import 'package:myAster/features/auth/domain/use_case/login_use_case.dart';
+import 'package:myAster/features/auth/presentation/view_model/signup/bloc/signup_bloc.dart';
+import 'package:myAster/features/home/presentation/view_model/cubit/home_cubit.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';

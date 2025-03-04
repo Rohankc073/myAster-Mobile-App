@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:myasteer/features/doctor/domain/entity/doctor_entity.dart';
+import 'package:myAster/features/doctor/domain/entity/doctor_entity.dart';
 
 import '../../../../core/error/failure.dart';
 

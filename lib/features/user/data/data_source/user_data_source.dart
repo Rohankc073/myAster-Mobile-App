@@ -1,4 +1,4 @@
-import 'package:myasteer/features/user/domain/entity/user_entity.dart';
+import 'package:myAster/features/user/domain/entity/user_entity.dart';
 
 abstract interface class IUserDataSource {
   // Future<void> createUser(UserEntity userEntity);

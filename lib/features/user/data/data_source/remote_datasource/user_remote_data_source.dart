@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:myasteer/features/user/data/model/user_api_model.dart';
-import 'package:myasteer/features/user/domain/entity/user_entity.dart';
+import 'package:myAster/features/user/data/model/user_api_model.dart';
+import 'package:myAster/features/user/domain/entity/user_entity.dart';
 
 import '../../../../../app/constants/api_endpoints.dart';
 
