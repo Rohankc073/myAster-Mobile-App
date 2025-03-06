@@ -29,4 +29,15 @@ This project is a mobile application designed to streamline hospital management 
   <img src="assets/screenshots/doctor.png" width="250">
 </p>
 
+<p align="center">
+  <img src="assets/screenshots/history.png" width="250">
+  <img src="assets/screenshots/no.png" width="250">
+  <img src="assets/screenshots/reserpassword.png" width="250">
+</p>
+
+
+
+
+
+
 
