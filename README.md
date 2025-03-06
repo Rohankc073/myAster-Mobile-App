@@ -11,5 +11,22 @@ This project is a mobile application designed to streamline hospital management 
 - 📲 **User-Friendly Interface**
 
 
-Flutter Project for final year 
+<p align="center">
+  <img src="assets/screenshots/splash.png" width="250">
+  <img src="assets/screenshots/login.png" width="250">
+  <img src="assets/screenshots/signup.png" width="250">
+</p>
+
+<p align="center">
+  <img src="assets/screenshots/home.png" width="250">
+  <img src="assets/screenshots/product.png" width="250">
+  <img src="assets/screenshots/doctor.png" width="250">
+</p>
+
+<p align="center">
+  <img src="assets/screenshots/cart.png" width="250">
+  <img src="assets/screenshots/profile.png" width="250">
+  <img src="assets/screenshots/doctor.png" width="250">
+</p>
+
 
