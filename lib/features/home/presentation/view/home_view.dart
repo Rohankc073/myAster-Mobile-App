@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myAster/app/di/di.dart';
+import 'package:myAster/features/cart/presentation/view/cart_screen_view.dart';
 import 'package:myAster/features/home/presentation/view/bottom_view/dashboard_view.dart';
 import 'package:myAster/features/home/presentation/view/bottom_view/profile_view.dart';
 import 'package:myAster/features/home/presentation/view/bottom_view/setting_view.dart';
 import 'package:myAster/features/home/presentation/view_model/cubit/home_cubit.dart';
 import 'package:myAster/features/product/presentation/view/product_view.dart';
 import 'package:myAster/features/product/presentation/view_model/product_bloc.dart';
-import 'package:myAster/sensor/promixity_sensor.dart';
 import 'package:myAster/sensor/shake_detector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,8 +21,6 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
   late ShakeDetector _shakeDetector;
-  late ProximityDetector _proximityDetector;
-  bool _isScreenOff = false; // ✅ Controls screen visibility
 
   final List<String> _appBarTitles = [
     "Home",
@@ -41,23 +39,11 @@ class _DashboardState extends State<Dashboard> {
     );
 
     _shakeDetector.startListening(); // ✅ Start shake detection
-
-    // ✅ Initialize ProximityDetector
-    _proximityDetector = ProximityDetector(
-      onProximityChange: (bool isNear) {
-        setState(() {
-          _isScreenOff = isNear;
-        });
-      },
-    );
-
-    _proximityDetector.startListening(); // ✅ Start proximity detection
   }
 
   @override
   void dispose() {
-    _shakeDetector.stopListening(); // ✅ Stop shake detection
-    _proximityDetector.stopListening(); // ✅ Stop proximity detection
+    _shakeDetector.stopListening(); // ✅ Stop listening when screen is disposed
     super.dispose();
   }
 
@@ -82,50 +68,62 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _isScreenOff
-          ? Colors.black
-          : Colors.white, // ✅ Turn screen black if near
-      body: _isScreenOff
-          ? const Center(
-              child: Text("Screen Off",
-                  style: TextStyle(color: Colors.white, fontSize: 24)))
-          : IndexedStack(
-              index: _selectedIndex,
-              children: [
-                const HomeScreen(),
-                BlocProvider(
-                  create: (context) => getIt<ProductBloc>(),
-                  child: const ProductView(),
-                ),
-                const ProfileScreen(),
-                const SettingsScreen(),
-              ],
-            ),
-      bottomNavigationBar: _isScreenOff
-          ? null // ✅ Hide bottom navigation if screen is off
-          : BottomNavigationBar(
-              currentIndex: _selectedIndex,
-              onTap: _onItemTapped,
-              type: BottomNavigationBarType.fixed,
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.shopping_bag),
-                  label: 'Products',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: 'Profile',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.settings),
-                  label: 'Settings',
-                ),
-              ],
-            ),
+      appBar: AppBar(
+        title: Text(_appBarTitles[_selectedIndex]),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CartPage()),
+              );
+            },
+            tooltip: "Cart",
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: _logout, // ✅ Manual logout button
+            tooltip: "Logout",
+          ),
+        ],
+      ),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: [
+          const HomeScreen(),
+          BlocProvider(
+            create: (context) => getIt<ProductBloc>(),
+            child: const ProductView(),
+          ),
+          const ProfileScreen(),
+          const SettingsScreen(),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_bag),
+            label: 'Products',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+      ),
     );
   }
 }

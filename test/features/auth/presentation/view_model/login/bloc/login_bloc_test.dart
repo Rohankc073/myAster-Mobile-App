@@ -1,135 +1,166 @@
-// import 'package:bloc_test/bloc_test.dart';
-// import 'package:dartz/dartz.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:flutter_test/flutter_test.dart';
-// import 'package:mocktail/mocktail.dart';
-// import 'package:myasteer/core/error/failure.dart';
-// import 'package:myasteer/features/auth/domain/use_case/login_use_case.dart';
-// import 'package:myasteer/features/auth/presentation/view/login_page.dart';
-// import 'package:myasteer/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
-// import 'package:myasteer/features/auth/presentation/view_model/signup/bloc/signup_bloc.dart';
-// import 'package:myasteer/features/home/presentation/view_model/cubit/home_cubit.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:myAster/features/auth/domain/use_case/login_use_case.dart';
+import 'package:myAster/features/auth/presentation/view/login_page.dart';
+import 'package:myAster/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
+import 'package:myAster/features/auth/presentation/view_model/request_otp/request_otp_bloc.dart';
+import 'package:myAster/features/auth/presentation/view_model/signup/bloc/signup_bloc.dart';
+import 'package:myAster/features/home/presentation/view_model/cubit/home_cubit.dart';
 
-// // Mock dependencies
-// class MockLoginUserUsecase extends Mock implements LoginUseCase {}
+// ✅ Mock Dependencies
+class MockLoginUserUseCase extends Mock implements LoginUseCase {}
 
-// class MockSignupBloc extends Mock implements SignupBloc {}
+class MockSignupBloc extends Mock implements SignupBloc {}
 
-// void main() {
-//   late LoginBloc loginBloc;
-//   late MockLoginUserUsecase loginUsecase;
-//   late MockSignupBloc signupBloc;
+class MockRequestOtpBloc extends Mock implements RequestOtpBloc {}
 
-//   setUp(() {
-//     loginUsecase = MockLoginUserUsecase();
-//     signupBloc = MockSignupBloc();
-//     loginBloc = LoginBloc(
-//         loginUseCase: loginUsecase,
-//         signupBloc: signupBloc,
-//         homeCubit: HomeCubit());
+void main() {
+  late LoginBloc loginBloc;
+  late MockLoginUserUseCase loginUseCase;
+  late MockSignupBloc signupBloc;
+  late MockRequestOtpBloc requestOtpBloc;
+  late HomeCubit homeCubit;
 
-//     registerFallbackValue(const LoginUserParams(email: '', password: ''));
-//   });
+  setUp(() {
+    loginUseCase = MockLoginUserUseCase();
+    signupBloc = MockSignupBloc();
+    requestOtpBloc = MockRequestOtpBloc();
+    homeCubit = HomeCubit();
 
-//   group('LoginBloc Tests', () {
-//     const validEmail = 'test@gmail.com';
-//     const validPassword = 'password';
-//     const loginParams =
-//         LoginUserParams(email: validEmail, password: validPassword);
+    loginBloc = LoginBloc(
+      loginUseCase: loginUseCase,
+      signupBloc: signupBloc,
+      homeCubit: homeCubit,
+      requestOtpBloc: requestOtpBloc,
+    );
 
-//     blocTest<LoginBloc, LoginState>(
-//       'emits [isLoading=true, isSuccess=true] when login succeeds',
-//       build: () {
-//         when(() => loginUsecase.call(any()))
-//             .thenAnswer((_) async => const Right(null)); // ✅ No user object
-//         return loginBloc;
-//       },
-//       act: (bloc) => bloc.add(
-//           const LoginUserEvent(email: validEmail, password: validPassword)),
-//       expect: () => [
-//         LoginState.initial().copyWith(isLoading: true),
-//         LoginState.initial().copyWith(isLoading: false, isSuccess: true),
-//       ],
-//       verify: (_) {
-//         verify(() => loginUsecase.call(loginParams)).called(1);
-//       },
-//     );
+    registerFallbackValue(const LoginUserParams(email: '', password: ''));
+  });
 
-//     blocTest<LoginBloc, LoginState>(
-//       'emits [isLoading=true, isSuccess=false, errorMessage="Invalid credentials"] when login fails',
-//       build: () {
-//         when(() => loginUsecase.call(any())).thenAnswer((_) async =>
-//             const Left(ApiFailure(message: 'Invalid credentials')));
-//         return loginBloc;
-//       },
-//       act: (bloc) => bloc.add(
-//           const LoginUserEvent(email: validEmail, password: validPassword)),
-//       expect: () => [
-//         LoginState.initial().copyWith(isLoading: true),
-//         LoginState.initial().copyWith(
-//             isLoading: false,
-//             isSuccess: false,
-//             errorMessage: "Invalid credentials"),
-//       ],
-//       verify: (_) {
-//         verify(() => loginUsecase.call(loginParams)).called(1);
-//       },
-//     );
-//   });
+  // group('LoginBloc Tests', () {
+  //   const validEmail = 'test@gmail.com';
+  //   const validPassword = 'password123';
+  //   const loginParams =
+  //       LoginUserParams(email: validEmail, password: validPassword);
 
-//   tearDown(() {
-//     loginBloc.close();
-//     reset(loginUsecase);
-//     reset(signupBloc);
-//   });
+  //   const mockAuthResponse = AuthResponse(
+  //     token: 'mock_token',
+  //     userId: '12345',
+  //     name: 'John Doe',
+  //     email: validEmail,
+  //     role: 'user',
+  //   );
 
-//   testWidgets('Email and Password Validation', (WidgetTester tester) async {
-//     await tester.pumpWidget(
-//       MaterialApp(
-//         home: BlocProvider<LoginBloc>.value(
-//           value: loginBloc,
-//           child: LoginView(),
-//         ),
-//       ),
-//     );
+  //   blocTest<LoginBloc, LoginState>(
+  //     '✅ Emits [isLoading=true, isSuccess=true] when login succeeds',
+  //     build: () {
+  //       when(() => loginUseCase.call(any()))
+  //           .thenAnswer((_) async => const Right(mockAuthResponse));
 
-//     final emailField = find.byKey(const Key('email'));
-//     final passwordField = find.byKey(const Key('password'));
+  //       return loginBloc;
+  //     },
+  //     act: (bloc) => bloc.add(LoginUserEvent(
+  //       email: validEmail,
+  //       password: validPassword,
+  //       context: MockBuildContext(),
+  //       destination: const Dashboard(),
+  //     )),
+  //     expect: () => [
+  //       LoginState.initial().copyWith(isLoading: true),
+  //       LoginState.initial().copyWith(isLoading: false, isSuccess: true),
+  //     ],
+  //     verify: (_) {
+  //       verify(() => loginUseCase.call(loginParams)).called(1);
+  //     },
+  //   );
 
-//     await tester.enterText(emailField, 'rohan@gmail.com');
-//     await tester.enterText(passwordField, 'password@123');
+  //   blocTest<LoginBloc, LoginState>(
+  //     '❌ Emits [isLoading=true, isSuccess=false] when login fails',
+  //     build: () {
+  //       when(() => loginUseCase.call(any())).thenAnswer((_) async =>
+  //           const Left(ApiFailure(message: 'Invalid credentials')));
 
-//     await tester.pump();
+  //       return loginBloc;
+  //     },
+  //     act: (bloc) => bloc.add(LoginUserEvent(
+  //       email: validEmail,
+  //       password: validPassword,
+  //       context: MockBuildContext(),
+  //       destination: const Dashboard(),
+  //     )),
+  //     expect: () => [
+  //       LoginState.initial().copyWith(isLoading: true),
+  //       LoginState.initial().copyWith(isLoading: false, isSuccess: false),
+  //     ],
+  //     verify: (_) {
+  //       verify(() => loginUseCase.call(loginParams)).called(1);
+  //     },
+  //   );
+  // });
 
-//     expect(find.text('rohan@gmail.com'), findsOneWidget);
-//     expect(find.text('password@123'), findsOneWidget);
-//   });
+  // tearDown(() {
+  //   loginBloc.close();
+  //   reset(loginUseCase);
+  //   reset(signupBloc);
+  //   reset(requestOtpBloc);
+  // });
 
-//   testWidgets('Invalid Email and Password Validation',
-//       (WidgetTester tester) async {
-//     await tester.pumpWidget(
-//       MaterialApp(
-//         home: BlocProvider<LoginBloc>.value(
-//           value: loginBloc,
-//           child: LoginView(),
-//         ),
-//       ),
-//     );
+  testWidgets('📝 UI Test: Email and Password Validation',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: BlocProvider<LoginBloc>.value(
+          value: loginBloc,
+          child: LoginView(),
+        ),
+      ),
+    );
 
-//     final emailField = find.byKey(const Key('email'));
-//     final passwordField = find.byKey(const Key('password'));
-//     final loginButton = find.byKey(const Key('loginButton'));
+    await tester.pumpAndSettle(); // ✅ Ensure UI is ready
 
-//     await tester.enterText(emailField, 'invalid-email');
-//     await tester.enterText(passwordField, 'short');
+    final emailField = find.byKey(const Key('email'));
+    final passwordField = find.byKey(const Key('password'));
 
-//     await tester.pump();
+    await tester.enterText(emailField, 'rohan@gmail.com');
+    await tester.enterText(passwordField, 'password@123');
 
-//     await tester.tap(loginButton);
-//     await tester.pump();
+    await tester.pump();
 
-//     expect(find.text('Enter a valid email'), findsOneWidget);
-//     expect(find.text('Password must be at least 8 characters'), findsOneWidget);
-//   });
-// }
+    expect(find.text('rohan@gmail.com'), findsOneWidget);
+    expect(find.text('password@123'), findsOneWidget);
+  });
+
+  // testWidgets('🚨 UI Test: Shows SnackBar when login fails',
+  //     (WidgetTester tester) async {
+  //   when(() => loginUseCase.call(any())).thenAnswer(
+  //       (_) async => const Left(ApiFailure(message: 'Invalid credentials')));
+
+  //   await tester.pumpWidget(
+  //     MaterialApp(
+  //       home: BlocProvider<LoginBloc>.value(
+  //         value: loginBloc,
+  //         child: LoginView(),
+  //       ),
+  //     ),
+  //   );
+
+  //   await tester.pumpAndSettle(); // ✅ Ensure UI is fully loaded
+
+  //   final emailField = find.byKey(const Key('email'));
+  //   final passwordField = find.byKey(const Key('password'));
+  //   final loginButton = find.byKey(const Key('loginButton'));
+
+  //   await tester.enterText(emailField, 'test@gmail.com');
+  //   await tester.enterText(passwordField, 'password123');
+  //   await tester.tap(loginButton);
+  //   await tester.pumpAndSettle(); // ✅ Wait for SnackBar to show
+
+  //   // ✅ Verify that a SnackBar is shown with the error message
+  //   expect(find.textContaining('Invalid Credentials'), findsOneWidget);
+  // });
+}
+
+// ✅ Mock BuildContext Class
+class MockBuildContext extends Mock implements BuildContext {}

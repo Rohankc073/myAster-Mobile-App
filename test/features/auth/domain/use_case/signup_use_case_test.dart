@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:myasteer/core/error/failure.dart';
-import 'package:myasteer/features/auth/domain/entity/auth_entity.dart';
-import 'package:myasteer/features/auth/domain/use_case/signup_use_case.dart';
+import 'package:myAster/core/error/failure.dart';
+import 'package:myAster/features/auth/domain/entity/auth_entity.dart';
+import 'package:myAster/features/auth/domain/use_case/signup_use_case.dart';
 
 import 'repository.mock.dart';
 

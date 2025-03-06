@@ -43,8 +43,8 @@ class _DoctorViewState extends State<DoctorView> {
     if (imagePath == null || imagePath.trim().isEmpty) {
       return "https://via.placeholder.com/150";
     }
-    if (imagePath.contains("localhost")) {
-      return imagePath.replaceFirst("localhost", "127.0.0.1");
+    if (imagePath.contains("192.168.1.88")) {
+      return imagePath.replaceFirst("192.168.1.88", "127.0.0.1");
     }
     return imagePath.trim();
   }
@@ -254,7 +254,7 @@ class _DoctorViewState extends State<DoctorView> {
 
     try {
       final response = await http.post(
-        Uri.parse("http://localhost:5003/appointments/schedule"),
+        Uri.parse("http://192.168.1.88:5003/appointments/schedule"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "userId": userId,

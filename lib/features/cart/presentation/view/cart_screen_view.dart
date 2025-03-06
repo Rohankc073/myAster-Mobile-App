@@ -44,7 +44,7 @@ class _CartPageState extends State<CartPage> {
   Future<void> _fetchCartData() async {
     try {
       final response =
-          await http.get(Uri.parse("http://localhost:5003/cart/$userId"));
+          await http.get(Uri.parse("http://192.168.1.88:5003/cart/$userId"));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -66,7 +66,7 @@ class _CartPageState extends State<CartPage> {
   Future<void> _removeItemFromCart(String productId) async {
     try {
       final response = await http.delete(
-        Uri.parse("http://localhost:5003/cart/remove"),
+        Uri.parse("http://192.168.1.88:5003/cart/remove"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"userId": userId, "productId": productId}),
       );
@@ -91,7 +91,7 @@ class _CartPageState extends State<CartPage> {
   Future<void> _clearCart() async {
     try {
       final response = await http.delete(
-        Uri.parse("http://localhost:5003/cart/clear/$userId"),
+        Uri.parse("http://192.168.1.88:5003/cart/clear/$userId"),
       );
 
       if (response.statusCode == 200) {
@@ -122,10 +122,15 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100], // ✅ Soft background
       appBar: AppBar(
-        title: const Text("Your Cart"),
+        title: const Text(
+          "Your Cart",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+        ),
         backgroundColor: Colors.blueAccent,
         centerTitle: true,
+        elevation: 5,
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -136,7 +141,8 @@ class _CartPageState extends State<CartPage> {
               : cartItems.isEmpty
                   ? const Center(
                       child: Text("Your cart is empty",
-                          style: TextStyle(fontSize: 18)))
+                          style:
+                              TextStyle(fontSize: 18, color: Colors.black54)))
                   : Column(
                       children: [
                         Expanded(
@@ -147,26 +153,27 @@ class _CartPageState extends State<CartPage> {
                               final item = cartItems[index];
 
                               return Card(
-                                elevation: 3,
-                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                elevation: 5,
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 10),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(15),
                                 ),
                                 child: ListTile(
-                                  contentPadding: const EdgeInsets.all(12),
+                                  contentPadding: const EdgeInsets.all(15),
                                   leading: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
                                     child: Image.network(
                                       item['image'],
-                                      width: 65,
-                                      height: 65,
+                                      width: 70,
+                                      height: 70,
                                       fit: BoxFit.cover,
                                       errorBuilder: (context, error,
                                               stackTrace) =>
                                           Image.network(
                                               "https://via.placeholder.com/150",
-                                              width: 65,
-                                              height: 65,
+                                              width: 70,
+                                              height: 70,
                                               fit: BoxFit.cover),
                                     ),
                                   ),
@@ -177,13 +184,13 @@ class _CartPageState extends State<CartPage> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   subtitle: Text(
-                                    "Price: NPR ${item['price']} x ${item['quantity']}",
+                                    "NPR ${item['price']} x ${item['quantity']}",
                                     style: const TextStyle(
                                         fontSize: 16, color: Colors.black54),
                                   ),
                                   trailing: IconButton(
                                     icon: const Icon(Icons.delete,
-                                        color: Colors.red),
+                                        color: Colors.redAccent),
                                     onPressed: () {
                                       _removeItemFromCart(item['productId']);
                                     },
@@ -194,7 +201,7 @@ class _CartPageState extends State<CartPage> {
                           ),
                         ),
 
-                        // ✅ Total Price and Buttons
+                        // ✅ Floating Checkout Section
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
@@ -202,8 +209,8 @@ class _CartPageState extends State<CartPage> {
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.shade300,
-                                blurRadius: 5,
-                                spreadRadius: 1,
+                                blurRadius: 8,
+                                spreadRadius: 2,
                               )
                             ],
                             borderRadius: const BorderRadius.vertical(
@@ -225,34 +232,37 @@ class _CartPageState extends State<CartPage> {
                                   Text(
                                     "NPR ${_calculateTotalPrice().toStringAsFixed(2)}",
                                     style: const TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 22,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.green,
                                     ),
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 15),
 
                               // ✅ Clear Cart Button
-                              ElevatedButton(
+                              ElevatedButton.icon(
                                 onPressed: _clearCart,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.redAccent,
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 50, vertical: 12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
                                 ),
-                                child: const Text(
+                                icon: const Icon(Icons.delete_forever),
+                                label: const Text(
                                   "Clear Cart",
                                   style: TextStyle(
                                       fontSize: 18, color: Colors.white),
                                 ),
                               ),
-
                               const SizedBox(height: 10),
 
-                              // ✅ Checkout Button (Navigates to Checkout Page)
-                              ElevatedButton(
+                              // ✅ Checkout Button
+                              ElevatedButton.icon(
                                 onPressed: () {
                                   Navigator.push(
                                     context,
@@ -266,8 +276,12 @@ class _CartPageState extends State<CartPage> {
                                   backgroundColor: Colors.blueAccent,
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 50, vertical: 12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
                                 ),
-                                child: const Text(
+                                icon: const Icon(Icons.shopping_cart_checkout),
+                                label: const Text(
                                   "Proceed to Checkout",
                                   style: TextStyle(
                                       fontSize: 18, color: Colors.white),

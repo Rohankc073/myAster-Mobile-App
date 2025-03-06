@@ -17,8 +17,8 @@
 //     if (imagePath == null || imagePath.trim().isEmpty) {
 //       return "https://via.placeholder.com/150"; // Placeholder image
 //     }
-//     if (imagePath.contains("localhost")) {
-//       return imagePath.replaceFirst("localhost", "127.0.0.1");
+//     if (imagePath.contains("192.168.1.88")) {
+//       return imagePath.replaceFirst("192.168.1.88", "127.0.0.1");
 //     }
 //     return imagePath.trim();
 //   }

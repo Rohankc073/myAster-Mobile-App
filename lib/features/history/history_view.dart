@@ -35,8 +35,8 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
 
   Future<void> _fetchOrders() async {
     try {
-      final response =
-          await http.get(Uri.parse("http://localhost:5003/order/user/$userId"));
+      final response = await http
+          .get(Uri.parse("http://192.168.1.88:5003/order/user/$userId"));
 
       if (response.statusCode == 200) {
         setState(() {
@@ -51,7 +51,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
   Future<void> _fetchAppointments() async {
     try {
       final response = await http.get(Uri.parse(
-          "http://localhost:5003/appointments/getAll?userId=$userId"));
+          "http://192.168.1.88:5003/appointments/getAll?userId=$userId"));
 
       if (response.statusCode == 200) {
         setState(() {

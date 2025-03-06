@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:myAster/app/di/di.dart';
+import 'package:myAster/features/auth/presentation/view/request_otp_view.dart';
 import 'package:myAster/features/auth/presentation/view/signup_page.dart';
 import 'package:myAster/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
+import 'package:myAster/features/auth/presentation/view_model/request_otp/request_otp_bloc.dart';
 import 'package:myAster/features/home/presentation/view/home_view.dart';
 
 class LoginView extends StatelessWidget {
@@ -101,10 +104,22 @@ class LoginView extends StatelessWidget {
                           Align(
                             alignment: Alignment.centerRight,
                             child: TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => BlocProvider(
+                                      create: (context) =>
+                                          getIt<RequestOtpBloc>(),
+                                      child: RequestOtpView(),
+                                    ),
+                                  ),
+                                );
+                              },
                               child: const Text(
-                                'Forgot Password?',
-                                style: TextStyle(color: Colors.black),
+                                'Reset Password',
+                                style: TextStyle(
+                                    color: Colors.blueGrey, fontSize: 14),
                               ),
                             ),
                           ),

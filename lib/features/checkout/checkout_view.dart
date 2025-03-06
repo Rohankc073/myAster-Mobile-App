@@ -44,7 +44,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
     try {
       final response = await http.post(
-        Uri.parse("http://localhost:5003/order/add"),
+        Uri.parse("http://192.168.1.88:5003/order/add"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "userId": userId,

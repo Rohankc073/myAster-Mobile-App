@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:myAster/features/auth/presentation/view/request_otp_view.dart';
 import 'package:myAster/features/history/history_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -42,7 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     try {
       final response = await http.put(
-        Uri.parse("http://localhost:5003/user/update/$userId"),
+        Uri.parse("http://192.168.1.88:5003/user/update/$userId"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"name": updatedName, "contact": updatedPhone}),
       );
@@ -176,17 +177,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       );
                     },
                   ),
-
-                  const SizedBox(height: 20),
-
-                  ElevatedButton(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Logged out")),
+                  ListTile(
+                    leading: const Icon(Icons.history),
+                    title: const Text("Reset"),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RequestOtpView()),
                       );
                     },
-                    child: const Text("Log Out"),
                   ),
+
+                  const SizedBox(height: 20),
                 ],
               ),
             ),

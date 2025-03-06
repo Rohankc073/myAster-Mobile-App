@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:myasteer/core/error/failure.dart';
-import 'package:myasteer/features/auth/domain/use_case/upload_image_usecase.dart';
+import 'package:myAster/core/error/failure.dart';
+import 'package:myAster/features/auth/domain/use_case/upload_image_usecase.dart';
 
 import 'login_use_case_test.dart';
 

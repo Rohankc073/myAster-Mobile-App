@@ -8,10 +8,14 @@ import 'package:myAster/features/auth/data/datasource/local_data_source/local_da
 import 'package:myAster/features/auth/data/datasource/remote_data_source/remote_data_source.dart';
 import 'package:myAster/features/auth/data/repository/auth_local_repository.dart';
 import 'package:myAster/features/auth/data/repository/auth_remote_repository.dart';
+import 'package:myAster/features/auth/domain/use_case/get_otp_usecase.dart';
 import 'package:myAster/features/auth/domain/use_case/login_use_case.dart';
+import 'package:myAster/features/auth/domain/use_case/reset_password_usecase.dart';
 import 'package:myAster/features/auth/domain/use_case/signup_use_case.dart';
 import 'package:myAster/features/auth/domain/use_case/upload_image_usecase.dart';
 import 'package:myAster/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
+import 'package:myAster/features/auth/presentation/view_model/request_otp/request_otp_bloc.dart';
+import 'package:myAster/features/auth/presentation/view_model/reset_password/reset_password_bloc.dart';
 import 'package:myAster/features/auth/presentation/view_model/signup/bloc/signup_bloc.dart';
 import 'package:myAster/features/cart/data/data_source/cart_datasource.dart';
 import 'package:myAster/features/cart/data/repository/cart_remote_repository.dart';
@@ -43,6 +47,10 @@ Future<void> initDependencies() async {
 
   await _initLoginDependencies();
   await _initSignupDependencies();
+
+  await _initRequestOtpDependencies();
+  await _initResetPasswordDependencies();
+
   await _initCartDependencies();
   await _initOnboardingDependencies();
   await _initSplashDependencies();
@@ -60,6 +68,29 @@ _initApiService() {
 
 _initHiveService() {
   getIt.registerLazySingleton<HiveService>(() => HiveService());
+}
+
+_initRequestOtpDependencies() {
+  if (!getIt.isRegistered<GetOtpUseCase>()) {
+    getIt.registerLazySingleton<GetOtpUseCase>(() => GetOtpUseCase(
+          userRepository: getIt<AuthRemoteRepository>(),
+        ));
+  }
+
+  getIt.registerFactory<RequestOtpBloc>(
+    () => RequestOtpBloc(getOtpUseCase: getIt<GetOtpUseCase>()),
+  );
+}
+
+_initResetPasswordDependencies() {
+  getIt.registerLazySingleton<ResetPasswordUseCase>(
+    () => ResetPasswordUseCase(userRepository: getIt<AuthRemoteRepository>()),
+  );
+
+  getIt.registerFactory<ResetPasswordBloc>(
+    () =>
+        ResetPasswordBloc(resetPasswordUseCase: getIt<ResetPasswordUseCase>()),
+  );
 }
 
 Future<void> _initSharedPreferences() async {
@@ -95,6 +126,7 @@ _initLoginDependencies() async {
       loginUseCase: getIt<LoginUseCase>(),
       signupBloc: getIt<SignupBloc>(),
       homeCubit: getIt<HomeCubit>(),
+      requestOtpBloc: getIt<RequestOtpBloc>(),
     ),
   );
 }

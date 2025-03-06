@@ -75,4 +75,16 @@ class AuthLocalDataSource implements IAuthDataSource {
     // TODO: implement uploadProfilePicture
     throw UnimplementedError();
   }
+
+  @override
+  Future<String> receiveOtp(String email) {
+    // TODO: implement receiveOtp
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> setNewPassword(String email, String newPassword, String otp) {
+    // TODO: implement setNewPassword
+    throw UnimplementedError();
+  }
 }

@@ -26,3 +26,7 @@ class SharedPrefsFailure extends Failure {
     required super.message,
   });
 }
+
+class ServerFailure extends Failure {
+  const ServerFailure({required super.message});
+}

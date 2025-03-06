@@ -10,4 +10,8 @@ abstract interface class IAuthDataSource {
   // Future<AuthEntity> getCurrentUser();
 
   Future<String> uploadProfilePicture(File file);
+
+  Future<String> receiveOtp(String email);
+
+  Future<void> setNewPassword(String email, String newPassword, String otp);
 }

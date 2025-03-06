@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:myasteer/features/auth/presentation/view/login_page.dart';
-import 'package:myasteer/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
+import 'package:myAster/features/auth/presentation/view/login_page.dart';
+import 'package:myAster/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
 
 class MockLoginBloc extends MockBloc<LoginEvent, LoginState>
     implements LoginBloc {}

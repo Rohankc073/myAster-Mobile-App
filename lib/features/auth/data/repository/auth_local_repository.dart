@@ -55,4 +55,17 @@ class AuthLocalRepository implements IAuthRepository {
     // TODO: implement uploadProfilePicture
     throw UnimplementedError();
   }
+
+  @override
+  Future<Either<Failure, String>> receiveOtp(String email) {
+    // TODO: implement receiveOtp
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, void>> resetPassword(
+      String email, String newPassword, String otp) {
+    // TODO: implement resetPassword
+    throw UnimplementedError();
+  }
 }

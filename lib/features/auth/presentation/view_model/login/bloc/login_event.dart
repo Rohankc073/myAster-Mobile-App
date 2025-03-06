@@ -7,6 +7,16 @@ sealed class LoginEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class NavigateOtpScreenEvent extends LoginEvent {
+  final BuildContext context;
+  final Widget destination;
+
+  const NavigateOtpScreenEvent({
+    required this.context,
+    required this.destination,
+  });
+}
+
 class NavigateRegisterScreenEvent extends LoginEvent {
   final BuildContext context;
   final Widget destination;
