@@ -1,68 +1,24 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myasteer/features/auth/presentation/view/signup_page.dart';
-import 'package:myasteer/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
-
-import '../../../../core/common/snackbar/my_snackbar.dart';
-import '../../../../core/network/api_service.dart';
+import 'package:myAster/app/di/di.dart';
+import 'package:myAster/features/auth/presentation/view/request_otp_view.dart';
+import 'package:myAster/features/auth/presentation/view/signup_page.dart';
+import 'package:myAster/features/auth/presentation/view_model/login/bloc/login_bloc.dart';
+import 'package:myAster/features/auth/presentation/view_model/request_otp/request_otp_bloc.dart';
+import 'package:myAster/features/home/presentation/view/home_view.dart';
 
 class LoginView extends StatelessWidget {
   LoginView({super.key});
 
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  // Login Function
-  void login(BuildContext context) async {
-    if (_formKey.currentState!.validate()) {
-      final email = _emailController.text.trim();
-      final password = _passwordController.text.trim();
-
-      try {
-        final apiService = ApiService(Dio());
-        final user = await apiService.loginUser(email, password);
-
-        if (user != null && user['success'] == true) {
-          // Log the response for debugging purposes
-          print("Login successful: $user");
-
-          // Show success message and navigate
-          showMySnackBar(
-            context: context,
-            message: 'Login Successful!',
-            color: Colors.green,
-          );
-
-          // Navigate to Home screen
-        } else {
-          // Handle failed login
-          print("Invalid login response: $user");
-          showMySnackBar(
-            context: context,
-            message: 'Invalid username or password',
-            color: Colors.red,
-          );
-        }
-      } catch (e) {
-        // Handle any error during the API call
-        print("Error during login: $e");
-        showMySnackBar(
-          context: context,
-          message: 'An error occurred. Please try again.',
-          color: Colors.red,
-        );
-      }
-    }
-  }
+  final _emailController = TextEditingController(text: "admin@gmail.com");
+  final _passwordController = TextEditingController(text: "admin123");
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // Gradient Background
           Container(
             decoration: const BoxDecoration(),
           ),
@@ -109,6 +65,11 @@ class LoginView extends StatelessWidget {
                               if (value!.isEmpty) {
                                 return 'Please enter your email';
                               }
+                              final emailRegex =
+                                  RegExp(r"^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
+                              // if (!emailRegex.hasMatch(value)) {
+                              //   return "Enter a valid email";
+                              // }
                               return null;
                             },
                           ),
@@ -127,12 +88,15 @@ class LoginView extends StatelessWidget {
                               hintText: 'Enter Your Password',
                               suffixIcon: const Icon(Icons.visibility_off),
                             ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your password';
-                              }
-                              return null;
-                            },
+                            // validator: (value) {
+                            //   if (value == null || value.trim().isEmpty) {
+                            //     return "Password is required";
+                            //   }
+                            //   if (value.length < 8) {
+                            //     return "Password must be at least 8 characters";
+                            //   }
+                            //   return null;
+                            // },
                           ),
                           const SizedBox(height: 10),
 
@@ -140,10 +104,22 @@ class LoginView extends StatelessWidget {
                           Align(
                             alignment: Alignment.centerRight,
                             child: TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => BlocProvider(
+                                      create: (context) =>
+                                          getIt<RequestOtpBloc>(),
+                                      child: RequestOtpView(),
+                                    ),
+                                  ),
+                                );
+                              },
                               child: const Text(
-                                'Forgot Password?',
-                                style: TextStyle(color: Colors.black),
+                                'Reset Password',
+                                style: TextStyle(
+                                    color: Colors.blueGrey, fontSize: 14),
                               ),
                             ),
                           ),
@@ -156,7 +132,23 @@ class LoginView extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: ElevatedButton(
-                              onPressed: () => login(context),
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  final email = _emailController.text.trim();
+                                  final password =
+                                      _passwordController.text.trim();
+
+                                  // Navigate to Home screen
+                                  context.read<LoginBloc>().add(
+                                        LoginUserEvent(
+                                          context: context,
+                                          email: email,
+                                          password: password,
+                                          destination: const Dashboard(),
+                                        ),
+                                      );
+                                }
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,
                                 // shadowColor: Colors.transparent,
@@ -167,6 +159,7 @@ class LoginView extends StatelessWidget {
                                 ),
                               ),
                               child: const Text(
+                                key: ValueKey('loginButton'),
                                 'Sign In',
                                 style: TextStyle(
                                   fontSize: 18,

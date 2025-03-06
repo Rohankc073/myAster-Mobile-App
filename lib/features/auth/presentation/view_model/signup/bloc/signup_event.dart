@@ -1,6 +1,6 @@
 part of 'signup_bloc.dart';
 
-sealed class SignupEvent extends Equatable {
+abstract class SignupEvent extends Equatable {
   const SignupEvent();
 
   @override
@@ -9,33 +9,26 @@ sealed class SignupEvent extends Equatable {
 
 class LoadImage extends SignupEvent {
   final File file;
-  const LoadImage({
-    required this.file,
-  });
+
+  const LoadImage({required this.file});
+
+  @override
+  List<Object> get props => [file];
 }
 
 class RegisterUser extends SignupEvent {
-  final BuildContext context;
-  final String email;
   final String name;
+  final String email;
   final String phone;
   final String password;
 
   const RegisterUser({
-    required this.context,
-    required this.email,
     required this.name,
+    required this.email,
     required this.phone,
     required this.password,
   });
+
+  @override
+  List<Object> get props => [name, email, phone, password];
 }
-
-// class NavigateLoginScreenEvent extends SignupEvent {
-//   final BuildContext context;
-//   final Widget destination;
-
-//   const NavigateLoginScreenEvent({
-//     required this.context,
-//     required this.destination,
-//   });
-// }

@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:myasteer/app/constants/api_endpoints.dart';
-import 'package:myasteer/features/auth/data/datasource/auth_data_source.dart';
-import 'package:myasteer/features/auth/data/model/auth_api_model.dart';
-import 'package:myasteer/features/auth/domain/entity/auth_entity.dart';
+import 'package:myAster/app/constants/api_endpoints.dart';
+import 'package:myAster/core/error/failure.dart';
+import 'package:myAster/features/auth/data/datasource/auth_data_source.dart';
+import 'package:myAster/features/auth/data/model/auth_api_model.dart';
+import 'package:myAster/features/auth/domain/entity/auth_entity.dart';
+import 'package:myAster/features/auth/domain/use_case/login_use_case.dart';
 
 class AuthRemoteDataSource implements IAuthDataSource {
   final Dio _dio;
@@ -18,17 +20,37 @@ class AuthRemoteDataSource implements IAuthDataSource {
   }
 
   @override
-  Future<String> loginUser(String email, String password) async {
+  Future<AuthResponse> loginUser(String email, String password) async {
     try {
-      var response = await _dio.post(
+      Response response = await _dio.post(
         ApiEndpoints.login,
-        data: {'email': email, 'password': password},
+        data: {
+          "email": email,
+          "password": password,
+        },
       );
 
       if (response.statusCode == 200) {
-        return response.data['token'];
+        print("Login API Response: ${response.data}"); // Debugging output
+
+        final String token = response.data['token'];
+        final Map<String, dynamic> userData =
+            Map<String, dynamic>.from(response.data['user']);
+
+        final String userId = userData['_id']; // Extract correct user ID
+        final String name = userData['name'];
+        final String email = userData['email'];
+        final String role = userData['role'];
+
+        return AuthResponse(
+          token: token,
+          userId: userId,
+          name: name,
+          email: email,
+          role: role,
+        );
       } else {
-        throw Exception('Failed to login: ${response.statusMessage}');
+        throw Exception('Login failed: ${response.statusMessage}');
       }
     } on DioException catch (e) {
       throw Exception('Network error during login: ${e.message}');
@@ -75,6 +97,49 @@ class AuthRemoteDataSource implements IAuthDataSource {
       }
     } on DioException catch (e) {
       throw Exception('Network error during profile upload: ${e.message}');
+    } catch (e) {
+      throw Exception('Unexpected error: $e');
+    }
+  }
+
+  /// Receives OTP
+  @override
+  Future<String> receiveOtp(String email) async {
+    try {
+      print("EMAIL TO SEND: $email");
+
+      var response = await _dio.post(
+        ApiEndpoints.receiveOtp,
+        data: {'email': email},
+        options: Options(headers: {
+          "Content-Type": "application/json",
+        }),
+      );
+
+      print("RESPONSE RECEIVED: ${response.data}");
+
+      return response.data["message"] as String; // Ensure this returns a string
+    } catch (e) {
+      print("DIO ERROR: ${e.toString()}");
+      throw ApiFailure(message: e.toString());
+    }
+  }
+
+  /// Sets a new password
+  @override
+  Future<void> setNewPassword(
+      String? otp, String newPassword, String email) async {
+    try {
+      var response = await _dio.post(
+        ApiEndpoints.setNewPassword,
+        data: {'email': email, 'newPassword': newPassword, 'otp': otp},
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception(response.statusMessage);
+      }
+    } on DioException catch (e) {
+      throw Exception('Network error: ${e.message}');
     } catch (e) {
       throw Exception('Unexpected error: $e');
     }

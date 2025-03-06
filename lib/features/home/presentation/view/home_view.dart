@@ -1,294 +1,126 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:myAster/app/di/di.dart';
+import 'package:myAster/features/cart/presentation/view/cart_screen_view.dart';
+import 'package:myAster/features/home/presentation/view/bottom_view/dashboard_view.dart';
+import 'package:myAster/features/home/presentation/view/bottom_view/profile_view.dart';
+import 'package:myAster/features/home/presentation/view/bottom_view/setting_view.dart';
+import 'package:myAster/features/home/presentation/view_model/cubit/home_cubit.dart';
+import 'package:myAster/features/product/presentation/view/product_view.dart';
+import 'package:myAster/features/product/presentation/view_model/product_bloc.dart';
+import 'package:myAster/sensor/shake_detector.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class Dashboard extends StatefulWidget {
+  const Dashboard({super.key});
+
+  @override
+  State<Dashboard> createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
+  int _selectedIndex = 0;
+  late ShakeDetector _shakeDetector;
+
+  final List<String> _appBarTitles = [
+    "Home",
+    "Products",
+    "Profile",
+    "Settings",
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    // ✅ Initialize ShakeDetector
+    _shakeDetector = ShakeDetector(
+      onPhoneShake: _logout, // ✅ Calls logout when phone shakes
+    );
+
+    _shakeDetector.startListening(); // ✅ Start shake detection
+  }
+
+  @override
+  void dispose() {
+    _shakeDetector.stopListening(); // ✅ Stop listening when screen is disposed
+    super.dispose();
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  // ✅ Logout Function
+  Future<void> _logout() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+    await prefs.remove('user');
+
+    print("User logged out due to shake gesture!");
+
+    // Navigate back to login screen
+    context.read<HomeCubit>().logout(context);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text("Home"),
-      // ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Good Afternoon",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 5),
-            const Text(
-              "Guest",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search),
-                hintText: "Search Doctors/Specialities",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.grey),
-                ),
-                filled: true,
-                fillColor: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Categories",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  "See All",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.blue,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            GridView.count(
-              crossAxisCount: 4,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 10,
-              crossAxisSpacing: 10,
-              children: const [
-                CategoryItem(
-                  icon: Icons.medical_services,
-                  label: "Dentistry",
-                  color: Colors.pinkAccent,
-                ),
-                CategoryItem(
-                  icon: Icons.favorite,
-                  label: "Cardiology",
-                  color: Colors.green,
-                ),
-                CategoryItem(
-                  icon: Icons.lan,
-                  label: "Pulmonology",
-                  color: Colors.orange,
-                ),
-                CategoryItem(
-                  icon: Icons.stop,
-                  label: "General",
-                  color: Colors.purple,
-                ),
-                CategoryItem(
-                  icon: Icons.people,
-                  label: "Neurology",
-                  color: Colors.teal,
-                ),
-                CategoryItem(
-                  icon: Icons.lunch_dining,
-                  label: "Gastro",
-                  color: Colors.deepPurple,
-                ),
-                CategoryItem(
-                  icon: Icons.science,
-                  label: "Lab",
-                  color: Colors.redAccent,
-                ),
-                CategoryItem(
-                  icon: Icons.local_pharmacy,
-                  label: "Pharmacy",
-                  color: Colors.blueAccent,
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.lightBlueAccent.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  Image.asset(
-                    'assets/images/doctor.png', // Replace with your image path
-                    height: 80,
-                    width: 80,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Icon(
-                        Icons.broken_image,
-                        size: 80,
-                        color: Colors.grey,
-                      );
-                    },
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Online and Offline Consultations",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Handle Book Now action
-                          },
-                          child: const Text("Book Now"),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Row(
-              children: [
-                Expanded(
-                  child: ActionCard(
-                    title: "Book your Services",
-                    subtitle: "24x7",
-                    icon: Icons.support_agent,
-                    backgroundColor: Colors.pinkAccent,
-                    buttonLabel: "Book",
-                  ),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: ActionCard(
-                    title: "Pharmacy",
-                    subtitle: "Medicine at your doorstep",
-                    icon: Icons.local_pharmacy,
-                    backgroundColor: Colors.lightBlue,
-                    buttonLabel: "Buy",
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class CategoryItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color color;
-
-  const CategoryItem({
-    super.key,
-    required this.icon,
-    required this.label,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 30,
-          backgroundColor: color.withOpacity(0.2),
-          child: Icon(icon, size: 30, color: color),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
-  }
-}
-
-class ActionCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final IconData icon;
-  final Color backgroundColor;
-  final String buttonLabel;
-
-  const ActionCard({
-    super.key,
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-    required this.backgroundColor,
-    required this.buttonLabel,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: backgroundColor.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, size: 40, color: backgroundColor),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      subtitle,
-                      style:
-                          const TextStyle(fontSize: 12, color: Colors.black54),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+      appBar: AppBar(
+        title: Text(_appBarTitles[_selectedIndex]),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CartPage()),
+              );
+            },
+            tooltip: "Cart",
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: backgroundColor,
-                minimumSize: const Size(70, 30), // Minimum size for the button
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                textStyle: const TextStyle(fontSize: 12), // Adjust font size
-              ),
-              onPressed: () {},
-              child: Text(buttonLabel),
-            ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: _logout, // ✅ Manual logout button
+            tooltip: "Logout",
+          ),
+        ],
+      ),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: [
+          const HomeScreen(),
+          BlocProvider(
+            create: (context) => getIt<ProductBloc>(),
+            child: const ProductView(),
+          ),
+          const ProfileScreen(),
+          const SettingsScreen(),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_bag),
+            label: 'Products',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
           ),
         ],
       ),

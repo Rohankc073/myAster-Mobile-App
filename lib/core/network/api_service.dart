@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:myasteer/app/constants/api_endpoints.dart';
-import 'package:myasteer/core/network/dio_error_interceptor.dart';
+import 'package:myAster/app/constants/api_endpoints.dart';
+import 'package:myAster/core/network/dio_error_interceptor.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class ApiService {
@@ -25,36 +25,36 @@ class ApiService {
       };
   }
 
-  Future<Map<String, dynamic>?> loginUser(String email, String password) async {
-    try {
-      // Sending the login request
-      final response = await _dio.post(
-        ApiEndpoints.login,
-        data: {
-          'email': email,
-          'password': password,
-        },
-      );
+//   Future<Map<String, dynamic>?> loginUser(String email, String password) async {
+//     try {
+//       // Sending the login request
+//       final response = await _dio.post(
+//         ApiEndpoints.login,
+//         data: {
+//           'email': email,
+//           'password': password,
+//         },
+//       );
 
-      // Log the full response to understand the structure
-      print("API Response: ${response.data}");
+//       // Log the full response to understand the structure
+//       print("API Response: ${response.data}");
 
-      // Check if the response status code is 200 and the success flag is true
-      if (response.statusCode == 200 && response.data['success'] == true) {
-        // Successfully logged in, return the full response data (including the token)
-        return response
-            .data; // This returns the entire response, including the token
-      } else {
-        // Log the failure response
-        print("Login failed: ${response.data['message']}");
-      }
-    } catch (e) {
-      // Log error during API call
-      print("Error during login: $e");
-      rethrow; // Propagate error for further handling
-    }
+//       // Check if the response status code is 200 and the success flag is true
+//       if (response.statusCode == 200 && response.data['success'] == true) {
+//         // Successfully logged in, return the full response data (including the token)
+//         return response
+//             .data; // This returns the entire response, including the token
+//       } else {
+//         // Log the failure response
+//         print("Login failed: ${response.data['message']}");
+//       }
+//     } catch (e) {
+//       // Log error during API call
+//       print("Error during login: $e");
+//       rethrow; // Propagate error for further handling
+//     }
 
-    // Return null if login fails or an error occurs
-    return null;
-  }
+//     // Return null if login fails or an error occurs
+//     return null;
+//   }
 }

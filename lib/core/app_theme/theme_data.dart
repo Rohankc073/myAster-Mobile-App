@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myasteer/app/constants/theme_constant.dart'; // Replace with your constants file path
+import 'package:myAster/app/constants/theme_constant.dart';
+// Replace with your constants file path
 
 class AppTheme {
   AppTheme._();
@@ -24,7 +25,6 @@ class AppTheme {
         centerTitle: true,
         backgroundColor: ThemeConstant.appBarColor,
         elevation: 4,
-        shadowColor: Colors.amber,
         titleTextStyle: TextStyle(
           fontSize: 20,
           color: Colors.white,

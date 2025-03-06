@@ -1,13 +1,17 @@
 import 'dart:io';
 
-import 'package:myasteer/features/auth/domain/entity/auth_entity.dart';
+import 'package:myAster/features/auth/domain/entity/auth_entity.dart';
+import 'package:myAster/features/auth/domain/use_case/login_use_case.dart';
 
 abstract interface class IAuthDataSource {
-  Future<String> loginUser(String email, String password);
-
+  Future<AuthResponse> loginUser(String username, String password);
   Future<void> registerUser(AuthEntity user);
 
-  Future<AuthEntity> getCurrentUser();
+  // Future<AuthEntity> getCurrentUser();
 
   Future<String> uploadProfilePicture(File file);
+
+  Future<String> receiveOtp(String email);
+
+  Future<void> setNewPassword(String email, String newPassword, String otp);
 }

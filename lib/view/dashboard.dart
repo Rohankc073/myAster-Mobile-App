@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myasteer/view/bottom_screen/appointment_screen.dart';
-import 'package:myasteer/view/bottom_screen/home_screen.dart';
-import 'package:myasteer/view/bottom_screen/profile_screen.dart';
+import 'package:myAster/features/home/presentation/view/bottom_view/appointment_view.dart';
+import 'package:myAster/features/home/presentation/view/bottom_view/profile_view.dart';
+
+import '../features/home/presentation/view/bottom_view/dashboard_view.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
